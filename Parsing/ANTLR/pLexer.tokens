@@ -1,0 +1,12 @@
+ADD=1
+INT=2
+SEPARATOR=3
+NEWLINE=4
+NEG=5
+REGISTER=6
+HASH=7
+'ADD'=1
+','=3
+'-'=5
+'r'=6
+'#'=7
