@@ -16,7 +16,8 @@ public class pParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ADD=1, INT=2, SEPARATOR=3, NEWLINE=4, NEG=5, REGISTER=6, HASH=7;
+		ADD=1, SUB=2, MOV=3, AND=4, OR=5, INT=6, SEPARATOR=7, WS=8, NEG=9, REGISTER=10, 
+		HASH=11;
 	public static final int
 		RULE_prog = 0, RULE_reg = 1, RULE_imm = 2, RULE_inst = 3;
 	public static final String[] ruleNames = {
@@ -24,10 +25,12 @@ public class pParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'ADD'", null, "','", null, "'-'", "'r'", "'#'"
+		null, "'ADD '", "'SUB '", "'MOV '", "'AND '", "'OR '", null, "', '", null, 
+		"'-'", "'r'", "'#'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, "ADD", "INT", "SEPARATOR", "NEWLINE", "NEG", "REGISTER", "HASH"
+		null, "ADD", "SUB", "MOV", "AND", "OR", "INT", "SEPARATOR", "WS", "NEG", 
+		"REGISTER", "HASH"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -85,9 +88,9 @@ public class pParser extends Parser {
 		public InstContext inst(int i) {
 			return getRuleContext(InstContext.class,i);
 		}
-		public List<TerminalNode> NEWLINE() { return getTokens(pParser.NEWLINE); }
-		public TerminalNode NEWLINE(int i) {
-			return getToken(pParser.NEWLINE, i);
+		public List<TerminalNode> WS() { return getTokens(pParser.WS); }
+		public TerminalNode WS(int i) {
+			return getToken(pParser.WS, i);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -119,15 +122,19 @@ public class pParser extends Parser {
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case ADD:
+				case SUB:
+				case MOV:
+				case AND:
+				case OR:
 					{
 					setState(8);
 					inst();
 					}
 					break;
-				case NEWLINE:
+				case WS:
 					{
 					setState(9);
-					match(NEWLINE);
+					match(WS);
 					}
 					break;
 				default:
@@ -137,7 +144,7 @@ public class pParser extends Parser {
 				setState(12); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==ADD || _la==NEWLINE );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MOV) | (1L << AND) | (1L << OR) | (1L << WS))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -249,10 +256,6 @@ public class pParser extends Parser {
 
 	public static class InstContext extends ParserRuleContext {
 		public TerminalNode ADD() { return getToken(pParser.ADD, 0); }
-		public List<TerminalNode> NEWLINE() { return getTokens(pParser.NEWLINE); }
-		public TerminalNode NEWLINE(int i) {
-			return getToken(pParser.NEWLINE, i);
-		}
 		public List<RegContext> reg() {
 			return getRuleContexts(RegContext.class);
 		}
@@ -263,8 +266,13 @@ public class pParser extends Parser {
 		public TerminalNode SEPARATOR(int i) {
 			return getToken(pParser.SEPARATOR, i);
 		}
-		public TerminalNode HASH() { return getToken(pParser.HASH, 0); }
-		public TerminalNode INT() { return getToken(pParser.INT, 0); }
+		public TerminalNode SUB() { return getToken(pParser.SUB, 0); }
+		public TerminalNode MOV() { return getToken(pParser.MOV, 0); }
+		public TerminalNode AND() { return getToken(pParser.AND, 0); }
+		public TerminalNode OR() { return getToken(pParser.OR, 0); }
+		public ImmContext imm() {
+			return getRuleContext(ImmContext.class,0);
+		}
 		public InstContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -282,73 +290,122 @@ public class pParser extends Parser {
 	public final InstContext inst() throws RecognitionException {
 		InstContext _localctx = new InstContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_inst);
-		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(45);
+			setState(60);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
-			case 1:
-				{
+			switch (_input.LA(1)) {
+			case ADD:
 				{
 				setState(23);
 				match(ADD);
 				setState(24);
-				match(NEWLINE);
+				reg();
 				setState(25);
+				match(SEPARATOR);
+				setState(26);
 				reg();
 				setState(27);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (_la==SEPARATOR) {
-					{
-					setState(26);
-					match(SEPARATOR);
-					}
-				}
-
-				setState(29);
-				match(NEWLINE);
+				match(SEPARATOR);
 				setState(30);
-				reg();
-				setState(32);
 				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (_la==SEPARATOR) {
+				switch (_input.LA(1)) {
+				case REGISTER:
 					{
-					setState(31);
-					match(SEPARATOR);
+					setState(28);
+					reg();
 					}
+					break;
+				case HASH:
+					{
+					setState(29);
+					imm();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
-
+				}
+				break;
+			case SUB:
+				{
+				setState(32);
+				match(SUB);
+				setState(33);
+				reg();
 				setState(34);
-				match(NEWLINE);
+				match(SEPARATOR);
 				setState(35);
 				reg();
-				}
-				}
-				break;
-			case 2:
-				{
-				{
-				setState(37);
-				match(ADD);
-				setState(38);
-				reg();
+				setState(36);
+				match(SEPARATOR);
 				setState(39);
-				match(SEPARATOR);
-				setState(40);
-				reg();
-				setState(41);
-				match(SEPARATOR);
-				setState(42);
-				match(HASH);
-				setState(43);
-				match(INT);
+				_errHandler.sync(this);
+				switch (_input.LA(1)) {
+				case REGISTER:
+					{
+					setState(37);
+					reg();
+					}
+					break;
+				case HASH:
+					{
+					setState(38);
+					imm();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
 				}
 				break;
+			case MOV:
+				{
+				setState(41);
+				match(MOV);
+				setState(42);
+				reg();
+				setState(43);
+				match(SEPARATOR);
+				setState(44);
+				reg();
+				}
+				break;
+			case AND:
+				{
+				setState(46);
+				match(AND);
+				setState(47);
+				reg();
+				setState(48);
+				match(SEPARATOR);
+				setState(49);
+				reg();
+				setState(50);
+				match(SEPARATOR);
+				setState(51);
+				reg();
+				}
+				break;
+			case OR:
+				{
+				setState(53);
+				match(OR);
+				setState(54);
+				reg();
+				setState(55);
+				match(SEPARATOR);
+				setState(56);
+				reg();
+				setState(57);
+				match(SEPARATOR);
+				setState(58);
+				reg();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 			}
 		}
@@ -364,20 +421,23 @@ public class pParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\t\62\4\2\t\2\4\3"+
-		"\t\3\4\4\t\4\4\5\t\5\3\2\3\2\6\2\r\n\2\r\2\16\2\16\3\3\3\3\3\3\3\4\3\4"+
-		"\5\4\26\n\4\3\4\3\4\3\5\3\5\3\5\3\5\5\5\36\n\5\3\5\3\5\3\5\5\5#\n\5\3"+
-		"\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5\60\n\5\3\5\2\2\6\2\4\6"+
-		"\b\2\2\2\63\2\f\3\2\2\2\4\20\3\2\2\2\6\23\3\2\2\2\b/\3\2\2\2\n\r\5\b\5"+
-		"\2\13\r\7\6\2\2\f\n\3\2\2\2\f\13\3\2\2\2\r\16\3\2\2\2\16\f\3\2\2\2\16"+
-		"\17\3\2\2\2\17\3\3\2\2\2\20\21\7\b\2\2\21\22\7\4\2\2\22\5\3\2\2\2\23\25"+
-		"\7\t\2\2\24\26\7\7\2\2\25\24\3\2\2\2\25\26\3\2\2\2\26\27\3\2\2\2\27\30"+
-		"\7\4\2\2\30\7\3\2\2\2\31\32\7\3\2\2\32\33\7\6\2\2\33\35\5\4\3\2\34\36"+
-		"\7\5\2\2\35\34\3\2\2\2\35\36\3\2\2\2\36\37\3\2\2\2\37 \7\6\2\2 \"\5\4"+
-		"\3\2!#\7\5\2\2\"!\3\2\2\2\"#\3\2\2\2#$\3\2\2\2$%\7\6\2\2%&\5\4\3\2&\60"+
-		"\3\2\2\2\'(\7\3\2\2()\5\4\3\2)*\7\5\2\2*+\5\4\3\2+,\7\5\2\2,-\7\t\2\2"+
-		"-.\7\4\2\2.\60\3\2\2\2/\31\3\2\2\2/\'\3\2\2\2\60\t\3\2\2\2\b\f\16\25\35"+
-		"\"/";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\rA\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\3\2\3\2\6\2\r\n\2\r\2\16\2\16\3\3\3\3\3\3\3\4\3\4\5"+
+		"\4\26\n\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5!\n\5\3\5\3\5\3\5\3\5"+
+		"\3\5\3\5\3\5\5\5*\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
+		"\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5?\n\5\3\5\2\2\6\2\4\6\b\2\2\2E\2\f\3\2"+
+		"\2\2\4\20\3\2\2\2\6\23\3\2\2\2\b>\3\2\2\2\n\r\5\b\5\2\13\r\7\n\2\2\f\n"+
+		"\3\2\2\2\f\13\3\2\2\2\r\16\3\2\2\2\16\f\3\2\2\2\16\17\3\2\2\2\17\3\3\2"+
+		"\2\2\20\21\7\f\2\2\21\22\7\b\2\2\22\5\3\2\2\2\23\25\7\r\2\2\24\26\7\13"+
+		"\2\2\25\24\3\2\2\2\25\26\3\2\2\2\26\27\3\2\2\2\27\30\7\b\2\2\30\7\3\2"+
+		"\2\2\31\32\7\3\2\2\32\33\5\4\3\2\33\34\7\t\2\2\34\35\5\4\3\2\35 \7\t\2"+
+		"\2\36!\5\4\3\2\37!\5\6\4\2 \36\3\2\2\2 \37\3\2\2\2!?\3\2\2\2\"#\7\4\2"+
+		"\2#$\5\4\3\2$%\7\t\2\2%&\5\4\3\2&)\7\t\2\2\'*\5\4\3\2(*\5\6\4\2)\'\3\2"+
+		"\2\2)(\3\2\2\2*?\3\2\2\2+,\7\5\2\2,-\5\4\3\2-.\7\t\2\2./\5\4\3\2/?\3\2"+
+		"\2\2\60\61\7\6\2\2\61\62\5\4\3\2\62\63\7\t\2\2\63\64\5\4\3\2\64\65\7\t"+
+		"\2\2\65\66\5\4\3\2\66?\3\2\2\2\678\7\7\2\289\5\4\3\29:\7\t\2\2:;\5\4\3"+
+		"\2;<\7\t\2\2<=\5\4\3\2=?\3\2\2\2>\31\3\2\2\2>\"\3\2\2\2>+\3\2\2\2>\60"+
+		"\3\2\2\2>\67\3\2\2\2?\t\3\2\2\2\b\f\16\25 )>";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
