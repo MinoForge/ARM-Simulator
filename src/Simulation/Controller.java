@@ -71,7 +71,7 @@ public class Controller {
         while(Controller.PC < instructions.length * 4) {
             writer.execute();
             accessor.execute();
-            executor.exexute();
+            executor.execute();
             decoder.execute();
             fetcher.execute();
         }

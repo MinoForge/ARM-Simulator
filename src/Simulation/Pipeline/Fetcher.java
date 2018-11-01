@@ -1,5 +1,7 @@
 package Simulation.Pipeline;
 
+import Simulation.Controller;
+
 /**
  *
  */
