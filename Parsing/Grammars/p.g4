@@ -18,10 +18,12 @@ WS    :[ \n\t\r];
 NEG : '-';
 REGISTER : 'r';
 HASH : '#';
+ENTRY: 'ENTRY';
+END: 'END';
 
 /* Rules */
 
-prog   : (inst | WS)+
+prog   : ENTRY (inst | WS)+ END
        ;
 
 reg    : (REGISTER INT);

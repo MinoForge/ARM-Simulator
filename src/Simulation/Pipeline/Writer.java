@@ -1,15 +1,14 @@
-package Simulation;
+package Simulation.Pipeline;
 
 /**
  * Created by Caleb on 11/1/2018.
  */
-public class Accessor extends PipelineSegment{
-    private byte[] exmemRegister;
+public class Writer extends PipelineSegment{
+
     private byte[] memwbRegister;
 
 
-    public Accessor(byte[] exmem, byte[] memwb) {
-        this.exmemRegister = exmem;
+    public Writer(byte[] memwb) {
         this.memwbRegister = memwb;
     }
 
@@ -17,8 +16,7 @@ public class Accessor extends PipelineSegment{
      *
      */
     public void read(){
-        //TODO use info in pipeline register to see if mem needs to be
-        // acessed
+        //TODO pull register info from pipeline register
 
 
     }
@@ -27,7 +25,7 @@ public class Accessor extends PipelineSegment{
      *
      */
     public void write(){
-        //TODO Add above to the mem/wb register
+        //TODO writes back to the registers
 
     }
 
