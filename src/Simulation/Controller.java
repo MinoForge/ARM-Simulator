@@ -1,11 +1,20 @@
 package Simulation;
 
+import Simulation.Pipeline.*;
+
 public class Controller {
 
     private int DEFAULT_REGISTER_NUM = 13;
 
     private String[] data;
     private String[] instructions;
+
+    private Fetcher fetcher;
+    private Decoder decoder;
+    private Executor executor;
+    private Accessor accessor;
+    private Writer writer;
+
 
     //private  instructor;
     public static int PC = 0;
@@ -28,6 +37,19 @@ public class Controller {
             registers[i] = 0;
         }
 
+        byte[] ifid = new byte[24];
+        byte[] idex = new byte[64];
+        byte[] exmem = new byte[48];
+        byte[] memwb = new byte[32];
+
+        fetcher = new Fetcher(ifid);
+        decoder = new Decoder(ifid, idex);
+        executor = new Executor(idex, exmem);
+        accessor = new Accessor(exmem, memwb);
+        writer = new Writer(memwb);
+
+
+
         readData(); //initialize data stuff
         setUpStack(); //stack initialization
 
@@ -44,23 +66,19 @@ public class Controller {
 
 
 
-    public void execute() {
+
+    public void cycle() {
         while(Controller.PC < instructions.length * 4) {
-            String instruction = fetch();
-            send();
+            writer.execute();
+            accessor.execute();
+            executor.exexute();
+            decoder.execute();
+            fetcher.execute();
         }
     }
 
-    public String fetch() {
 
-        PC = PC + 4;
-        return instructions[(PC - 4) / 4];
 
-    }
-
-    public void send() {
-
-    }
 
 
 }
