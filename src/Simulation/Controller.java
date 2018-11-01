@@ -7,7 +7,7 @@ public class Controller {
     private String[] data;
     private String[] instructions;
 
-    private Instructor instructor;
+    //private  instructor;
     public static int PC = 0;
 
 
@@ -31,7 +31,7 @@ public class Controller {
         readData(); //initialize data stuff
         setUpStack(); //stack initialization
 
-        this.instructor = new Instructor();
+        //this.instructor = new Instructor();
     }
 
     private void readData() {

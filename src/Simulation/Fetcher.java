@@ -1,12 +1,15 @@
 package Simulation;
 
-public class Instructor {
+public class Fetcher {
 
     private String instruction;
 
-    public Instructor() {
+    public Fetcher() {
         this.instruction = "";
+
     }
+
+
 
     public void decode() {
 
