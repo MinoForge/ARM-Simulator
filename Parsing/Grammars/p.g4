@@ -1,40 +1,51 @@
 grammar p;
 
-//language=Go;
-//
-
 /* Tokens */
 ADD    : 'ADD ';
 SUB    : 'SUB ';
 MOV    : 'MOV ';
-
 AND    : 'AND ';
 OR     : 'OR ';
 
-
-INT    : [0-9]+;
+INT           : [0-9]+;
 SEPARATOR     : ', ';
-WS    :[ \n\t\r];
-NEG : '-';
-REGISTER : 'r';
-HASH : '#';
-ENTRY: 'ENTRY';
-END: 'END';
+WS            :[ \n\t\r];
+NEG           : '-';
+REGISTER      : 'r';
+COLON         : ':';
+HASH          : '#';
+EQUALS        : '=';
+ENTRY         : 'ENTRY';
+END           : 'END';
+WORD          : [A-Za-z]+;
+LCWORD        : [a-z]+;
+DIRECTIVE     : '\.';
+DATA          : '\.data'
+STRING        : '".*"'
+
 
 /* Rules */
 
-prog   : ENTRY (inst | WS)+ END
-       ;
+file    : prog  data
 
-reg    : (REGISTER INT);
+prog    : ENTRY (label | inst | WS)+ END
+        ;
 
-imm    : (HASH NEG ? INT);
+data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+))
 
-inst   : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
-       |  SUB reg SEPARATOR reg SEPARATOR (reg | imm)
-       |  MOV reg SEPARATOR reg 
-       |  AND reg SEPARATOR reg SEPARATOR reg
-       |  OR reg SEPARATOR reg SEPARATOR reg )
-       ;
+reg     : (REGISTER INT);
+
+imm     : (HASH NEG ? INT);
+
+memcall : (EQUALS WORD);
+
+label   : (WORD COLON);
+
+inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
+        |  SUB reg SEPARATOR reg SEPARATOR (reg | imm)
+        |  MOV reg SEPARATOR reg
+        |  AND reg SEPARATOR reg SEPARATOR reg
+        |  OR reg SEPARATOR reg SEPARATOR reg )
+        ;
 
 
