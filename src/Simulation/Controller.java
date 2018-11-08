@@ -2,6 +2,8 @@ package Simulation;
 
 import Simulation.Pipeline.*;
 
+import java.io.File;
+
 public class Controller {
 
     private int DEFAULT_REGISTER_NUM = 13;
@@ -20,9 +22,10 @@ public class Controller {
     public static int PC = 0;
 
 
-    public Controller(String[] data, String[] instructions) {
-        this.data = data;
-        this.instructions = instructions;
+    public Controller(File file) {
+        //TODO read in from file to data and instructions.
+//        this.data = data;
+//        this.instructions = instructions;
         init(this.data);
 
     }
