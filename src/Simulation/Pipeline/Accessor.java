@@ -16,7 +16,7 @@ public class Accessor extends PipelineSegment{
     /**
      *
      */
-    public void read(){
+    private void read(){
         //TODO use info in pipeline register to see if mem needs to be
         // acessed
 
@@ -26,7 +26,7 @@ public class Accessor extends PipelineSegment{
     /**
      *
      */
-    public void write(){
+    private void write(){
         //TODO Add above to the mem/wb register
 
     }

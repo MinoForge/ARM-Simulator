@@ -1,4 +1,4 @@
-grammar p;
+grammar LEGGram;
 
 /* Tokens */
 ADD    : 'ADD ';
@@ -19,19 +19,19 @@ ENTRY         : 'ENTRY';
 END           : 'END';
 WORD          : [A-Za-z]+;
 LCWORD        : [a-z]+;
-DIRECTIVE     : '\.';
-DATA          : '\.data'
-STRING        : '".*"'
+DIRECTIVE     : '.';
+DATA          : '.data';
+STRING        : '".*"';
 
 
 /* Rules */
 
-file    : prog  data
+file    : prog  data;
 
 prog    : ENTRY (label | inst | WS)+ END
         ;
 
-data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+))
+data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+));
 
 reg     : (REGISTER INT);
 

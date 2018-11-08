@@ -17,7 +17,7 @@ public class Decoder extends PipelineSegment {
     /**
      *
      */
-    public void read(){
+    private void read(){
         //TODO strip the immediate and sign extend if found
         //TODO strip the read registers
 
@@ -27,7 +27,7 @@ public class Decoder extends PipelineSegment {
     /**
      *
      */
-    public void write(){
+    private void write(){
         //TODO Add above to the ex/mem register
 
     }

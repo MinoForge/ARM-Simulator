@@ -23,7 +23,7 @@ public class Fetcher extends PipelineSegment{
     /**
      *
      */
-    public void read(){
+    private void read(){
         Controller.PC+=4;
 
         //TODO instruction to binary
@@ -33,7 +33,7 @@ public class Fetcher extends PipelineSegment{
     /**
      *
      */
-    public void write(){
+    private void write(){
         //TODO Add to the if/id register
 
     }

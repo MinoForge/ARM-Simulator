@@ -15,7 +15,7 @@ public class Writer extends PipelineSegment{
     /**
      *
      */
-    public void read(){
+    private void read(){
         //TODO pull register info from pipeline register
 
 
@@ -24,7 +24,7 @@ public class Writer extends PipelineSegment{
     /**
      *
      */
-    public void write(){
+    private void write(){
         //TODO writes back to the registers
 
     }

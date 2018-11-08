@@ -18,7 +18,7 @@ public class Executor extends PipelineSegment {
     /**
      *
      */
-    public void read(){
+    private void read(){
         // TODO a lot
 
 
@@ -27,7 +27,7 @@ public class Executor extends PipelineSegment {
     /**
      *
      */
-    public void write(){
+    private void write(){
         //TODO Add above to the mem/wb register
 
     }
