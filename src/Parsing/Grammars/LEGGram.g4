@@ -1,4 +1,4 @@
-grammar p;
+grammar LEGGram;
 
 /* Tokens */
 ADD    : 'ADD ';
@@ -19,8 +19,8 @@ ENTRY         : 'ENTRY';
 END           : 'END';
 WORD          : [A-Za-z]+;
 LCWORD        : [a-z]+;
-DIRECTIVE     : '\.';
-DATA          : '\.data'
+DIRECTIVE     : '.';
+DATA          : '.data';
 STRING        : '".*"';
 
 

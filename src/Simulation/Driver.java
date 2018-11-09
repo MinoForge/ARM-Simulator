@@ -10,6 +10,14 @@ import java.io.File;
 import java.io.IOException;
 
 
+/**
+ * The main class to run to start up the controller and begin running a file through the simulator.
+ *
+ * @author Caleb Dinehart
+ * @author Peter Gardner
+ * @version November 8, 2018
+ *
+ */
 public class Driver {
 
     public static void main(String... args){
@@ -26,7 +34,7 @@ public class Driver {
         try {
             LEGGramLexer lexer = new LEGGramLexer(CharStreams.fromFileName(file));
             LEGGramParser parser = new LEGGramParser(new CommonTokenStream(lexer));
-            parser.getSerializedATN();
+            parser.getSerializedATN(); //TODO Not done.
         } catch(IOException ioe) {
 
         }

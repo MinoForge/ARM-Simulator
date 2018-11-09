@@ -4,6 +4,16 @@ import Simulation.Pipeline.*;
 
 import java.io.File;
 
+
+/**
+ * A class to handle statically available registers, and act as a controller for the pipeline
+ * segments.
+ *
+ * @author Caleb Dinehart
+ * @author Peter Gardner
+ * @version November 8, 2018
+ *
+ */
 public class Controller {
 
     private int DEFAULT_REGISTER_NUM = 13;

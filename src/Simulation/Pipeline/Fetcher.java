@@ -3,6 +3,11 @@ package Simulation.Pipeline;
 import Simulation.Controller;
 
 /**
+ * A class to model the Instruction Fetching segment of the ARM pipeline.
+ *
+ * @author Caleb Dinehart
+ * @author Peter Gardner
+ * @version November 8, 2018
  *
  */
 public class Fetcher extends PipelineSegment{

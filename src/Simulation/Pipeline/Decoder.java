@@ -1,7 +1,12 @@
 package Simulation.Pipeline;
 
 /**
- * Created by Caleb on 11/1/2018.
+ * A class to model the Instruction Decoding segment of the ARM pipeline.
+ *
+ * @author Caleb Dinehart
+ * @author Peter Gardner
+ * @version November 8, 2018
+ *
  */
 public class Decoder extends PipelineSegment {
 
