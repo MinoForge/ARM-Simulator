@@ -22,7 +22,7 @@ public class Writer extends PipelineSegment{
      */
     private void read(){
         //TODO pull register info from pipeline register
-
+        //
 
     }
 

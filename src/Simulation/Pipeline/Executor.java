@@ -25,6 +25,8 @@ public class Executor extends PipelineSegment {
      */
     private void read(){
         // TODO a lot
+        //It will have to run all the operations that come thorough, any
+        // arithmetic, logic or branch calculation
 
 
     }
@@ -33,7 +35,8 @@ public class Executor extends PipelineSegment {
      *
      */
     private void write(){
-        //TODO Add above to the mem/wb register
+        //TODO Add above to the ex/mem register
+        // give the results of the executions to the ex/mem register.
 
     }
 

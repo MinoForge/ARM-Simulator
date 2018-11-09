@@ -23,7 +23,7 @@ public class Accessor extends PipelineSegment{
      */
     private void read(){
         //TODO use info in pipeline register to see if mem needs to be
-        // acessed
+        // accessed
 
 
     }

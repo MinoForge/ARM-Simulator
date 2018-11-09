@@ -2,13 +2,17 @@ package Simulation;
 
 import Parsing.ANTLR.LEGGramLexer;
 import Parsing.ANTLR.LEGGramParser;
+/*
 import org.antlr.runtime.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-
+*/
 import java.io.File;
 import java.io.IOException;
 
+
+import java.io.File;
+import java.util.Scanner;
 
 /**
  * The main class to run to start up the controller and begin running a file through the simulator.
@@ -21,23 +25,31 @@ import java.io.IOException;
 public class Driver {
 
     public static void main(String... args){
-        //TODO scanner stuff for input file
         String input = "";
-        parseFile(input);
+
+        //TODO scanner stuff for input file
+
+        parseInput(input);
 
 
 
 
     }
 
-    public static void parseFile(String file) {
-        try {
+    public static void parseInput(String input) {
+        //TODO ANTLR runs and parses the file
+    }
+
+    public static void parseFile(){ //(/*String fileName*/){
+        /*
+            try {
             LEGGramLexer lexer = new LEGGramLexer(CharStreams.fromFileName(file));
             LEGGramParser parser = new LEGGramParser(new CommonTokenStream(lexer));
             parser.getSerializedATN(); //TODO Not done.
         } catch(IOException ioe) {
 
         }
+        */
     }
 
 

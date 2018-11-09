@@ -26,12 +26,12 @@ STRING        : '".*"';
 
 /* Rules */
 
-file    : prog  data;
+file    : prog WS+ data WS
 
 prog    : ENTRY (label | inst | WS)+ END
         ;
 
-data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+));
+data    : (DATA WS+ DIRECTIVE LCWORD WS (STRING | INT));
 
 reg     : (REGISTER INT);
 

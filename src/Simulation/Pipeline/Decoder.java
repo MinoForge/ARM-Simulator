@@ -24,8 +24,11 @@ public class Decoder extends PipelineSegment {
      */
     private void read(){
         //TODO strip the immediate and sign extend if found
+        //Only if the opcode dictates
         //TODO strip the read registers
-
+        // Using binary in if/id register, find the register which are being
+        // read from and hand and find the contents of them in the register
+        // array.
 
     }
 
@@ -34,7 +37,8 @@ public class Decoder extends PipelineSegment {
      */
     private void write(){
         //TODO Add above to the ex/mem register
-
+        //put the contents of those registers into ex/mem so it may performt
+        // the operation on them
     }
 
     /**
