@@ -27,8 +27,7 @@ public class Decoder extends PipelineSegment {
         //Only if the opcode dictates
         //TODO strip the read registers
         // Using binary in if/id register, find the register which are being
-        // read from and hand and find the contents of them in the register
-        // array.
+        // read from and find the contents of them in the register array.
 
     }
 

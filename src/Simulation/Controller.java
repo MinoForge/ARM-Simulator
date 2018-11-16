@@ -50,10 +50,10 @@ public class Controller {
             registers[i] = 0;
         }
 
-        byte[] ifid = new byte[24];
-        byte[] idex = new byte[64];
-        byte[] exmem = new byte[48];
-        byte[] memwb = new byte[32];
+        byte[] ifid = new byte[12];
+        byte[] idex = new byte[32];
+        byte[] exmem = new byte[24];
+        byte[] memwb = new byte[16];
 
         fetcher = new Fetcher(ifid);
         decoder = new Decoder(ifid, idex);
