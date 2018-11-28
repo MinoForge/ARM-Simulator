@@ -56,7 +56,7 @@ public class Controller {
         byte[] memwb = new byte[16];
 
         fetcher = new Fetcher(ifid);
-        decoder = new Decoder(ifid, idex);
+        decoder = new Decoder(ifid, idex, registers);
         executor = new Executor(idex, exmem);
         accessor = new Accessor(exmem, memwb);
         writer = new Writer(memwb);

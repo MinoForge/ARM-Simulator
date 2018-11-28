@@ -46,25 +46,25 @@ public class Fetcher extends PipelineSegment{
     private void read(){
         String inst = instructions[Controller.PC/4];
         PC+=4;
-        String format = "";
+        char format;
+        format = 'r';
         //get type from file
-
-        format  = "r";
-
+        String[] instArray;
+        String temp;
         switch(format){
-            case("r"):
-                String[] instArray = inst.split(" ");
+            case('r'):
+                instArray = inst.split(" ");
                 for (String s: instArray){
                     s = s.replace(",", "");
                 }
                 //grabbing inst command
-                String temp = instArray[0].toLowerCase();
+                temp = instArray[0].toLowerCase();
                 // Adding the correct opcode to the instBin string
                 instBin = instBin + opCodes.get(temp);
 
                 int[] registerNumbers = new int[3];
                 for(int i = 0; i < instArray.length - 1; i++){
-                    instArray[i+1] = instArray[i+1].replace("[a-zX-Z]", "");
+                    instArray[i+1] = instArray[i+1].replace("[a-zA-Z]", "");
                     registerNumbers[i] = Integer.parseInt(instArray[i + 1]);
                 }
                 // adding rm register binary
@@ -80,11 +80,21 @@ public class Fetcher extends PipelineSegment{
                 temp = Integer.toBinaryString(registerNumbers[0]);
                 instBin = instBin + temp;
                 break;
-            case("i"):
+            case('i'):
+                instArray = inst.split(" ");
+                for (String s: instArray){
+                    s = s.replace(",", "");
+                }
+                //grabbing  inst command
+                temp = instArray[0].toLowerCase();
+                //
+                instBin = instBin + opCodes.get(temp);
+                instBin = instBin;
+
 
                 break;
 
-            case("b"):
+            case('b'):
 
                 break;
 
