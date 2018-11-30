@@ -16,7 +16,12 @@ import java.io.File;
  */
 public class Controller {
 
-    private int DEFAULT_REGISTER_NUM = 13;
+    private static final int DEFAULT_REGISTER_NUM = 32;
+    private static final int IFID_SIZE = 2;
+    private static final int IDEX_SIZE = 4;
+    private static final int EXMEM_SIZE = 3;
+    private static final int MEMWB_SIZE = 2;
+
 
     private String[] data;
     private String[] instructions;
@@ -32,11 +37,11 @@ public class Controller {
     public static int PC = 0;
 
 
-    public Controller(File file) {
+    public Controller(String file) {
         //TODO read in from file to data and instructions.
 //        this.data = data;
 //        this.instructions = instructions;
-        init(this.data);
+        //init(this.data);
 
     }
 
@@ -50,16 +55,16 @@ public class Controller {
             registers[i] = 0;
         }
 
-        byte[] ifid = new byte[12];
-        byte[] idex = new byte[32];
-        byte[] exmem = new byte[24];
-        byte[] memwb = new byte[16];
+        byte[][] ifid = new byte[IFID_SIZE][8];
+        byte[][] idex = new byte[IDEX_SIZE][8];
+        byte[][] exmem = new byte[EXMEM_SIZE][8];
+        byte[][] memwb = new byte[MEMWB_SIZE][8];
 
         fetcher = new Fetcher(ifid);
         decoder = new Decoder(ifid, idex, registers);
         executor = new Executor(idex, exmem);
-        accessor = new Accessor(exmem, memwb);
-        writer = new Writer(memwb);
+        //accessor = new Accessor(exmem, memwb);
+        //writer = new Writer(memwb);
 
 
 
