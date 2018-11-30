@@ -14,7 +14,7 @@ import static Simulation.Controller.PC;
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version November 8, 2018
+ * @version November 30, 2018
  *
  */
 public class Fetcher extends PipelineSegment{
@@ -26,8 +26,10 @@ public class Fetcher extends PipelineSegment{
 
 
     /**
-     *  Constructor that takes the instruction to fetch.
-     * @param ifid the  to fetch.
+     *  Constructor of the Fetcher Class that takes the list of instructions
+     *  that will be fetched and the ifid pipeline register.
+     * @param ifid  The byte[][] representing the pipeline register
+     * @param instructions The String array containing the instructions.
      */
     public Fetcher(byte[][] ifid, String... instructions) {
         this.instructions = instructions;
@@ -41,7 +43,8 @@ public class Fetcher extends PipelineSegment{
     }
 
     /**
-     *
+     * Method that builds the binary representation of the instruction
+     * corresponding to the current PC, and increments the PC.
      */
     private void read(){
         System.out.println("\nStarting Fetch\n------------------------\n");
@@ -117,6 +120,7 @@ public class Fetcher extends PipelineSegment{
                 System.out.println("This is the bin after all additions: " +
                         instBin);
                 break;
+            //Currently unfinished for i types
             case('i'):
                 instArray = inst.split(" ");
                 for (String s: instArray){
@@ -130,23 +134,27 @@ public class Fetcher extends PipelineSegment{
 
 
                 break;
-
+            // Not started on b types
             case('b'):
 
                 break;
 
         }
 
-        //TODO instruction to binary
+        //TODO instruction to binary for I type and B type
         // Done by splitting up the instruction line and using each part of
         // the instruction(ie. the instruction name, which registers listed,
         // etc)
-        // Use the multiple hashmaps, initialized by constructor, and will
-        // map each part of the instruction to its binary equivalent and adds
-        // each to the binary instruction field.
 
     }
 
+    /**
+     * Method to make sure that the binary representation of the registers
+     * have the correct number bits. It concatenates zeros to the front of
+     * the binary string and returns the corrected string.
+     * @param reg the string to be checked/altered
+     * @return the corrected string
+     */
     public String correctBits(String reg){
         String correct = reg;
         while (correct.length() < 5) {
@@ -156,40 +164,41 @@ public class Fetcher extends PipelineSegment{
     }
 
     /**
-     *
+     * Writes the PC and the instruction fetched to the IFID register in bytes.
      */
     private void write(){
+        // Creating the buffers that will hold the bytes of the PC and
+        // instruction
         ByteBuffer pcBuffer = ByteBuffer.allocate(8);
         ByteBuffer instBuffer = ByteBuffer.allocate(4);
         pcBuffer.order(ByteOrder.LITTLE_ENDIAN);
         pcBuffer.putLong(PC);
         byte[] PcBytes = pcBuffer.array();
+        // Writing the PC to the IFID
         for(int i = 0; i < PcBytes.length; i++){
             ifidRegister[0][i] = PcBytes[i];
         }
+
 
         instBuffer = ByteBuffer.allocate(Long.BYTES);
         instBuffer.order(ByteOrder.LITTLE_ENDIAN);
         long temp = Long.valueOf(instBin, 2);
         instBuffer.putLong(temp);
+        // Writing the
         byte[] instBytes = instBuffer.array();
         for(int i = 0; i < instBytes.length; i++){
             ifidRegister[1][i] = instBytes[i];
         }
-
-        //TODO Add to the if/id register
-        //adds the current PC to the if/id register and then adds the binary
-        //translation to the if/id register
-
+        // Must reinitialize the instruction binary string
+        instBin = "";
     }
 
     /**
-     *
+     * Runs read and write for Fetch
      */
     public void execute(){
         read();
         write();
-        instBin = "";
     }
 
 }

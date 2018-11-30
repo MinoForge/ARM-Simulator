@@ -16,13 +16,18 @@ public class Executor extends PipelineSegment {
     private byte[][] idexRegister;
 
     /**
-    *
-    */
+     * Constructor to make an Executor Class. Must have the IDEX pipeline
+     * register implementation and the EXEM register implementation.
+     */
     public Executor(byte[][] idex, byte[][] exmem) {
         this.exmemRegister = exmem;
         this.idexRegister = idex;
     }
 
+    /**
+     * Interprets the information in the IDEX pipeline register.
+     * @return an empty string at the moment
+     */
     public String interpretPipeReg(){
         byte[] regContentsBytes = new byte[8];
         for(int i = 0; i < idexRegister[1].length; i++){

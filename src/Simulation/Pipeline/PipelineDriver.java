@@ -13,7 +13,10 @@ public class PipelineDriver {
     private static final int EXMEM_SIZE = 3;
     private static final int MEMWB_SIZE = 2;
 
-
+    /**
+     * Runs a test of the Fetch and Decode stages.
+     * @param args
+     */
     public static void main(String... args){
         String test1 = "add r1, r2, r3";
         String test2 = "AND X1, X3, X4";
@@ -35,6 +38,12 @@ public class PipelineDriver {
         test(fetcher,decoder,executor);
     }
 
+    /**
+     * The testing method
+     * @param fetcher
+     * @param decoder
+     * @param executor
+     */
     public static void test(Fetcher fetcher, Decoder decoder, Executor executor){
         //test1
         fetcher.execute();

@@ -34,8 +34,9 @@ public class Decoder extends PipelineSegment {
     }
 
     /**
-     *
-     * @return
+     * Method that reads and interprets the IFID register.
+     * @return a string representing the binary representation of the
+     * instruction
      */
     public String interpretPipeReg(){
         byte[] instBytes = new byte[4];
@@ -53,13 +54,15 @@ public class Decoder extends PipelineSegment {
         return Integer.toBinaryString(temp);
     }
     /**
-     *
+     * Uses the instruction binary to find the read and write registers, and
+     * will sign extend an immediate value depending on the instruction
      */
     private void read(){
         instBin = interpretPipeReg();
         char format = 'r';
         switch (format){
             case('r'):
+
                 //pulling apart the bin string
                 String opCode = instBin.substring(0,11);
                 System.out.println("this is the opcode : " + opCode);
@@ -70,6 +73,7 @@ public class Decoder extends PipelineSegment {
                 System.out.println("this is the regN : " + regN);
                 String regD = instBin.substring(27,32);
                 System.out.println("this is the regD : " + regD);
+
                 // Getting the register indices
                 nRegister = Integer.parseInt(regN, 2);
                 System.out.println("The first operand register: " + nRegister);
@@ -81,11 +85,8 @@ public class Decoder extends PipelineSegment {
 
 
         //TODO strip the immediate and sign extend if I format
+        //TODO finish for I type and B type
         //Only if the opcode dictates
-        //TODO strip the read registers
-        // Using binary in if/id register, find the register which are being
-        // read from and find the contents of them in the register array.
-
     }
 
     /**
@@ -98,29 +99,27 @@ public class Decoder extends PipelineSegment {
         for(int i = 0; i < idexRegister[0].length; i++){
             idexRegister[0][i] = ifidRegister[0][i];
         }
-        ByteBuffer regDbuf = ByteBuffer.allocate(Long.BYTES);
-        regDbuf.order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer regBuf = ByteBuffer.allocate(Long.BYTES);
+        regBuf.order(ByteOrder.LITTLE_ENDIAN);
         long temp = registers[dRegister];
-        regDbuf.putLong(temp);
-        byte[] regContents = regDbuf.array();
+        regBuf.putLong(temp);
+        byte[] regContents = regBuf.array();
         for(int i = 0; i < idexRegister[1].length; i++){
             idexRegister[1][i] = regContents[i];
         }
 
-        ByteBuffer regNbuf = ByteBuffer.allocate(Long.BYTES);
-        regNbuf.order(ByteOrder.LITTLE_ENDIAN);
+        regBuf.clear();
         temp = registers[nRegister];
-        regNbuf.putLong(temp);
-        regContents = regNbuf.array();
+        regBuf.putLong(temp);
+        regContents = regBuf.array();
         for(int i = 0; i < idexRegister[2].length; i++){
             idexRegister[2][i] = regContents[i];
         }
 
-        ByteBuffer regMbuf = ByteBuffer.allocate(Long.BYTES);
-        regMbuf.order(ByteOrder.LITTLE_ENDIAN);
+        regBuf.clear();
         temp = registers[mRegister];
-        regMbuf.putLong(temp);
-        regContents = regMbuf.array();
+        regBuf.putLong(temp);
+        regContents = regBuf.array();
         for(int i = 0; i < idexRegister[3].length; i++){
             idexRegister[3][i] = regContents[i];
         }
