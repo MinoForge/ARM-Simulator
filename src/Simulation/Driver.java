@@ -31,7 +31,11 @@ public class Driver {
 
         parseInput(input);
 
-
+        if(parseFile()) {
+            Controller controller = new Controller(input);
+        } else{
+            System.exit(1);
+        }
 
 
     }
@@ -40,7 +44,7 @@ public class Driver {
         //TODO ANTLR runs and parses the file
     }
 
-    public static void parseFile(){ //(/*String fileName*/){
+    public static boolean parseFile(){ //(/*String fileName*/){
         /*
             try {
             LEGGramLexer lexer = new LEGGramLexer(CharStreams.fromFileName(file));
@@ -50,6 +54,7 @@ public class Driver {
 
         }
         */
+        return true;
     }
 
 

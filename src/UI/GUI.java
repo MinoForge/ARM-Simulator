@@ -27,6 +27,6 @@ public class GUI extends Application {
 
 
         File file = null; //TODO get file from user
-        Controller controller = new Controller(file); //TODO
+        //Controller controller = new Controller(file); //TODO
     }
 }

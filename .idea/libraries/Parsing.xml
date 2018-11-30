@@ -1,12 +1,11 @@
 <component name="libraryTable">
   <library name="Parsing">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/src/Parsing" />
+      <root url="jar://$PROJECT_DIR$/src/Parsing/antlr-4.7.1-complete.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="file://$PROJECT_DIR$/src" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/src/Parsing" recursive="false" />
   </library>
 </component>
