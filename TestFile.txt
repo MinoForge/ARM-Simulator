@@ -1,0 +1,6 @@
+ENTRY
+
+Add r1, r2, r3
+AND r2, r3, r7
+
+END

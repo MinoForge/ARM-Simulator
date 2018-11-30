@@ -1,11 +1,11 @@
 grammar LEGGram;
 
 /* Tokens */
-ADD    : 'ADD ';
-SUB    : 'SUB ';
-MOV    : 'MOV ';
-AND    : 'AND ';
-OR     : 'OR ';
+ADD    : [Aa][Dd][Dd][ ];
+SUB    : [Ss][Uu][Bb][ ];
+MOV    : [Mm][Oo][Vv][ ];
+AND    : [Aa][Nn][Dd][ ];
+OR     : [Oo][Rr][ ];
 
 INT           : [0-9]+;
 SEPARATOR     : ', ';
@@ -27,8 +27,8 @@ STRING        : '".*"';
 /* Rules */
 
 file    : prog  data;
-
-prog    : ENTRY (label | inst | WS)+ END
+//TODO re-add labels to prog?? Was ambiguous.
+prog    : ENTRY (inst | WS)+ END
         ;
 
 data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+));

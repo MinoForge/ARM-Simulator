@@ -112,7 +112,7 @@ public class GUI extends Application {
         ScrollPane filePane = new ScrollPane(fileText);
         filePane.setFitToWidth(true);
         filePane.setFitToHeight(true);
-        VBox registers = new VBox();
+//        VBox registers = new VBox();
 
         ArrayList<Register> regList = new ArrayList<>(32);
         for(int i = 0; i < 32; i++) {
@@ -133,7 +133,7 @@ public class GUI extends Application {
         colFive.setCellValueFactory(new PropertyValueFactory<>("bytes"));
 
         regTable.getColumns().setAll(colOne, colTwo, colThree, colFour, colFive);
-        registers.getChildren().add(regTable);
+//        registers.getChildren().add(regTable);
 //        regTable.setItems(obsRegList);
 
         regTable.setFixedCellSize(25);
@@ -142,7 +142,7 @@ public class GUI extends Application {
         regTable.minHeightProperty().bind(regTable.prefHeightProperty());
         regTable.maxHeightProperty().bind(regTable.prefHeightProperty());
 
-        ScrollPane regPane = new ScrollPane(registers);
+        ScrollPane regPane = new ScrollPane(regTable);
         regPane.setFitToWidth(true);
         regPane.setFitToHeight(true);
 

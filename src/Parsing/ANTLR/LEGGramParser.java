@@ -29,7 +29,7 @@ public class LEGGramParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'ADD '", "'SUB '", "'MOV '", "'AND '", "'OR '", null, "', '", null, 
+		null, null, "'SUB '", "'MOV '", "'AND '", "'OR '", null, "', '", null, 
 		"'-'", "'r'", "':'", "'#'", "'='", "'ENTRY'", "'END'", null, null, "'.'", 
 		"'.data'", "'\".*\"'"
 	};
@@ -134,12 +134,6 @@ public class LEGGramParser extends Parser {
 	public static class ProgContext extends ParserRuleContext {
 		public TerminalNode ENTRY() { return getToken(LEGGramParser.ENTRY, 0); }
 		public TerminalNode END() { return getToken(LEGGramParser.END, 0); }
-		public List<LabelContext> label() {
-			return getRuleContexts(LabelContext.class);
-		}
-		public LabelContext label(int i) {
-			return getRuleContext(LabelContext.class,i);
-		}
 		public List<InstContext> inst() {
 			return getRuleContexts(InstContext.class);
 		}
@@ -173,33 +167,27 @@ public class LEGGramParser extends Parser {
 			{
 			setState(19);
 			match(ENTRY);
-			setState(23); 
+			setState(22); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(23);
+				setState(22);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
-				case WORD:
-					{
-					setState(20);
-					label();
-					}
-					break;
 				case ADD:
 				case SUB:
 				case MOV:
 				case AND:
 				case OR:
 					{
-					setState(21);
+					setState(20);
 					inst();
 					}
 					break;
 				case WS:
 					{
-					setState(22);
+					setState(21);
 					match(WS);
 					}
 					break;
@@ -207,11 +195,11 @@ public class LEGGramParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(25); 
+				setState(24); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MOV) | (1L << AND) | (1L << OR) | (1L << WS) | (1L << WORD))) != 0) );
-			setState(27);
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MOV) | (1L << AND) | (1L << OR) | (1L << WS))) != 0) );
+			setState(26);
 			match(END);
 			}
 		}
@@ -258,36 +246,36 @@ public class LEGGramParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(29);
+			setState(28);
 			match(DATA);
-			setState(30);
+			setState(29);
 			match(WS);
-			setState(31);
+			setState(30);
 			match(DIRECTIVE);
-			setState(32);
+			setState(31);
 			match(LCWORD);
-			setState(39);
+			setState(38);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case STRING:
 				{
-				setState(33);
+				setState(32);
 				match(STRING);
 				}
 				break;
 			case INT:
 				{
-				setState(35); 
+				setState(34); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(34);
+					setState(33);
 					match(INT);
 					}
 					}
-					setState(37); 
+					setState(36); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==INT );
@@ -334,9 +322,9 @@ public class LEGGramParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(41);
+			setState(40);
 			match(REGISTER);
-			setState(42);
+			setState(41);
 			match(INT);
 			}
 			}
@@ -378,19 +366,19 @@ public class LEGGramParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(44);
+			setState(43);
 			match(HASH);
-			setState(46);
+			setState(45);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NEG) {
 				{
-				setState(45);
+				setState(44);
 				match(NEG);
 				}
 			}
 
-			setState(48);
+			setState(47);
 			match(INT);
 			}
 			}
@@ -430,9 +418,9 @@ public class LEGGramParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(50);
+			setState(49);
 			match(EQUALS);
-			setState(51);
+			setState(50);
 			match(WORD);
 			}
 			}
@@ -472,9 +460,9 @@ public class LEGGramParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(53);
+			setState(52);
 			match(WORD);
-			setState(54);
+			setState(53);
 			match(COLON);
 			}
 			}
@@ -529,33 +517,33 @@ public class LEGGramParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(93);
+			setState(92);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case ADD:
 				{
-				setState(56);
+				setState(55);
 				match(ADD);
+				setState(56);
+				reg();
 				setState(57);
-				reg();
+				match(SEPARATOR);
 				setState(58);
-				match(SEPARATOR);
-				setState(59);
 				reg();
-				setState(60);
+				setState(59);
 				match(SEPARATOR);
-				setState(63);
+				setState(62);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case REGISTER:
 					{
-					setState(61);
+					setState(60);
 					reg();
 					}
 					break;
 				case HASH:
 					{
-					setState(62);
+					setState(61);
 					imm();
 					}
 					break;
@@ -566,28 +554,28 @@ public class LEGGramParser extends Parser {
 				break;
 			case SUB:
 				{
-				setState(65);
+				setState(64);
 				match(SUB);
+				setState(65);
+				reg();
 				setState(66);
-				reg();
+				match(SEPARATOR);
 				setState(67);
-				match(SEPARATOR);
-				setState(68);
 				reg();
-				setState(69);
+				setState(68);
 				match(SEPARATOR);
-				setState(72);
+				setState(71);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case REGISTER:
 					{
-					setState(70);
+					setState(69);
 					reg();
 					}
 					break;
 				case HASH:
 					{
-					setState(71);
+					setState(70);
 					imm();
 					}
 					break;
@@ -598,45 +586,45 @@ public class LEGGramParser extends Parser {
 				break;
 			case MOV:
 				{
-				setState(74);
+				setState(73);
 				match(MOV);
-				setState(75);
+				setState(74);
 				reg();
-				setState(76);
+				setState(75);
 				match(SEPARATOR);
-				setState(77);
+				setState(76);
 				reg();
 				}
 				break;
 			case AND:
 				{
-				setState(79);
+				setState(78);
 				match(AND);
+				setState(79);
+				reg();
 				setState(80);
-				reg();
+				match(SEPARATOR);
 				setState(81);
-				match(SEPARATOR);
-				setState(82);
 				reg();
-				setState(83);
+				setState(82);
 				match(SEPARATOR);
-				setState(84);
+				setState(83);
 				reg();
 				}
 				break;
 			case OR:
 				{
-				setState(86);
+				setState(85);
 				match(OR);
+				setState(86);
+				reg();
 				setState(87);
-				reg();
+				match(SEPARATOR);
 				setState(88);
-				match(SEPARATOR);
-				setState(89);
 				reg();
-				setState(90);
+				setState(89);
 				match(SEPARATOR);
-				setState(91);
+				setState(90);
 				reg();
 				}
 				break;
@@ -657,30 +645,30 @@ public class LEGGramParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\26b\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\26a\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\3\2\3\3\3\3"+
-		"\3\3\3\3\6\3\32\n\3\r\3\16\3\33\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\6\4&\n"+
-		"\4\r\4\16\4\'\5\4*\n\4\3\5\3\5\3\5\3\6\3\6\5\6\61\n\6\3\6\3\6\3\7\3\7"+
-		"\3\7\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\tB\n\t\3\t\3\t\3\t\3\t"+
-		"\3\t\3\t\3\t\5\tK\n\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t"+
-		"\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\t`\n\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\2"+
-		"\2e\2\22\3\2\2\2\4\25\3\2\2\2\6\37\3\2\2\2\b+\3\2\2\2\n.\3\2\2\2\f\64"+
-		"\3\2\2\2\16\67\3\2\2\2\20_\3\2\2\2\22\23\5\4\3\2\23\24\5\6\4\2\24\3\3"+
-		"\2\2\2\25\31\7\20\2\2\26\32\5\16\b\2\27\32\5\20\t\2\30\32\7\n\2\2\31\26"+
-		"\3\2\2\2\31\27\3\2\2\2\31\30\3\2\2\2\32\33\3\2\2\2\33\31\3\2\2\2\33\34"+
-		"\3\2\2\2\34\35\3\2\2\2\35\36\7\21\2\2\36\5\3\2\2\2\37 \7\25\2\2 !\7\n"+
-		"\2\2!\"\7\24\2\2\")\7\23\2\2#*\7\26\2\2$&\7\b\2\2%$\3\2\2\2&\'\3\2\2\2"+
-		"\'%\3\2\2\2\'(\3\2\2\2(*\3\2\2\2)#\3\2\2\2)%\3\2\2\2*\7\3\2\2\2+,\7\f"+
-		"\2\2,-\7\b\2\2-\t\3\2\2\2.\60\7\16\2\2/\61\7\13\2\2\60/\3\2\2\2\60\61"+
-		"\3\2\2\2\61\62\3\2\2\2\62\63\7\b\2\2\63\13\3\2\2\2\64\65\7\17\2\2\65\66"+
-		"\7\22\2\2\66\r\3\2\2\2\678\7\22\2\289\7\r\2\29\17\3\2\2\2:;\7\3\2\2;<"+
-		"\5\b\5\2<=\7\t\2\2=>\5\b\5\2>A\7\t\2\2?B\5\b\5\2@B\5\n\6\2A?\3\2\2\2A"+
-		"@\3\2\2\2B`\3\2\2\2CD\7\4\2\2DE\5\b\5\2EF\7\t\2\2FG\5\b\5\2GJ\7\t\2\2"+
-		"HK\5\b\5\2IK\5\n\6\2JH\3\2\2\2JI\3\2\2\2K`\3\2\2\2LM\7\5\2\2MN\5\b\5\2"+
-		"NO\7\t\2\2OP\5\b\5\2P`\3\2\2\2QR\7\6\2\2RS\5\b\5\2ST\7\t\2\2TU\5\b\5\2"+
-		"UV\7\t\2\2VW\5\b\5\2W`\3\2\2\2XY\7\7\2\2YZ\5\b\5\2Z[\7\t\2\2[\\\5\b\5"+
-		"\2\\]\7\t\2\2]^\5\b\5\2^`\3\2\2\2_:\3\2\2\2_C\3\2\2\2_L\3\2\2\2_Q\3\2"+
-		"\2\2_X\3\2\2\2`\21\3\2\2\2\n\31\33\')\60AJ_";
+		"\3\3\6\3\31\n\3\r\3\16\3\32\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\6\4%\n\4\r"+
+		"\4\16\4&\5\4)\n\4\3\5\3\5\3\5\3\6\3\6\5\6\60\n\6\3\6\3\6\3\7\3\7\3\7\3"+
+		"\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\5\tA\n\t\3\t\3\t\3\t\3\t\3\t\3"+
+		"\t\3\t\5\tJ\n\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3"+
+		"\t\3\t\3\t\3\t\3\t\3\t\5\t_\n\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\2\2c\2\22"+
+		"\3\2\2\2\4\25\3\2\2\2\6\36\3\2\2\2\b*\3\2\2\2\n-\3\2\2\2\f\63\3\2\2\2"+
+		"\16\66\3\2\2\2\20^\3\2\2\2\22\23\5\4\3\2\23\24\5\6\4\2\24\3\3\2\2\2\25"+
+		"\30\7\20\2\2\26\31\5\20\t\2\27\31\7\n\2\2\30\26\3\2\2\2\30\27\3\2\2\2"+
+		"\31\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2\2\34\35\7\21\2"+
+		"\2\35\5\3\2\2\2\36\37\7\25\2\2\37 \7\n\2\2 !\7\24\2\2!(\7\23\2\2\")\7"+
+		"\26\2\2#%\7\b\2\2$#\3\2\2\2%&\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\')\3\2\2\2"+
+		"(\"\3\2\2\2($\3\2\2\2)\7\3\2\2\2*+\7\f\2\2+,\7\b\2\2,\t\3\2\2\2-/\7\16"+
+		"\2\2.\60\7\13\2\2/.\3\2\2\2/\60\3\2\2\2\60\61\3\2\2\2\61\62\7\b\2\2\62"+
+		"\13\3\2\2\2\63\64\7\17\2\2\64\65\7\22\2\2\65\r\3\2\2\2\66\67\7\22\2\2"+
+		"\678\7\r\2\28\17\3\2\2\29:\7\3\2\2:;\5\b\5\2;<\7\t\2\2<=\5\b\5\2=@\7\t"+
+		"\2\2>A\5\b\5\2?A\5\n\6\2@>\3\2\2\2@?\3\2\2\2A_\3\2\2\2BC\7\4\2\2CD\5\b"+
+		"\5\2DE\7\t\2\2EF\5\b\5\2FI\7\t\2\2GJ\5\b\5\2HJ\5\n\6\2IG\3\2\2\2IH\3\2"+
+		"\2\2J_\3\2\2\2KL\7\5\2\2LM\5\b\5\2MN\7\t\2\2NO\5\b\5\2O_\3\2\2\2PQ\7\6"+
+		"\2\2QR\5\b\5\2RS\7\t\2\2ST\5\b\5\2TU\7\t\2\2UV\5\b\5\2V_\3\2\2\2WX\7\7"+
+		"\2\2XY\5\b\5\2YZ\7\t\2\2Z[\5\b\5\2[\\\7\t\2\2\\]\5\b\5\2]_\3\2\2\2^9\3"+
+		"\2\2\2^B\3\2\2\2^K\3\2\2\2^P\3\2\2\2^W\3\2\2\2_\21\3\2\2\2\n\30\32&(/"+
+		"@I^";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
