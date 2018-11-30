@@ -19,15 +19,24 @@ import java.util.Scanner;
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version November 8, 2018
+ * @version November 30, 2018
  *
  */
 public class Driver implements ANTLRErrorListener{
 
+    /** The file to be read from. */
     private File file;
+
+    /** The contents of the file. */
     private String fileString;
+
+    /** String containing all errors which the parser encounters. */
     private String errorMsg;
 
+    /**
+     * Constructor which takes a fileName.
+     * @param fileName the name of the File.
+     */
     public Driver(String fileName) {
         Scanner fileIn = null;
         try {
@@ -48,8 +57,11 @@ public class Driver implements ANTLRErrorListener{
         this.errorMsg = "";
     }
 
-
-    public static void main(String... args){
+    /**
+     * Main method to start up the Simulator.
+     * @param args Takes a fileName.
+     */
+    public static void main(String... args){ //TODO add functionality
         String arg = "TestFile.txt";
         if(args.length == 1) //{
             arg = args[0];
@@ -64,19 +76,23 @@ public class Driver implements ANTLRErrorListener{
 
     }
 
+    /**
+     * Method to parse the String set in fileString.
+     * @return true if no problems were encountered in parsing. False otherwise.
+     */
     public boolean parseInput() {
-        //TODO ANTLR runs and parses the file
         boolean passesParse = true;
-//        System.out.println(fileString);
         LEGGramLexer lexer = new LEGGramLexer(CharStreams.fromString(this.fileString));
         LEGGramParser parser = new LEGGramParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(this);
 
-        parser.prog(); //TODO Not done.
+        parser.prog();
 
         System.err.println(this.errorMsg);
-
+        if(!this.errorMsg.equals("")) {
+            passesParse = false;
+        }
 
         return passesParse;
     }
