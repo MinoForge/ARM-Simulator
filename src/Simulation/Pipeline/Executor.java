@@ -23,7 +23,7 @@ public class Executor extends PipelineSegment {
         this.idexRegister = idex;
     }
 
-    public void interpretPipeReg(){
+    public String interpretPipeReg(){
         byte[] regContentsBytes = new byte[8];
         for(int i = 0; i < idexRegister[1].length; i++){
             regContentsBytes[i] = idexRegister[1][i];
@@ -58,6 +58,8 @@ public class Executor extends PipelineSegment {
         temp = buf.getLong();
         System.out.println("This is the contents of the the second operand " +
                 "register" + " string: " + temp);
+
+        return new String();
     }
     /**
      *

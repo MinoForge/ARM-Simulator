@@ -15,4 +15,8 @@ public abstract class PipelineSegment {
     private void read() {}
 
     abstract public void execute();
+
+    public String interpretPipeReg() {
+        return "This PipelineSegment does not support this operation.";
+    }
 }
