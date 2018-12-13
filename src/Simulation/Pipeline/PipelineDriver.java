@@ -20,7 +20,7 @@ public class PipelineDriver {
     public static void main(String... args){
 
         String test1 = "add r1, r2, r3";
-        String test2 = "AND X1, X3, X4";
+        String test2 = "AND r1, r3, r4";
 
         long[] registers = new long[DEFAULT_REGISTER_NUM];
         for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
