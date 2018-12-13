@@ -39,6 +39,7 @@ public class Decoder extends PipelineSegment {
         registers[2] = 2;
         registers[3] = 6;
         registers[4] = 8;
+
     }
 
     /**
