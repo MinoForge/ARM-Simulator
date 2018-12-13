@@ -31,6 +31,14 @@ public class Decoder extends PipelineSegment {
         this.mRegister = 0;
         this.dRegister = 0;
         this.registers =regs;
+
+        /**
+         * For demo purposes only
+         */
+        registers[1] = 3;
+        registers[2] = 2;
+        registers[3] = 6;
+        registers[4] = 8;
     }
 
     /**
@@ -50,7 +58,8 @@ public class Decoder extends PipelineSegment {
         int temp = buf.getInt();
         System.out.println("\nStarting Decoder\n-------------------------" +
                 "---------------------------------\n");
-        System.out.println("This is the binary string: " + Integer.toBinaryString(temp));
+        System.out.println(("This is the binary string to decode: \n\n\t\t\t"
+                +Integer.toBinaryString(temp)));
         return Integer.toBinaryString(temp);
     }
     /**
@@ -65,22 +74,37 @@ public class Decoder extends PipelineSegment {
 
                 //pulling apart the bin string
                 String opCode = instBin.substring(0,11);
-                System.out.println("this is the opcode : " + opCode);
+                //System.out.println("this is the opcode : " + opCode);
                 String regM =  instBin.substring(11,16);
-                System.out.println("this is the regM : " + regM);
-                String shmt = "000000";
+                //System.out.println("this is the regM : " + regM);
+                //String shmt = "000000";
                 String regN = instBin.substring(22,27);
-                System.out.println("this is the regN : " + regN);
+                //System.out.println("this is the regN : " + regN);
                 String regD = instBin.substring(27,32);
-                System.out.println("this is the regD : " + regD);
+                //System.out.println("this is the regD : " + regD);
 
                 // Getting the register indices
                 nRegister = Integer.parseInt(regN, 2);
-                System.out.println("The first operand register: " + nRegister);
+                //System.out.println("The first operand register: " +
+                // nRegister);
                 mRegister = Integer.parseInt(regM, 2);
-                System.out.println("The second operand register: " + mRegister);
+                //System.out.println("The second operand register: " +
+                //    mRegister);
                 dRegister = Integer.parseInt(regD, 2);
-                System.out.println("The destination register: " + dRegister);
+                //System.out.println("The destination register: " + dRegister);
+
+                System.out.println
+                        ("\n\n\t  Binary\t\t|\t   Meaning\t\t|\t\tContents");
+                System.out.println
+                        ("--------------------|-------------------|-----------------");
+                System.out.printf("\t%10s   \t| %10s      \t|  %10s   \t\n",
+                        opCode,  "ADD", "add");
+                System.out.printf("%12s      \t|  %10s | %10s   \t\n",
+                        regM,  "Operand Register", registers[mRegister]);
+                System.out.printf("%12s      \t|  %10s | %10s   \t\n",
+                        regN,  "Operand Register", registers[nRegister]);
+                System.out.printf("%12s      \t|  %10s   | %10s   \t\n",
+                        regD,  " Dest Register", registers[dRegister]);
         }
 
 

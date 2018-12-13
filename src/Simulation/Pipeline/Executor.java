@@ -38,11 +38,12 @@ public class Executor extends PipelineSegment {
         buf.put(regContentsBytes);
         buf.flip();
         long temp = buf.getLong();
-        System.out.println("\nReading IDEX " +
-                "register\n-------------------------" +
-                "---------------------------------\n");
-        System.out.println("This is the contents of the destination register" +
-                " string: " + temp);
+        //System.out.println("\nReading IDEX " +
+        //        "register\n-------------------------" +
+        //        "---------------------------------\n");
+        //System.out.println("This is the contents of the destination
+        // register" +
+        //        " string: " + temp);
 
         buf.clear();
         for(int i = 0; i < idexRegister[2].length; i++){
@@ -51,8 +52,8 @@ public class Executor extends PipelineSegment {
         buf.put(regContentsBytes);
         buf.flip();
         temp = buf.getLong();
-        System.out.println("This is the contents of the the first operand " +
-                "register" + " string: " + temp);
+        //System.out.println("This is the contents of the the first operand " +
+        //        "register" + " string: " + temp);
 
         buf.clear();
         for(int i = 0; i < idexRegister[3].length; i++){
@@ -61,8 +62,8 @@ public class Executor extends PipelineSegment {
         buf.put(regContentsBytes);
         buf.flip();
         temp = buf.getLong();
-        System.out.println("This is the contents of the the second operand " +
-                "register" + " string: " + temp);
+        //System.out.println("This is the contents of the the second operand " +
+        //        "register" + " string: " + temp);
 
         return new String();
     }
