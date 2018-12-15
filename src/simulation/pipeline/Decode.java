@@ -1,9 +1,7 @@
-package Simulation.Pipeline;
+package simulation.pipeline;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import static Simulation.Controller.PC;
 
 /**
  * A class to model the Instruction Decoding segment of the ARM pipeline.
@@ -13,7 +11,7 @@ import static Simulation.Controller.PC;
  * @version November 8, 2018
  *
  */
-public class Decoder extends PipelineSegment {
+public class Decode extends PipelineSegment {
 
     private byte[][] ifidRegister;
     private byte[][] idexRegister;
@@ -23,7 +21,7 @@ public class Decoder extends PipelineSegment {
     private int dRegister;
     private long[] registers;
 
-    public Decoder(byte[][] ifid, byte[][] idex,long[] regs) {
+    public Decode(byte[][] ifid, byte[][] idex, long[] regs) {
         this.ifidRegister = ifid;
         this.idexRegister = idex;
         this.instBin = "";
@@ -57,7 +55,7 @@ public class Decoder extends PipelineSegment {
         buf.put(instBytes);
         buf.flip();
         int temp = buf.getInt();
-        System.out.println("\nStarting Decoder\n-------------------------" +
+        System.out.println("\nStarting Decode\n-------------------------" +
                 "---------------------------------\n");
         System.out.println(("This is the binary string to decode: \n\n\t\t\t"
                 +Integer.toBinaryString(temp)));
@@ -94,6 +92,9 @@ public class Decoder extends PipelineSegment {
                 dRegister = Integer.parseInt(regD, 2);
                 //System.out.println("The destination register: " + dRegister);
 
+                /*
+                This code is only for demo. TODO Remove at start of semester.
+                 */
                 System.out.println
                         ("\n\n\t  Binary\t\t|\t   Meaning\t\t|\t\tContents");
                 System.out.println

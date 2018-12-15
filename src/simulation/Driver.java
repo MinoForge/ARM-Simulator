@@ -1,16 +1,14 @@
-package Simulation;
+package simulation;
 
-import Parsing.ANTLR.LEGGramLexer;
-import Parsing.ANTLR.LEGGramParser;
+import parsing.antlr.LEGGramLexer;
+import parsing.antlr.LEGGramParser;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-//import org.antlr.v4.runtime.CharStreams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.BitSet;
 import java.util.Scanner;
 
@@ -97,7 +95,7 @@ public class Driver implements ANTLRErrorListener{
         return passesParse;
     }
 
-
+    //Begin ErrorListener implementation.
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer,
                             Object offendingSymbol,
@@ -130,6 +128,8 @@ public class Driver implements ANTLRErrorListener{
     public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
         System.out.println("reportContextSensitivity not handled.");
     }
+
+    //End ErrorListener implementation.
 
     public static void usage() {
         System.err.println("java Driver <filename>");

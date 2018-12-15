@@ -1,6 +1,6 @@
-package Parsing.ANTLR;
+package parsing.antlr;
 
-// Generated from LEGGram.g4 by ANTLR 4.7.1
+// Generated from LEGGram.g4 by antlr 4.7.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

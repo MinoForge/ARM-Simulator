@@ -1,7 +1,7 @@
-package Simulation.Pipeline;
+package simulation.pipeline;
 
 /**
- * An abstract class to define a few key methods which must be available in any Pipeline Segment.
+ * An abstract class to define a few key methods which must be available in any pipeline Segment.
  *
  * @author Caleb Dinehart
  * @author Peter Gardner

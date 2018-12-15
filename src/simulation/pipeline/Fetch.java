@@ -1,13 +1,12 @@
-package Simulation.Pipeline;
+package simulation.pipeline;
 
-import Simulation.Controller;
+import simulation.Controller;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.HashMap;
 
-import static Simulation.Controller.PC;
+import static simulation.Controller.PC;
 
 /**
  * A class to model the Instruction Fetching segment of the ARM pipeline.
@@ -17,21 +16,29 @@ import static Simulation.Controller.PC;
  * @version November 30, 2018
  *
  */
-public class Fetcher extends PipelineSegment{
+public class Fetch extends PipelineSegment{
+
+    /** All instructions from file. */
     private String[] instructions;
+
+    /** The if/id register. */
     private byte[][] ifidRegister;
+
+    /** The binary of the instruction. */
     private String instBin;
+
+    /** InstructionName -> Binary opCode */
     private HashMap<String,String> opCodes;
 
 
 
     /**
-     *  Constructor of the Fetcher Class that takes the list of instructions
+     *  Constructor of the Fetch Class that takes the list of instructions
      *  that will be fetched and the ifid pipeline register.
      * @param ifid  The byte[][] representing the pipeline register
      * @param instructions The String array containing the instructions.
      */
-    public Fetcher(byte[][] ifid, String... instructions) {
+    public Fetch(byte[][] ifid, String... instructions) {
         this.instructions = instructions;
         this.ifidRegister = ifid;
         this.instBin = "";
@@ -157,6 +164,10 @@ public class Fetcher extends PipelineSegment{
                 //System.out.println("this is this mReg: " + reg3);
                 //System.out.println("This is the bin after all additions: " +
                 //        instBin);
+
+                /*
+                Following code for demo. TODO Remove at start of semester.
+                 */
                 System.out.println("Instruction to Fetch:");
                 System.out.println("\n\t\t\t" + inst + "\n");
 

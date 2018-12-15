@@ -1,11 +1,13 @@
-package Simulation.Pipeline;
+package simulation.pipeline;
+
+import java.util.Scanner;
 
 /**
  * Class meant for testing the respective pipeline stages; not a part of the
  * simulation process.
  * Created by Caleb on 11/29/2018.
  */
-public class PipelineDriver {
+public class PipelineTester {
 
     private static final int DEFAULT_REGISTER_NUM = 32;
     private static final int IFID_SIZE = 2;
@@ -33,26 +35,32 @@ public class PipelineDriver {
         byte[][] exmem = new byte[EXMEM_SIZE][8];
         //byte[] memwb = new byte[MEMWB_SIZE];
 
-        Fetcher fetcher = new Fetcher(ifid, test1, test2);
-        Decoder decoder = new Decoder(ifid, idex, registers);
+        Fetch fetcher = new Fetch(ifid, test1, test2);
+        Decode decoder = new Decode(ifid, idex, registers);
         Executor executor = new Executor(idex, exmem);
         test(fetcher,decoder,executor);
     }
 
     /**
-     * The testing method
+     * The testing method. Currently only for demo. DOES NOT TEST FUNCTIONALITY
+     * TODO Make tests actually useful?
      * @param fetcher
      * @param decoder
      * @param executor
      */
-    public static void test(Fetcher fetcher, Decoder decoder, Executor executor){
+    public static void test(Fetch fetcher, Decode decoder, Executor executor){
         //test1
         fetcher.execute();
+        Scanner scanIn = new Scanner(System.in);
+        scanIn.next();
         decoder.execute();
+        scanIn.next();
         executor.interpretPipeReg();
         //test2
         fetcher.execute();
+        scanIn.next();
         decoder.execute();
+        scanIn.next();
         executor.interpretPipeReg();
     }
 }

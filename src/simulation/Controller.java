@@ -1,13 +1,11 @@
-package Simulation;
+package simulation;
 
-import Simulation.Pipeline.*;
-
-import java.io.File;
+import simulation.pipeline.*;
 
 
 /**
  * A class to handle statically available registers, and act as a controller for the pipeline
- * segments.
+ * segments. Interaction point between GUI and Pipeline.
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
@@ -26,8 +24,8 @@ public class Controller {
     private String[] data;
     private String[] instructions;
 
-    private Fetcher fetcher;
-    private Decoder decoder;
+    private Fetch fetcher;
+    private Decode decoder;
     private Executor executor;
     private Accessor accessor;
     private Writer writer;
@@ -60,8 +58,8 @@ public class Controller {
         byte[][] exmem = new byte[EXMEM_SIZE][8];
         byte[][] memwb = new byte[MEMWB_SIZE][8];
 
-        fetcher = new Fetcher(ifid);
-        decoder = new Decoder(ifid, idex, registers);
+        fetcher = new Fetch(ifid);
+        decoder = new Decode(ifid, idex, registers);
         executor = new Executor(idex, exmem);
         //accessor = new Accessor(exmem, memwb);
         //writer = new Writer(memwb);
