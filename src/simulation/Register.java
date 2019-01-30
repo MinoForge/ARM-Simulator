@@ -1,4 +1,4 @@
-package ui;
+package simulation;
 
 import javafx.beans.property.*;
 
