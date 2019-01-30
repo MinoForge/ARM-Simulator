@@ -11,21 +11,21 @@ Authors: Caleb Dinehart & Peter Gardner
     //Please compile on Agora before moving off for GUI testing.
 
 
-<b>TO RUN:</b>
+<b>TO RUN: make sure you are in /src/ before running</b>
 
 Pipeline Demo:
 
-    java src.simulation.pipeline.PipelineTester
+    java simulation.pipeline.PipelineTester
     //Known bug where some of the prints in decode do not come from the instruction
     //being run.
     
 Parsing Demo:
 
-    java src.simulation.Driver <TestFile.txt>
+    java simulation.Driver <TestFile.txt>
     //Note, a test file has been included, but you may choose your own.
     
     
 GUI Demo:
 
-    java src.ui.GUI
+    java ui.GUI
     //Runs in JavaFX, does not run in Agora.
