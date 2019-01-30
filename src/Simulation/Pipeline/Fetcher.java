@@ -14,7 +14,7 @@ import static Simulation.Controller.PC;
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version November 30, 2018
+ * @version February, 2019
  *
  */
 public class Fetcher extends PipelineSegment{
@@ -50,13 +50,13 @@ public class Fetcher extends PipelineSegment{
         System.out.println("\nStarting " +
                 "Fetch\n------------------------------------------" +
                 "----------------\n");
-        //System.out.println("This is the PC before incrementing: " +
-        //        Controller.PC);
+
         String inst = instructions[Controller.PC/4];
         PC+=4;
-        //System.out.println("This is the PC after incrementing: " + Controller
-        //        .PC);
+
+        // NEED TO FIX HOW WE GET THE FORMAT
         char format;
+
         format = 'r';
         //get type from file
         String[] instArray;
@@ -84,30 +84,25 @@ public class Fetcher extends PipelineSegment{
         switch(format){
             case('r'):
                 instArray = inst.split(" ");
-                //System.out.println("This is the Instruction as an array: " +
-                //        Arrays.toString(instArray));
-                for (int i  = 0; i < instArray.length; i++){ //String s:
-                // instArray){
+
+                for (int i  = 0; i < instArray.length; i++){
                     instArray[i] = instArray[i].replace(",", "");
                 }
                 registerOne = instArray[1];
                 registerTwo = instArray[2];
                 registerThree = instArray[3];
 
-                //System.out.println("This is the instruction array after " +
-                //        "dropping commas: " + Arrays.toString(instArray));
+
                 //grabbing inst command
 
                 temp = instArray[0].toLowerCase();
                 instructionName = instArray[0];
 
-                //System.out.println("this is the instruction: " + temp);
 
                 // Adding the correct opcode to the instBin string
                 instBin = instBin + opCodes.get(temp);
                 instructionBinary = opCodes.get(temp);
 
-                //System.out.println("This is the opcode: " + instBin);
 
                 //TODO remove the magic num
                 int[] registerNumbers = new int[3];
@@ -117,8 +112,7 @@ public class Fetcher extends PipelineSegment{
 
                     registerNumbers[i] = Integer.parseInt(instArray[i + 1]);
                 }
-                //System.out.println("This is the register numbers array: " +
-                //        Arrays.toString(registerNumbers));
+
                 // adding rm register binary
                 String reg1,reg2,reg3;
 
@@ -134,47 +128,23 @@ public class Fetcher extends PipelineSegment{
                 register2Bin = reg2;
                 register3Bin = reg1;
 
-                //System.out.println("this is the bin of dReg: " + reg1);
+
                 instBin = instBin + reg1;
-                //System.out.println("This is the bin after the adding the " +
-                //        "first register: " + instBin);
+
                 // will need to check if a shamt is present but for now
                 // assuming no
                 instBin = instBin + "000000";
                 shamt = "000000";
 
-                //System.out.println("This is the bin after the adding the " +
-                //        "shift amount: " + instBin);
+
                 // adding rn register binary
 
                 instBin = instBin + reg2;
-                //System.out.println("This is the bin of nReg: " + reg2);
-                //System.out.println("This is the bin after the adding the " +
-                //        "second register:" + instBin);
+
                 // adding rd register binary
 
                 instBin = instBin + reg3;
-                //System.out.println("this is this mReg: " + reg3);
-                //System.out.println("This is the bin after all additions: " +
-                //        instBin);
-                System.out.println("Instruction to Fetch:");
-                System.out.println("\n\t\t\t" + inst + "\n");
 
-
-                System.out.println("Instruction Part\t| Binary");
-                System.out.println("--------------------|---------------");
-                System.out.printf("%10s   \t\t| %s \n", instructionName,
-                        instructionBinary);
-                System.out.printf("%10s   \t\t| %s \n", registerOne,
-                        register1Bin);
-                System.out.printf("%10s   \t\t| %s \n", registerTwo,
-                        register2Bin);
-                System.out.printf("%10s   \t\t| %s \n", registerThree,
-                        register3Bin);
-                System.out.printf("%10s   \t\t| %s \n", "shamt",shamt);
-
-                System.out.println("\n\nInstruction in Binary:\n");
-                System.out.println("\t\t\t" + instBin + "\n");
 
 
                 break;
@@ -194,6 +164,15 @@ public class Fetcher extends PipelineSegment{
                 break;
             // Not started on b types
             case('b'):
+                instArray = inst.split(" ");
+                for (String s: instArray){
+                    s = s.replace(",", "");
+                }
+                //grabbing  inst command
+                temp = instArray[0].toLowerCase();
+                //
+                instBin = instBin + opCodes.get(temp);
+
 
                 break;
 

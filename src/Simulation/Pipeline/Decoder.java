@@ -32,13 +32,6 @@ public class Decoder extends PipelineSegment {
         this.dRegister = 0;
         this.registers =regs;
 
-        /**
-         * For demo purposes only
-         */
-        registers[1] = 3;
-        registers[2] = 2;
-        registers[3] = 6;
-        registers[4] = 8;
 
     }
 
