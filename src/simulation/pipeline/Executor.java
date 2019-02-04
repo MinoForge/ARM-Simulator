@@ -1,4 +1,4 @@
-package Simulation.Pipeline;
+package simulation.pipeline;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

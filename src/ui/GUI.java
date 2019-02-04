@@ -1,29 +1,21 @@
-package UI;
+package ui;
 
-import Simulation.Controller;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import javafx.collections.transformation.SortedList;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import simulation.Register;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 /**
@@ -63,7 +55,7 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.theStage = primaryStage;
-        this.theStage.setTitle("ARM & Pipeline");
+        this.theStage.setTitle("ARM & pipeline");
 
         //Make sections of GUI.
         Parent top = makeTop();
@@ -97,10 +89,11 @@ public class GUI extends Application {
         buttons.add(new Button("Step Back"));
         buttons.add(new Button("Stop Run"));
         buttons.add(new Button("Pause Run"));
+        buttons.add(new Button("Assembly, Assemble!"));
         buttons.add(new Button("Start/Continue"));
         buttons.add(new Button("Step Forward"));
         buttons.add(new Button("Cycles/Sec"));
-        buttons.add(new Button("0x"));
+//        buttons.add(new Button("0x"));
         buttonPane.getChildren().addAll(buttons);
         return buttonPane;
     }
