@@ -59,7 +59,7 @@ public class Fetch extends PipelineSegment{
                 "----------------\n");
 
         String inst = instructions[Controller.PC/4];
-        PC+=4;
+        Controller.PC+=4;
 
         // NEED TO FIX HOW DO WE GET THE FORMAT
         char format;
@@ -86,14 +86,16 @@ public class Fetch extends PipelineSegment{
 
         String shamt;
 
-        /**
-         * Massage the
+        /*
+         * Massage the instruction, and split it into an array.
          */
         instArray = inst.split(" ");
 
         for (int i  = 0; i < instArray.length; i++){
             instArray[i] = instArray[i].replace(",", "");
         }
+        // Initializing the register strings
+        String reg1,reg2,reg3;
 
         switch(format){
             case('r'):
@@ -124,15 +126,15 @@ public class Fetch extends PipelineSegment{
                 }
 
                 // adding rm register binary
-                String reg1,reg2,reg3;
+
 
                 reg1 = Integer.toBinaryString(registerNumbers[2]);
                 reg2 = Integer.toBinaryString(registerNumbers[1]);
                 reg3 = Integer.toBinaryString(registerNumbers[0]);
 
-                reg1 = correctBits(reg1);
-                reg2 = correctBits(reg2);
-                reg3 = correctBits(reg3);
+                reg1 = correctBits(reg1,5);
+                reg2 = correctBits(reg2,5);
+                reg3 = correctBits(reg3,5);
 
                 register1Bin = reg3;
                 register2Bin = reg2;
@@ -142,7 +144,7 @@ public class Fetch extends PipelineSegment{
                 instBin = instBin + reg1;
 
                 // will need to check if a shamt is present but for now
-                // assuming no
+                // assuming there isn't
                 instBin = instBin + "000000";
                 shamt = "000000";
 
@@ -159,38 +161,45 @@ public class Fetch extends PipelineSegment{
                 break;
             //Currently unfinished for i types
             case('i'):
-                instArray = inst.split(" ");
-                for (String s: instArray){
-                    s = s.replace(",", "");
-                }
                 //grabbing  inst command
                 temp = instArray[0].toLowerCase();
-                //
+                // adding opcode to instruction binary
                 instBin = instBin + opCodes.get(temp);
 
+                //pulling the registers from the instruction
+                reg1 = Integer.toBinaryString(Integer.parseInt(instArray[1]
+                        .replaceAll("[a-zA-Z]", "")));
+                reg2 = Integer.toBinaryString(Integer.parseInt(instArray[2]
+                        .replaceAll("[a-zA-Z]", "")));
+                reg1 = correctBits(reg1,5);
+                reg2 = correctBits(reg2,5);
+
+                //pulling the immmediate value from the instruction
+                String immediate =  instArray[3].replace("#","");
+                String immediateBin = Integer.toBinaryString(Integer.parseInt
+                        (immediate));
+                immediateBin = correctBits(immediateBin, 12);
+
+                instBin = instBin + immediateBin + reg2 + reg1;
 
 
                 break;
             // Not started on b types
             case('b'):
-                instArray = inst.split(" ");
-                for (String s: instArray){
-                    s = s.replace(",", "");
-                }
-                //grabbing  inst command
+                //grabbing instruction command
                 temp = instArray[0].toLowerCase();
-                //
+                //adding opcode
                 instBin = instBin + opCodes.get(temp);
 
+                String memLocation;
 
                 break;
 
         }
 
-        //TODO instruction to binary for I type and B type
-        // Done by splitting up the instruction line and using each part of
-        // the instruction(ie. the instruction name, which registers listed,
-        // etc)
+        //TODO B type
+        // Need labels to be implemented properly before much work can be
+        // done on Branching instructions.
 
     }
 
@@ -199,11 +208,12 @@ public class Fetch extends PipelineSegment{
      * have the correct number bits. It concatenates zeros to the front of
      * the binary string and returns the corrected string.
      * @param reg the string to be checked/altered
+     *
      * @return the corrected string
      */
-    public String correctBits(String reg){
+    public String correctBits(String reg, int num){
         String correct = reg;
-        while (correct.length() < 5) {
+        while (correct.length() < num) {
             correct = "0" + correct;
         }
         return correct;
@@ -213,6 +223,13 @@ public class Fetch extends PipelineSegment{
      * Writes the PC and the instruction fetched to the IFID register in bytes.
      */
     private void write(){
+        //Adding the
+        ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
+        ifidRegister.append(instBin);
+
+        instBin = "";
+
+        /* Maybe one day...
         // Creating the buffers that will hold the bytes of the PC and
         // instruction
         ByteBuffer pcBuffer = ByteBuffer.allocate(8);
@@ -235,8 +252,8 @@ public class Fetch extends PipelineSegment{
         for(int i = 0; i < instBytes.length; i++){
             ifidRegister[1][i] = instBytes[i];
         }
+        */
         // Must reinitialize the instruction binary string
-        instBin = "";
     }
 
     /**
