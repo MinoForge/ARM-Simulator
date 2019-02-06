@@ -211,7 +211,7 @@ public class Fetch extends PipelineSegment{
      *
      * @return the corrected string
      */
-    public String correctBits(String reg, int num){
+    public String correctBits(String reg, int num) {
         String correct = reg;
         while (correct.length() < num) {
             correct = "0" + correct;

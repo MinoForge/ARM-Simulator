@@ -2,6 +2,8 @@ package simulation;
 
 import simulation.pipeline.*;
 
+import java.nio.ByteOrder;
+
 
 /**
  * A class to handle statically available registers, and act as a controller for the pipeline
@@ -14,6 +16,7 @@ import simulation.pipeline.*;
  */
 public class Controller {
 
+    public static ByteOrder BYTE_ORDER;
     private static final int DEFAULT_REGISTER_NUM = 32;
     private static final int IFID_SIZE = 2;
     private static final int IDEX_SIZE = 4;
@@ -35,12 +38,16 @@ public class Controller {
     public static int PC = 0;
 
 
-    public Controller(String file) {
+    public Controller(String file, boolean littleEnd) {
         //TODO read in from file to data and instructions.
 //        this.data = data;
 //        this.instructions = instructions;
         //init(this.data);
-
+        if(littleEnd) {
+            BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
+        } else {
+            BYTE_ORDER = ByteOrder.BIG_ENDIAN;
+        }
     }
 
 

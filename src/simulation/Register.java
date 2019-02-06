@@ -2,6 +2,8 @@ package simulation;
 
 import javafx.beans.property.*;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Random;
 
 /**
@@ -14,8 +16,13 @@ import java.util.Random;
  */
 //TODO Like everthing. Move packages, make used throughout. Write stuff.
 public class Register {
-    /** The identifier for the register */
-    private IntegerProperty regNum;
+
+    private static final short BYTE_SIZE = 8;
+
+
+
+//    /** The identifier for the register */
+//    private IntegerProperty regNum;
 
     /** The actual value of the Register. Will need to be a byte array in the end, probably */
     private LongProperty trueVal;
@@ -39,11 +46,11 @@ public class Register {
     private short length;
 
     /**
-     * Constructor which creates a Register with that identifier number.
-     * @param regNum The number of the Register.
+     * Constructor which creates a Register with a specified number of bytes.
+     * @param numBytes The size of the Register, in bytes.
      */
-    public Register(Integer regNum) { //TODO Make a static register index so that cannot make duplicates.
-        this.regNum = new SimpleIntegerProperty(regNum);
+    public Register(int numBytes) { //TODO Make a static register index so that cannot make duplicates.
+//        this.regNum = new SimpleIntegerProperty();
         this.trueVal = new SimpleLongProperty();
         this.binVal = new SimpleStringProperty();
 //        this.octVal = new SimpleStringProperty();
@@ -54,11 +61,6 @@ public class Register {
         Random random = new Random();
         this.setVals((long)random.nextInt(200));
 //        this.setVals();
-    }
-
-    /** Gets the actual Integer for the regNum. */
-    public Integer getRegNum() {
-        return regNum.getValue();
     }
 
     /** Gets the actual String for the hexVal. */
@@ -96,10 +98,10 @@ public class Register {
         hexVal.set(hex);
     }
 
-    /** Gets the IntegerProperty for regNum. */
-    public IntegerProperty regNumProperty() {
-        return regNum;
-    }
+//    /** Gets the IntegerProperty for regNum. */
+//    public IntegerProperty regNumProperty() {
+//        return regNum;
+//    }
 
     /** Gets the LongProperty for trueVal. */
     public LongProperty trueValProperty() {
@@ -120,4 +122,26 @@ public class Register {
     public StringProperty hexValProperty() {
         return hexVal;
     }
+
+
+    public boolean append(String binary) {
+        if(binary.length() % BYTE_SIZE != 0) {
+            return false; //TODO Make this an exception instead?
+        }
+        if(binary.contains("^[0-1]")) {
+            return false;
+        }
+        short bytes = (short)(binary.length() / BYTE_SIZE);
+        ByteBuffer buffer = ByteBuffer.allocate(binary.length() / BYTE_SIZE);
+        buffer.order(Controller.BYTE_ORDER);
+        for(int i = 0;)
+    }
+
+    public String getBinary(int start, int pastEnd) {
+
+    }
+
+
+
+
 }
