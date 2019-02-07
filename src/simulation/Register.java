@@ -43,20 +43,25 @@ public class Register {
     private byte[] bytes;
 
     /** Length of the register, in bytes. Unused.*/
-    private short length;
+    private int length;
+
+    private short index;
 
     /**
      * Constructor which creates a Register with a specified number of bytes.
      * @param numBytes The size of the Register, in bytes.
      */
-    public Register(int numBytes) { //TODO Make a static register index so that cannot make duplicates.
+    public Register(int numBytes) { //TODO Make a static register index so
+        // that cannot make duplicates.
 //        this.regNum = new SimpleIntegerProperty();
         this.trueVal = new SimpleLongProperty();
         this.binVal = new SimpleStringProperty();
 //        this.octVal = new SimpleStringProperty();
         this.decVal = new SimpleStringProperty();
         this.hexVal = new SimpleStringProperty();
-        this.length = 8;
+        this.length = numBytes;
+        this.bytes = new byte[length];
+        this.index = 0;
 
         Random random = new Random();
         this.setVals((long)random.nextInt(200));
@@ -125,23 +130,80 @@ public class Register {
 
 
     public boolean append(String binary) {
-        if(binary.length() % BYTE_SIZE != 0) {
+        if(binary.length() % BYTE_SIZE != 0) { //Will not fit byte-array
             return false; //TODO Make this an exception instead?
         }
-        if(binary.contains("^[0-1]")) {
+        if(!binary.matches("[01]+")) { //Contains non-binary elements
             return false;
         }
-        short bytes = (short)(binary.length() / BYTE_SIZE);
-        ByteBuffer buffer = ByteBuffer.allocate(binary.length() / BYTE_SIZE);
-        buffer.order(Controller.BYTE_ORDER);
-        for(int i = 0;)
+        int bytesCnt = binary.length() / BYTE_SIZE;
+        if(bytesCnt > length - index) { //Will overflow register
+            return false;
+        }
+
+        ByteBuffer buffer = ByteBuffer.allocate(); //allocate bytes
+        buffer.order(Controller.BYTE_ORDER); //
+        long temp = Long.parseLong(binary,2);
+        buffer.putLong(temp);
+        /*
+        for(int i = 0; i < bytesCnt; i++) {
+//            int index = BYTE_SIZE * i;
+//            buffer.putInt()
+            buffer.put(Byte.parseByte(binary.substring(index, index +
+                    BYTE_SIZE), 2));
+        }
+        */
+        bytes = buffer.array();
+
+        return true;
     }
 
+    public byte[] getBytes(int start, int pastEnd) {
+        if(pastEnd > length) {
+            return null;
+        }
+        int bytesCnt = pastEnd - start;
+        byte[] result = new byte[bytesCnt];
+        for(int i = 0; i < bytesCnt; i++) {
+            result[i] = bytes[start + i];
+        }
+        return result;
+    }
+    /*
     public String getBinary(int start, int pastEnd) {
 
+
+        int bytesCnt = pastEnd - start;
+//        ByteBuffer buffer = ByteBuffer.allocate(bytesCnt);
+//        buffer.order(Controller.BYTE_ORDER);
+        byte[] arr = getBytes(start, pastEnd);
+        String result = "";
+        for(int i = 0; i < bytesCnt; i++) {
+            result += Byte.toString(arr[i]);
+        }
+
+        return result;
+    }
+    */
+    public String getBinary() {
+        ByteBuffer buf = ByteBuffer.allocate(bytes.length);
+        buf.order(Controller.BYTE_ORDER);
+        buf.put(bytes);
+        buf.flip();
+        long temp = buf.getLong();
+
+        return Long.toBinaryString(temp);
     }
 
 
+    public static void main(String... args) {
+        Controller control = new Controller("file", true);
+        Register reg = new Register(5);
+        String test = "1100000000000011";
+        System.out.println(test.length());
+        reg.append(test);
+        System.out.println(reg.getBinary());
 
+    }
 
 }

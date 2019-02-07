@@ -55,19 +55,19 @@ public class Controller {
      * Initializes the simulator, registers, stack, etc.
      */
     public void init(String[] data) {
-        long[] registers = new long[DEFAULT_REGISTER_NUM];
-        for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
-            registers[i] = 0;
-        }
+        Register[] registers = new Register[DEFAULT_REGISTER_NUM];
+//        for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
+//            registers[i] = 0;
+//        }
 
-        byte[][] ifid = new byte[IFID_SIZE][8];
-        byte[][] idex = new byte[IDEX_SIZE][8];
-        byte[][] exmem = new byte[EXMEM_SIZE][8];
-        byte[][] memwb = new byte[MEMWB_SIZE][8];
+        Register ifid = new Register(12);
+        Register idex = new Register(32);
+        Register exmem = new Register(24);
+        Register memwb = new Register(16);
 
         fetcher = new Fetch(ifid);
         decoder = new Decode(ifid, idex, registers);
-        executor = new Executor(idex, exmem);
+//        executor = new Executor(idex, exmem);
         //accessor = new Accessor(exmem, memwb);
         //writer = new Writer(memwb);
 

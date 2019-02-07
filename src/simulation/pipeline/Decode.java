@@ -1,5 +1,7 @@
 package simulation.pipeline;
 
+import simulation.Register;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -13,17 +15,17 @@ import java.nio.ByteOrder;
  */
 public class Decode extends PipelineSegment {
 
-    private byte[][] ifidRegister;
-    private byte[][] idexRegister;
+    private Register ifidRegister;
+    private Register idexRegister;
     private String instBin;
     private int nRegister;
     private int mRegister;
     private int dRegister;
     private long immediate;
-    private long[] registers;
-    private char format;
+    private Register[] registers;
+    private String format;
 
-    public Decode(byte[][] ifid, byte[][] idex, long[] regs) {
+    public Decode(Register ifid, Register idex, Register[] regs) {
         this.ifidRegister = ifid;
         this.idexRegister = idex;
         this.instBin      = "";
@@ -31,7 +33,7 @@ public class Decode extends PipelineSegment {
         this.mRegister    = 0;
         this.dRegister    = 0;
         this.registers    = regs;
-        this.format       = '\0';
+        this.format       = "";
 
     }
 
@@ -42,7 +44,7 @@ public class Decode extends PipelineSegment {
      */
     public String interpretPipeReg(){
 
-        return ifidRegister.getBinary(8,12);
+        return ifidRegister.getBinary();
 
 
 
@@ -74,7 +76,7 @@ public class Decode extends PipelineSegment {
         String opCode, regM, regN, regD;
 
         switch (format){
-            case('r'):
+            case("r"):
 
                 //pulling apart the bin string
                 opCode = instBin.substring(0,11);
@@ -100,7 +102,7 @@ public class Decode extends PipelineSegment {
                 break;
 
 
-            case('i'):
+            case("i"):
                 //opCode = instBin.substring(0,10);
                 regD = instBin.substring(27,32);
                 regN = instBin.substring(22,27);
@@ -125,19 +127,19 @@ public class Decode extends PipelineSegment {
      */
     private void write(){
         //First put PC into the ex/mem
-        if(format != 'r' || format != 'i'){
+        if(!format.matches("[ri]")){
             //do branch magic crap
         }else{
-            idexRegister.append(ifidRegister.getBinary(0,8));
+            idexRegister.append(ifidRegister.getBinary());
 
-            long temp = registers[dRegister].getData();
-            idexRegister.append(Long.toBinaryString(temp));
-            temp = registers[nRegister].getData();
-            idexRegister.append(Long.toBinaryString(temp));
+//            long temp = registers[dRegister].getBinary(0,8);
+            idexRegister.append(registers[dRegister].getBinary());
+//            temp = registers[nRegister].getBinary();
+            idexRegister.append(registers[nRegister].getBinary());
 
-            if(format == 'r'){
-                temp = registers[mRegister];
-                idexRegister.append(Long.toBinaryString(temp));
+            if(format == "r"){
+//                temp = registers[mRegister];
+                idexRegister.append(registers[mRegister].getBinary());
             } else{
                 idexRegister.append(Long.toBinaryString(immediate));
             }

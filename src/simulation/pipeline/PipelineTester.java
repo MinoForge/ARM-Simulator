@@ -1,5 +1,7 @@
 package simulation.pipeline;
 
+import simulation.Register;
+
 import java.util.Scanner;
 
 /**
@@ -24,21 +26,21 @@ public class PipelineTester {
         String test1 = "add r1, r2, r3";
         String test2 = "AND r1, r3, r4";
 
-        long[] registers = new long[DEFAULT_REGISTER_NUM];
-        for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
-            registers[i] = 0;
-        }
-        byte[][] ifid = new byte[IFID_SIZE][8];
-        byte[][] idex = new byte[IDEX_SIZE][8];
+        Register[] registers = new Register[DEFAULT_REGISTER_NUM];
+//        for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
+//            registers[i] = 0;
+//        }
+        Register ifid = new Register(12);
+        Register idex = new Register(32);
 
         //Not being tested yet
-        byte[][] exmem = new byte[EXMEM_SIZE][8];
+        Register exmem = new Register(24);
         //byte[] memwb = new byte[MEMWB_SIZE];
 
         Fetch fetcher = new Fetch(ifid, test1, test2);
         Decode decoder = new Decode(ifid, idex, registers);
-        Executor executor = new Executor(idex, exmem);
-        test(fetcher,decoder,executor);
+//        Executor executor = new Executor(idex, exmem);
+//        test(fetcher,decoder,executor);
     }
 
     /**

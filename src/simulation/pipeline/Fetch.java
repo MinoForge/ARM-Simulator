@@ -1,6 +1,7 @@
 package simulation.pipeline;
 
 import simulation.Controller;
+import simulation.Register;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -22,7 +23,7 @@ public class Fetch extends PipelineSegment{
     private String[] instructions;
 
     /** The if/id register. */
-    private byte[][] ifidRegister;
+    private Register ifidRegister;
 
     /** The binary of the instruction. */
     private String instBin;
@@ -38,7 +39,7 @@ public class Fetch extends PipelineSegment{
      * @param ifid  The byte[][] representing the pipeline register
      * @param instructions The String array containing the instructions.
      */
-    public Fetch(byte[][] ifid, String... instructions) {
+    public Fetch(Register ifid, String... instructions) {
         this.instructions = instructions;
         this.ifidRegister = ifid;
         this.instBin = "";
@@ -136,10 +137,6 @@ public class Fetch extends PipelineSegment{
                 reg2 = correctBits(reg2,5);
                 reg3 = correctBits(reg3,5);
 
-                register1Bin = reg3;
-                register2Bin = reg2;
-                register3Bin = reg1;
-
 
                 instBin = instBin + reg1;
 
@@ -229,30 +226,30 @@ public class Fetch extends PipelineSegment{
 
         instBin = "";
 
-        /* Maybe one day...
+
         // Creating the buffers that will hold the bytes of the PC and
         // instruction
-        ByteBuffer pcBuffer = ByteBuffer.allocate(8);
-        ByteBuffer instBuffer = ByteBuffer.allocate(4);
-        pcBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        pcBuffer.putLong(PC);
-        byte[] PcBytes = pcBuffer.array();
-        // Writing the PC to the IFID register
-        for(int i = 0; i < PcBytes.length; i++){
-            ifidRegister[0][i] = PcBytes[i];
-        }
+//        ByteBuffer pcBuffer = ByteBuffer.allocate(8);
+//        ByteBuffer instBuffer = ByteBuffer.allocate(4);
+//        pcBuffer.order(ByteOrder.LITTLE_ENDIAN);
+//        pcBuffer.putLong(PC);
+//        byte[] PcBytes = pcBuffer.array();
+//        // Writing the PC to the IFID register
+//        for(int i = 0; i < PcBytes.length; i++){
+//            ifidRegister[0][i] = PcBytes[i];
+//        }
 
 
-        instBuffer = ByteBuffer.allocate(Long.BYTES);
-        instBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        long temp = Long.valueOf(instBin, 2);
-        instBuffer.putLong(temp);
-        // Writing the binary to the IFID register
-        byte[] instBytes = instBuffer.array();
-        for(int i = 0; i < instBytes.length; i++){
-            ifidRegister[1][i] = instBytes[i];
-        }
-        */
+//        instBuffer = ByteBuffer.allocate(Long.BYTES);
+//        instBuffer.order(ByteOrder.LITTLE_ENDIAN);
+//        long temp = Long.valueOf(instBin, 2);
+//        instBuffer.putLong(temp);
+//        // Writing the binary to the IFID register
+//        byte[] instBytes = instBuffer.array();
+//        for(int i = 0; i < instBytes.length; i++){
+//            ifidRegister[1][i] = instBytes[i];
+//        }
+
         // Must reinitialize the instruction binary string
     }
 
