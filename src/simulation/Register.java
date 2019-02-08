@@ -141,7 +141,7 @@ public class Register {
             return false;
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(); //allocate bytes
+        ByteBuffer buffer = ByteBuffer.allocate(); //allocate bytes //TODO Why does bytesCnt not work?
         buffer.order(Controller.BYTE_ORDER); //
         long temp = Long.parseLong(binary,2);
         buffer.putLong(temp);
