@@ -59,9 +59,9 @@ public class ControlUnit {
         }
     }
 
-    static public void flushPipe(int stageToStart, int stageToStart) {
-
-    }
+//    static public void flushPipe(int stageToStart, int stageToStart) {
+//
+//    }
 
     static public void haltPipe(int stageToHalt, int haltTimer) {
 

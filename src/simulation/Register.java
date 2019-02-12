@@ -1,5 +1,6 @@
 package simulation;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.beans.property.*;
 
 import java.nio.ByteBuffer;
@@ -60,13 +61,18 @@ public class Register {
         this.decVal = new SimpleStringProperty();
         this.hexVal = new SimpleStringProperty();
         this.length = numBytes;
-        this.bytes = new byte[length];
+        this.bytes = new byte[numBytes];
         this.index = 0;
-
-        Random random = new Random();
-        this.setVals((long)random.nextInt(200));
-//        this.setVals();
+        zeroOut();
     }
+
+    private void zeroOut() {
+        for (int i = 0; i < length; i++) {
+            bytes[i] = 0;
+        }
+    }
+
+
 
     /** Gets the actual String for the hexVal. */
     public String getHexVal() {
@@ -103,6 +109,7 @@ public class Register {
         hexVal.set(hex);
     }
 
+
 //    /** Gets the IntegerProperty for regNum. */
 //    public IntegerProperty regNumProperty() {
 //        return regNum;
@@ -129,6 +136,7 @@ public class Register {
     }
 
 
+    //TESTED WORKING 2/11
     public boolean append(String binary) {
         if(binary.length() % BYTE_SIZE != 0) { //Will not fit byte-array
             return false; //TODO Make this an exception instead?
@@ -141,25 +149,33 @@ public class Register {
             return false;
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(); //allocate bytes //TODO Why does bytesCnt not work?
-        buffer.order(Controller.BYTE_ORDER); //
-        long temp = Long.parseLong(binary,2);
-        buffer.putLong(temp);
-        /*
+        ByteBuffer buffer = ByteBuffer.allocate(bytesCnt); //allocate bytes //TODO Why does bytesCnt not work?
+        buffer.order(Controller.BYTE_ORDER);
+
         for(int i = 0; i < bytesCnt; i++) {
-//            int index = BYTE_SIZE * i;
+            int strIndex = BYTE_SIZE * i;
 //            buffer.putInt()
-            buffer.put(Byte.parseByte(binary.substring(index, index +
+            buffer.put((byte)Integer.parseInt(binary.substring(strIndex, strIndex +
                     BYTE_SIZE), 2));
+            bytes[index++] = buffer.get(i);
+
         }
-        */
-        bytes = buffer.array();
+
+//        bytes = buffer.array();
 
         return true;
     }
 
+//    public boolean writeBytes(int start, int pastEnd) {
+//
+//    }
+
+    //TESTED WORKING 2/11
     public byte[] getBytes(int start, int pastEnd) {
         if(pastEnd > length) {
+            return null;
+        }
+        if(start < 0) {
             return null;
         }
         int bytesCnt = pastEnd - start;
@@ -169,41 +185,59 @@ public class Register {
         }
         return result;
     }
-    /*
+
+    //TESTED WORKING 2/11
     public String getBinary(int start, int pastEnd) {
+        if(pastEnd > length) {
+            return "Can't index past end of register";
+        }
+        if(start < 0) {
+            return "Can't index before start of register";
+        }
 
 
         int bytesCnt = pastEnd - start;
-//        ByteBuffer buffer = ByteBuffer.allocate(bytesCnt);
-//        buffer.order(Controller.BYTE_ORDER);
-        byte[] arr = getBytes(start, pastEnd);
+        ByteBuffer buffer = ByteBuffer.allocate(bytesCnt);
+        buffer.order(Controller.BYTE_ORDER);
+        buffer.put(getBytes(start, pastEnd));
+        buffer.flip();
+//        byte[] arr = getBytes(start, pastEnd);
         String result = "";
-        for(int i = 0; i < bytesCnt; i++) {
-            result += Byte.toString(arr[i]);
-        }
+        for(int i = 0; i < bytesCnt; i++) { //Look, it's not magic but the explanation is long.
+            result += Integer.toBinaryString((buffer.get(i) & 0xFF) + 0x100).substring(1);
+        } //See https://stackoverflow.com/a/17496691
 
         return result;
     }
-    */
-    public String getBinary() {
-        ByteBuffer buf = ByteBuffer.allocate(bytes.length);
-        buf.order(Controller.BYTE_ORDER);
-        buf.put(bytes);
-        buf.flip();
-        long temp = buf.getLong();
 
-        return Long.toBinaryString(temp);
+    //TESTED WORKING 2/11
+    public String getBinary() {
+//        System.out.println(this.length);
+        return getBinary(0, this.length);
     }
 
 
     public static void main(String... args) {
         Controller control = new Controller("file", true);
         Register reg = new Register(5);
-        String test = "1100000000000011";
+        String test = "110010000000001100100111";
         System.out.println(test.length());
         reg.append(test);
+        System.out.println(reg.getBinary(1, 3));
         System.out.println(reg.getBinary());
+        System.out.println(reg.index);
+        String str = test.substring(0,16);
+        System.out.println(str.length());
+        System.out.println(str);
+        reg.append(str);
+        System.out.println(reg.getBinary());
+//        System.out.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
 
+    }
+
+    private int testFunctions() {
+        //TODO coverage
+        return 0;
     }
 
 }
