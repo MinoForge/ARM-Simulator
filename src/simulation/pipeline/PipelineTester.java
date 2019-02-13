@@ -39,8 +39,8 @@ public class PipelineTester {
 
         Fetch fetcher = new Fetch(ifid, test1, test2);
         Decode decoder = new Decode(ifid, idex, registers);
-//        Executor executor = new Executor(idex, exmem);
-//        test(fetcher,decoder,executor);
+        Executor executor = new Executor(idex, exmem);
+        test(fetcher,decoder,executor);
     }
 
     /**
@@ -57,12 +57,12 @@ public class PipelineTester {
         scanIn.next();
         decoder.execute();
         scanIn.next();
-        executor.interpretPipeReg();
+        //executor.interpretPipeReg();
         //test2
         fetcher.execute();
         scanIn.next();
         decoder.execute();
         scanIn.next();
-        executor.interpretPipeReg();
+        //executor.interpretPipeReg();
     }
 }

@@ -42,7 +42,10 @@ public class ControlUnit {
         return unit.runBoolean.get(num);
     }
 
-    static void newInstruction(String inst) {
+    static void newInstruction(String opCode) {
+
+        //
+
         if(unit == null) {
             makeUnit();
         }

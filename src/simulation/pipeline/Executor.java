@@ -38,6 +38,9 @@ public class Executor extends PipelineSegment {
      */
     public String interpretPipeReg(){
        byte[] regContentsBytes = new byte[8];
+
+
+
 //        for(int i = 0; i < idexRegister[1].length; i++){
 //            regContentsBytes[i] = idexRegister[1][i];
 //        }

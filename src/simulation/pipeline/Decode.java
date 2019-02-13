@@ -33,7 +33,7 @@ public class Decode extends PipelineSegment {
         this.mRegister    = 0;
         this.dRegister    = 0;
         this.registers    = regs;
-        this.format       = "";
+        this.format       = "r";
 
     }
 
@@ -45,9 +45,6 @@ public class Decode extends PipelineSegment {
     public String interpretPipeReg(){
 
         return ifidRegister.getBinary();
-
-
-
 
 
 //        byte[] instBytes = new byte[4];
@@ -72,7 +69,7 @@ public class Decode extends PipelineSegment {
      * will sign extend an immediate value depending on the instruction
      */
     private void read(){
-        instBin = interpretPipeReg();
+        instBin = ifidRegister.getBinary(8,12);
         String opCode, regM, regN, regD;
 
         switch (format){
@@ -130,21 +127,21 @@ public class Decode extends PipelineSegment {
         if(!format.matches("[ri]")){
             //do branch magic crap
         }else{
-            idexRegister.append(ifidRegister.getBinary());
+            System.out.println(ifidRegister.getBinary(0,8));
+            idexRegister.append(ifidRegister.getBinary(0,8));
 
-//            long temp = registers[dRegister].getBinary(0,8);
             idexRegister.append(registers[dRegister].getBinary());
-//            temp = registers[nRegister].getBinary();
             idexRegister.append(registers[nRegister].getBinary());
 
-            if(format == "r"){
-//                temp = registers[mRegister];
+            if(format.equals("r")){
+
                 idexRegister.append(registers[mRegister].getBinary());
             } else{
                 idexRegister.append(Long.toBinaryString(immediate));
             }
-        }
 
+        }
+        System.out.println(idexRegister.getBinary());
 
 
 

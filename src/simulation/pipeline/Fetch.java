@@ -63,12 +63,9 @@ public class Fetch extends PipelineSegment{
         Controller.PC+=4;
 
         // NEED TO FIX HOW DO WE GET THE FORMAT
-        char format;
+        // Done in control unit
 
-        format = 'r';
         //get type from file
-        String[] instArray;
-        String temp;
 
         /*
          *Code meant simply for the demo
@@ -90,11 +87,30 @@ public class Fetch extends PipelineSegment{
         /*
          * Massage the instruction, and split it into an array.
          */
+        String[] instArray;
+        String temp;
+
         instArray = inst.split(" ");
 
         for (int i  = 0; i < instArray.length; i++){
             instArray[i] = instArray[i].replace(",", "");
         }
+        temp = instArray[0].toLowerCase();
+        instBin = instBin + opCodes.get(temp);
+
+        char format = '\0';
+        String check = instBin.substring(3,7);
+        if(check.matches("100_") || check.matches("_1_0")){
+            format = 'i';
+        }
+        else if(check.matches("101_")){
+            format = 'b';
+        }
+        else if(check.matches("_101")){
+            format = 'r';
+        }
+
+
         // Initializing the register strings
         String reg1,reg2,reg3;
 
@@ -108,13 +124,12 @@ public class Fetch extends PipelineSegment{
 
                 //grabbing inst command
 
-                temp = instArray[0].toLowerCase();
+
                 instructionName = instArray[0];
 
 
                 // Adding the correct opcode to the instBin string
-                instBin = instBin + opCodes.get(temp);
-                instructionBinary = opCodes.get(temp);
+
 
 
                 //TODO remove the magic num
@@ -159,9 +174,9 @@ public class Fetch extends PipelineSegment{
             //Currently unfinished for i types
             case('i'):
                 //grabbing  inst command
-                temp = instArray[0].toLowerCase();
+                //temp = instArray[0].toLowerCase();
                 // adding opcode to instruction binary
-                instBin = instBin + opCodes.get(temp);
+                //instBin = instBin + opCodes.get(temp);
 
                 //pulling the registers from the instruction
                 reg1 = Integer.toBinaryString(Integer.parseInt(instArray[1]
@@ -171,7 +186,7 @@ public class Fetch extends PipelineSegment{
                 reg1 = correctBits(reg1,5);
                 reg2 = correctBits(reg2,5);
 
-                //pulling the immmediate value from the instruction
+                //pulling the immediate value from the instruction
                 String immediate =  instArray[3].replace("#","");
                 String immediateBin = Integer.toBinaryString(Integer.parseInt
                         (immediate));
@@ -184,9 +199,9 @@ public class Fetch extends PipelineSegment{
             // Not started on b types
             case('b'):
                 //grabbing instruction command
-                temp = instArray[0].toLowerCase();
+                //temp = instArray[0].toLowerCase();
                 //adding opcode
-                instBin = instBin + opCodes.get(temp);
+                //instBin = instBin + opCodes.get(temp);
 
                 String memLocation;
 
@@ -221,9 +236,12 @@ public class Fetch extends PipelineSegment{
      */
     private void write(){
         //Adding the
-        ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
-        ifidRegister.append(instBin);
+        System.out.println(Controller.PC);
 
+        ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
+        System.out.println(ifidRegister.getBinary(0,8));
+        ifidRegister.append(instBin);
+        System.out.println(ifidRegister.getBinary());
         instBin = "";
 
 
@@ -253,12 +271,19 @@ public class Fetch extends PipelineSegment{
         // Must reinitialize the instruction binary string
     }
 
+    public void tellControlUnit(){
+
+    }
+
     /**
      * Runs read and write for Fetch
      */
     public void execute(){
         read();
+        tellControlUnit();
         write();
     }
+
+
 
 }
