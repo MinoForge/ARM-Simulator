@@ -46,7 +46,7 @@ public class Register {
     /** Length of the register, in bytes. Unused.*/
     private int length;
 
-    private short index;
+    private int index;
 
     /**
      * Constructor which creates a Register with a specified number of bytes.
@@ -136,39 +136,51 @@ public class Register {
     }
 
 
-    //TESTED WORKING 2/11
+    //TESTED WORKING 2/12
     public boolean append(String binary) {
+        int result = writeBinaryAtIndex(index, binary);
+        if(result == -1) {
+            return false;
+        } else {
+            index = result;
+        }
+        return true;
+    }
+
+    //TESTED WORKING 2/12
+    //DOES NOT RESPECT INDEX FIELD. Use for specific byte writing.
+    public int writeBinaryAtIndex(int startByteIndex, String binary) {
+        if(startByteIndex < 0)  { //index
+            return -1;
+        }
         if(binary.length() % BYTE_SIZE != 0) { //Will not fit byte-array
-            return false; //TODO Make this an exception instead?
+            return -1; //TODO Make this an exception instead?
         }
         if(!binary.matches("[01]+")) { //Contains non-binary elements
-            return false;
+            return -1;
         }
-        int bytesCnt = binary.length() / BYTE_SIZE;
-        if(bytesCnt > length - index) { //Will overflow register
-            return false;
+        int bytesCnt = binary.length() / BYTE_SIZE; //Number of bytes to write
+        if(bytesCnt > length - startByteIndex) { //Will overflow register
+            return -1;
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(bytesCnt); //allocate bytes //TODO Why does bytesCnt not work?
+        ByteBuffer buffer = ByteBuffer.allocate(bytesCnt); //allocate bytes
         buffer.order(Controller.BYTE_ORDER);
 
-        for(int i = 0; i < bytesCnt; i++) {
-            int strIndex = BYTE_SIZE * i;
+        int i;
+        for(i = startByteIndex; i < bytesCnt + startByteIndex; i++) {
+            int strIndex = BYTE_SIZE * (i - startByteIndex); //indices of binary string to parse
 //            buffer.putInt()
             buffer.put((byte)Integer.parseInt(binary.substring(strIndex, strIndex +
                     BYTE_SIZE), 2));
-            bytes[index++] = buffer.get(i);
+            bytes[i] = buffer.get(i-startByteIndex);
 
         }
 
 //        bytes = buffer.array();
 
-        return true;
+        return i;
     }
-
-//    public boolean writeBytes(int start, int pastEnd) {
-//
-//    }
 
     //TESTED WORKING 2/11
     public byte[] getBytes(int start, int pastEnd) {
@@ -216,7 +228,7 @@ public class Register {
         return getBinary(0, this.length);
     }
 
-
+    //GENERAL TESTING
     public static void main(String... args) {
         Controller control = new Controller("file", true);
         Register reg = new Register(5);
@@ -226,13 +238,14 @@ public class Register {
         System.out.println(reg.getBinary(1, 3));
         System.out.println(reg.getBinary());
         System.out.println(reg.index);
-        String str = test.substring(0,16);
+        String str = test.substring(8,24);
         System.out.println(str.length());
         System.out.println(str);
         reg.append(str);
         System.out.println(reg.getBinary());
 //        System.out.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
-
+        System.out.println(reg.writeBinaryAtIndex(3, "0011001111001100"));
+        System.out.println(reg.getBinary());
     }
 
     private int testFunctions() {
@@ -240,4 +253,8 @@ public class Register {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return getBinary();
+    }
 }
