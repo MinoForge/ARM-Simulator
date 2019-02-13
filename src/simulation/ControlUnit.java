@@ -10,17 +10,21 @@ public class ControlUnit {
     static private ControlUnit unit;
 
     private ArrayList<ArrayList<Boolean>> values;
-    private ArrayList<Boolean> runBoolean;
+//    private ArrayList<Boolean> runBoolean;
+    private int stopTimer;
+    private int haltedStage;
 
     private static final int NUM_STAGES = 5;
 
     private ControlUnit() {
         this.values = new ArrayList<>(NUM_STAGES);
-        this.runBoolean = new ArrayList<>(NUM_STAGES);
+//        this.runBoolean = new ArrayList<>(NUM_STAGES);
         for(int i = 0; i < NUM_STAGES; i++) {
             this.values.add(new ArrayList<>());
-            this.runBoolean.add(false);
+//            this.runBoolean.add(false);
         }
+        this.stopTimer = 0;
+        this.haltedStage = -1;
 
     }
 
@@ -35,38 +39,72 @@ public class ControlUnit {
         return unit.values.get(num);
     }
 
-    static public boolean getGoAhead(int num) {
+    static public boolean getGoAhead(int stageNum) {
         if(unit == null) {
             makeUnit();
         }
-        return unit.runBoolean.get(num);
+        if(0 < unit.stopTimer) { //stopTimer positive
+            if(stageNum <= unit.haltedStage) { //Current stage is at or before the halted stage
+                if (unit.haltedStage == stageNum) { //Current Stage is the one halted
+                    unit.stopTimer--; //Decrement Timer
+                }
+                return false; //Do not run Pipeline Stage.
+            }
+
+        } else {
+            unit.haltedStage = -1;
+        }
+
+        return true; //No stoppage, run stage.
     }
 
-    static void newInstruction(String opCode) {
-
-        //
-
+    static public void newInstruction(String inst) {
         if(unit == null) {
             makeUnit();
         }
-        unit.push();
+        unit.push(0);
         //TODO Process instruction and set flags
     }
 
-    private void push() {
-        if(unit == null) {
-            makeUnit();
-        }
-        for(int i = 1; i < NUM_STAGES; i++) {
-
+    private void push(int stageNum) {
+        if(stageNum != NUM_STAGES) {
+            values.set(stageNum + 1, values.get(stageNum));
         }
     }
 
-//    static public void flushPipe(int stageToStart, int stageToStart) {
-//
-//    }
+    static public boolean flushPipeControl(int stageToStart, int stageToEnd) {
+        if(unit == null) {
+            makeUnit();
+        }
+
+        if(stageToStart < 0 || stageToEnd < 0 ||
+                stageToEnd > NUM_STAGES || stageToStart > NUM_STAGES) {
+
+            System.err.println("Halting Stage indices out of range: " +
+                    stageToStart + ":" + stageToEnd);
+            return false;
+        }
+        for(int i = stageToStart; i <= stageToEnd; i++) {
+            unit.values.set(i, new ArrayList<>());
+        }
+        return true;
+    }
+
+    static public boolean flushPipeControl(int stageToStart) {
+        return flushPipeControl(stageToStart, stageToStart);
+    }
 
     static public void haltPipe(int stageToHalt, int haltTimer) {
+        if(unit == null) {
+            makeUnit();
+        }
+        unit.haltedStage = stageToHalt;
+        unit.stopTimer = haltTimer;
+    }
+
+
+
+    public static void main(String... args) {
 
     }
 

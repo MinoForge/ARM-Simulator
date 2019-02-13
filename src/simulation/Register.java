@@ -55,11 +55,11 @@ public class Register {
     public Register(int numBytes) { //TODO Make a static register index so
         // that cannot make duplicates.
 //        this.regNum = new SimpleIntegerProperty();
-        this.trueVal = new SimpleLongProperty();
-        this.binVal = new SimpleStringProperty();
-//        this.octVal = new SimpleStringProperty();
-        this.decVal = new SimpleStringProperty();
-        this.hexVal = new SimpleStringProperty();
+//        this.trueVal = new SimpleLongProperty();
+//        this.binVal = new SimpleStringProperty();
+////        this.octVal = new SimpleStringProperty();
+//        this.decVal = new SimpleStringProperty();
+//        this.hexVal = new SimpleStringProperty();
         this.length = numBytes;
         this.bytes = new byte[numBytes];
         this.index = 0;
