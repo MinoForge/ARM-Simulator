@@ -1,5 +1,9 @@
 grammar LEGGram;
 
+@header {
+    package parsing.antlr;
+}
+
 /* Tokens */
 
 //Instructions

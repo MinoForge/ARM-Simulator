@@ -15,7 +15,6 @@ import java.util.Random;
  * @author Caleb Dinehart
  * @version November 30, 2018
  */
-//TODO Like everthing. Move packages, make used throughout. Write stuff.
 public class Register {
 
     private static final short BYTE_SIZE = 8;
@@ -246,6 +245,7 @@ public class Register {
 //        System.out.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
         System.out.println(reg.writeBinaryAtIndex(3, "0011001111001100"));
         System.out.println(reg.getBinary());
+
     }
 
     private int testFunctions() {
