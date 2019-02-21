@@ -60,10 +60,10 @@ public class Controller {
 //            registers[i] = 0;
 //        }
 
-        Register ifid = new Register(12);
-        Register idex = new Register(32);
-        Register exmem = new Register(24);
-        Register memwb = new Register(16);
+        Register ifid = new Register(IFID_SIZE);
+        Register idex = new Register(IDEX_SIZE);
+        Register exmem = new Register(EXMEM_SIZE);
+        Register memwb = new Register(MEMWB_SIZE);
 
         fetcher = new Fetch(ifid);
         decoder = new Decode(ifid, idex, registers);

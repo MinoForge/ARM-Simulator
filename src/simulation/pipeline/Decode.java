@@ -34,7 +34,6 @@ public class Decode extends PipelineSegment {
         this.dRegister    = 0;
         this.registers    = regs;
         this.format       = "r";
-
     }
 
     /**
@@ -43,6 +42,8 @@ public class Decode extends PipelineSegment {
      * instruction
      */
     public String interpretPipeReg(){
+
+
 
         return ifidRegister.getBinary();
 
@@ -86,6 +87,8 @@ public class Decode extends PipelineSegment {
                 regD = instBin.substring(27,32);
                 //System.out.println("this is the regD : " + regD);
 
+
+
                 // Getting the register indices
                 nRegister = Integer.parseInt(regN, 2);
                 //System.out.println("The first operand register: " +
@@ -106,10 +109,12 @@ public class Decode extends PipelineSegment {
                 String imme = instBin.substring(10,22);
 
                 dRegister = Integer.parseInt(regD, 2);
+
                 nRegister = Integer.parseInt(regN, 2);
                 int temp = Integer.parseInt(imme,2);
+                immediate = ((long)temp << (64 - 12) >> (64-12));
                 //sign extend the immediate value
-                immediate = (long)temp;
+//                immediate = (long)temp;
         }
 
 
@@ -130,15 +135,18 @@ public class Decode extends PipelineSegment {
             System.out.println(ifidRegister.getBinary(0,8));
             idexRegister.append(ifidRegister.getBinary(0,8));
 
-            idexRegister.append(registers[dRegister].getBinary());
+            //idexRegister.append(registers[dRegister].getBinary());
+
             idexRegister.append(registers[nRegister].getBinary());
-
             if(format.equals("r")){
-
                 idexRegister.append(registers[mRegister].getBinary());
             } else{
                 idexRegister.append(Long.toBinaryString(immediate));
             }
+
+            idexRegister.append(Long.toBinaryString(immediate));
+            idexRegister.append(instBin.substring(0,12));
+            idexRegister.append(instBin.substring(27,32));
 
         }
         System.out.println(idexRegister.getBinary());

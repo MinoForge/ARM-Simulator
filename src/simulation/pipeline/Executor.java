@@ -20,6 +20,7 @@ public class Executor extends PipelineSegment {
     private long value1;
     private long value2;
     private long result;
+    private long destReg;
 
 
 

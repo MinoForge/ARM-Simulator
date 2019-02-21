@@ -1,4 +1,7 @@
 package simulation.pipeline;
+import simulation.ControlUnit;
+import simulation.Register;
+import java.util.ArrayList;
 
 /**
  * A class to model the Write-back segment of the ARM pipeline.
@@ -10,37 +13,60 @@ package simulation.pipeline;
  */
 public class Writer extends PipelineSegment{
 
-    private byte[] memwbRegister;
+    private Register memwbRegister;
+    private ArrayList<Boolean> fields;
+    private boolean regWrite;
+    private boolean memToReg;
+    private String  aluResult;
+    private String  memData;
+    private String  rdField;
+    private Register[] regs;
 
 
-    public Writer(byte[] memwb) {
+    public Writer(Register memwb, Register[] regs) {
         this.memwbRegister = memwb;
+        this.regWrite = false;
+        this.memToReg = false;
+        this.aluResult= "";
+        this.memData  = "";
+        this.fields   = null;
+        this.regs = regs;
     }
 
     /**
      *
      */
     private void read(){
-        //TODO pull register info from pipeline register
-        //
+        fields = ControlUnit.getControlInstructions(4);
+        regWrite = fields.get(0);
+        memToReg = fields.get(1);
 
+        memData = memwbRegister.getBinary(0,8);
+        aluResult = memwbRegister.getBinary(8,16);
+        rdField = memwbRegister.getBinary(16,17);
     }
 
     /**
      *
      */
     private void write(){
-        //TODO writes back to the registers
-
+        if(regWrite){
+            if(memToReg){
+                regs[Integer.parseInt(rdField,2)].writeBinary(memData);
+            }else{
+                regs[Integer.parseInt(rdField,2)].writeBinary(aluResult);
+            }
+        }
     }
 
     /**
      *
      */
     public void execute(){
-        read();
-        write();
-
+        if(ControlUnit.getGoAhead(4)){
+            read();
+            write();
+        }
     }
 
 }
