@@ -18,10 +18,10 @@ public class Controller {
 
     public static ByteOrder BYTE_ORDER;
     private static final int DEFAULT_REGISTER_NUM = 32;
-    private static final int IFID_SIZE = 2;
-    private static final int IDEX_SIZE = 4;
-    private static final int EXMEM_SIZE = 3;
-    private static final int MEMWB_SIZE = 2;
+    private static final int IFID_SIZE = 12;
+    private static final int IDEX_SIZE = 34;
+    private static final int EXMEM_SIZE = 25;
+    private static final int MEMWB_SIZE = 17;
 
 
     private String[] data;

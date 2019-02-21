@@ -36,6 +36,7 @@ public class ControlUnit {
         if(unit == null) {
             makeUnit();
         }
+
         return unit.values.get(num);
     }
 
@@ -58,12 +59,21 @@ public class ControlUnit {
         return true; //No stoppage, run stage.
     }
 
-    static public void newInstruction(String inst) {
+    static public void newInstruction(String binInst) {
         if(unit == null) {
             makeUnit();
         }
+        ArrayList<Boolean> flags = new ArrayList<>();
+        for(int i = 0; i < 11; i++) {
+            if(binInst.charAt(i) != 1) {
+                flags.set(i, false);
+            } else {
+                flags.set(i, true);
+            }
+        }
+        unit.values.set(0, flags);
+
         unit.push(0);
-        //TODO Process instruction and set flags
     }
 
     private void push(int stageNum) {
@@ -78,7 +88,7 @@ public class ControlUnit {
         }
 
         if(stageToStart < 0 || stageToEnd < 0 ||
-                stageToEnd > NUM_STAGES || stageToStart > NUM_STAGES) {
+                stageToEnd >= NUM_STAGES || stageToStart >= NUM_STAGES) {
 
             System.err.println("Halting Stage indices out of range: " +
                     stageToStart + ":" + stageToEnd);

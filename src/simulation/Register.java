@@ -181,6 +181,10 @@ public class Register {
         return i;
     }
 
+    public int writeBinary(String binary) {
+        return writeBinaryAtIndex(0, binary);
+    }
+
     //TESTED WORKING 2/11
     public byte[] getBytes(int start, int pastEnd) {
         if(pastEnd > length) {
