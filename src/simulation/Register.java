@@ -135,19 +135,19 @@ public class Register {
     }
 
 
-    //TESTED WORKING 2/12
-    public boolean append(String binary) {
-        int result = writeBinaryAtIndex(index, binary);
-        if(result == -1) {
-            return false;
-        } else {
-            index = result;
-        }
-        return true;
-    }
+
+
 
     //TESTED WORKING 2/12
     //DOES NOT RESPECT INDEX FIELD. Use for specific byte writing.
+    /**
+     * Method to write a binary string to a register starting at a specific byte, regardless of
+     * contents or indices. Does not respect or update index for appending.
+     * @param startByteIndex The byte index at which to start writing.
+     * @param binary The binary string of the bytes to be written.
+     * @return -1 if the string will not fit in available space or index out of bounds, else returns
+     * the index after the final byte written.
+     */
     public int writeBinaryAtIndex(int startByteIndex, String binary) {
         if(startByteIndex < 0)  { //index
             return -1;
@@ -181,11 +181,42 @@ public class Register {
         return i;
     }
 
-    public int writeBinary(String binary) {
-        return writeBinaryAtIndex(0, binary);
+    //TESTED WORKING 2/12
+    /**
+     * A special method for registers which will append bytes to the end of previously appended
+     * information. Current byte where next append with begin is tracked in index field.
+     * @param binary The binary string of the bytes to be added.
+     * @return -1 if write failed, else the new index at which a new append will begin.
+     */
+    public int append(String binary) {
+        int result = writeBinaryAtIndex(index, binary);
+        if(result == -1) {
+            return -1;
+        } else {
+            index = result;
+        }
+        return index;
     }
 
+    /**
+     * Method which overwrites the current contents of the register, starting at byte 0.
+     * Resets and updates index.
+     * @param binary The binary string of the bytes being written.
+     * @return -1 if write failed, else the new append index.
+     */
+    public int writeBinary(String binary) {
+        index = 0;
+        return append(binary);
+    }
+
+
     //TESTED WORKING 2/11
+    /**
+     * Method to get a sequence of bytes from the register as an array.
+     * @param start The first byte in the sequence.
+     * @param pastEnd The index after the last byte in the sequence.
+     * @return null if indices are out of bounds, else an array of the bytes requested.
+     */
     public byte[] getBytes(int start, int pastEnd) {
         if(pastEnd > length) {
             return null;
@@ -201,15 +232,22 @@ public class Register {
         return result;
     }
 
-    //TESTED WORKING 2/11
-    public String getBinary(int start, int pastEnd) {
-        if(pastEnd > length) {
-            return "Can't index past end of register";
-        }
-        if(start < 0) {
-            return "Can't index before start of register";
-        }
 
+    //TESTED WORKING 2/11
+    /**
+     * Creates a binary string from a sequence of bytes in the register.
+     * @param start The first index in the sequence.
+     * @param pastEnd The index after the last byte in the sequence.
+     * @return null if indices are out of range, else a binary string of the bytes between start
+     * and end.
+     */
+    public String getBinary(int start, int pastEnd) {
+        if(pastEnd > length || pastEnd < 0) {
+            return null;
+        }
+        if(start < 0 || start >= length) {
+            return null;
+        }
 
         int bytesCnt = pastEnd - start;
         ByteBuffer buffer = ByteBuffer.allocate(bytesCnt);
@@ -226,6 +264,11 @@ public class Register {
     }
 
     //TESTED WORKING 2/11
+
+    /**
+     * More general method which returns a string representing the binary of the entire register.
+     * @return The binary string of the register.
+     */
     public String getBinary() {
 //        System.out.println(this.length);
         return getBinary(0, this.length);

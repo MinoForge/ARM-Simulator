@@ -38,7 +38,8 @@ public class Accessor extends PipelineSegment{
 
 
     /**
-     *
+     * Method first receives the information for setting the flags in Accessor, then takes the data
+     * from the exmem register.
      */
     private void read(){
         // TODO use info in pipeline register to see if mem needs to be
@@ -54,7 +55,10 @@ public class Accessor extends PipelineSegment{
     }
 
     /**
-     *
+     * Method the checks the write and read flags inorder to tell access what we are doing with
+     * memory. On a write it takes the result from the alu and puts it into memory address specified
+     * by exmem register. On a read, we retrieve what is in memory at the specified address and load
+     * it into the memwb register.
      */
     private void write(){
         // TODO Add above to the mem/wb register
@@ -74,7 +78,7 @@ public class Accessor extends PipelineSegment{
 
 
     /**
-     *
+     * Method first checks if the pipeline is stalled, if not then runs read() and write()
      */
     public void execute(){
         if(ControlUnit.getGoAhead(3)) {
