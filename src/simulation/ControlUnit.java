@@ -18,6 +18,8 @@ public class ControlUnit {
     /** List of Boolean arrays for the flags. */
     private ArrayList<ArrayList<Boolean>> values;
 
+    private ArrayList<String> instructions;
+
     /** Variable to keep track of pipeline halt length. */
     private int stopTimer;
 
@@ -50,7 +52,7 @@ public class ControlUnit {
      * @param num The index of the requesting stage.
      * @return The list of flags for the requesting stage.
      */
-    static public ArrayList<Boolean> getControlInstructions(int num) {
+    static public ArrayList<Boolean> getControlBools(int num) {
         if(unit == null) {
             makeUnit();
         }
@@ -87,20 +89,31 @@ public class ControlUnit {
      * Takes a binary instruction and puts flags into the first array and second array.
      * @param instBin Either the full instruction binary or just the first 11 bits.
      */
-    static public void newInstruction(int instBin) {
+    static public void newInstructionBin(int instBin) {
         if(unit == null) {
             makeUnit();
         }
 
 
-        ArrayList<Boolean> flags = new ArrayList<>();
-        for(int i = 0; i < 11; i++) {
-
-        }
-        unit.values.set(0, flags);
+//        ArrayList<Boolean> flags = new ArrayList<>();
+//        for(int i = 0; i < 11; i++) {
+//
+//        }
+//        unit.values.set(0, flags);
 
         unit.push(0);
     }
+
+
+    static public void newInstruction(String inst) {
+        if(unit == null) {
+            makeUnit();
+        }
+
+        unit.instructions.add(inst);
+    }
+
+
 
 //    private static boolean
 
@@ -113,7 +126,9 @@ public class ControlUnit {
     private void push(int stageNum) {
         if(stageNum != NUM_STAGES) {
             values.set(stageNum + 1, values.get(stageNum)); //TODO This probably clones unfortunately
+            instructions.set(stageNum + 1, instructions.get(stageNum));
         }
+
     }
 
     /**
