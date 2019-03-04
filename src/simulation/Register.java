@@ -232,6 +232,10 @@ public class Register {
         return result;
     }
 
+    public byte[] getBytes() {
+        return getBytes(0, length);
+    }
+
 
     //TESTED WORKING 2/11
     /**

@@ -85,24 +85,26 @@ public class ControlUnit {
 
     /**
      * Takes a binary instruction and puts flags into the first array and second array.
-     * @param binInst Either the full instruction binary or just the first 11 bits.
+     * @param instBin Either the full instruction binary or just the first 11 bits.
      */
-    static public void newInstruction(String binInst) {
+    static public void newInstruction(int instBin) {
         if(unit == null) {
             makeUnit();
         }
+
+
         ArrayList<Boolean> flags = new ArrayList<>();
         for(int i = 0; i < 11; i++) {
-            if(binInst.charAt(i) != 1) {
-                flags.set(i, false);
-            } else {
-                flags.set(i, true);
-            }
+
         }
         unit.values.set(0, flags);
 
         unit.push(0);
     }
+
+//    private static boolean
+
+
 
     /**
      * Private method to push the boolean array from a particular stage to the next.
