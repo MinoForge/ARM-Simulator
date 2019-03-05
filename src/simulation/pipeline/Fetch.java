@@ -1,5 +1,6 @@
 package simulation.pipeline;
 
+import simulation.ControlUnit;
 import simulation.Controller;
 import simulation.Register;
 
@@ -61,11 +62,7 @@ public class Fetch extends PipelineSegment{
 
         String inst = instructions[Controller.PC/4];
         Controller.PC+=4;
-
-        // NEED TO FIX HOW DO WE GET THE FORMAT
-        // Done in control unit
-
-        //get type from file
+        ControlUnit.newInstruction(inst);
 
         /*
          *Code meant simply for the demo
@@ -108,6 +105,7 @@ public class Fetch extends PipelineSegment{
         }
         else if(check.matches("_101")){
             format = 'r';
+
         }
 
 
@@ -271,16 +269,11 @@ public class Fetch extends PipelineSegment{
         // Must reinitialize the instruction binary string
     }
 
-    public void tellControlUnit(){
-
-    }
-
     /**
      * Runs read and write for Fetch
      */
     public void execute(){
         read();
-        tellControlUnit();
         write();
     }
 

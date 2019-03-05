@@ -42,8 +42,6 @@ public class Accessor extends PipelineSegment{
      * from the exmem register.
      */
     private void read(){
-        // TODO use info in pipeline register to see if mem needs to be
-        // accessed
         this.fields = ControlUnit.getControlInstructions(3);
         this.write = fields.get(0);
         this.read = fields.get(1);
@@ -61,14 +59,13 @@ public class Accessor extends PipelineSegment{
      * it into the memwb register.
      */
     private void write(){
-        // TODO Add above to the mem/wb register
+        //
 
         if(write){
             //Stack.writeBinaryAtIndex(temp,Integer.parseInt(address,2));
         }else if(read){
             // this.result = Stack.getBinary(Integer.parseInt(address),
             // Integer.parseInt(address) + 8);
-            //
         }
         memwbRegister.append(result);
         memwbRegister.append(address);

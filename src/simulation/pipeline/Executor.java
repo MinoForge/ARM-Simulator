@@ -1,5 +1,6 @@
 package simulation.pipeline;
 
+import simulation.ControlUnit;
 import simulation.Register;
 
 import java.nio.ByteBuffer;
@@ -85,8 +86,8 @@ public class Executor extends PipelineSegment {
 //     *
 //     */
     private void read(){
-
-
+        String temp = ControlUnit.getInstruction();
+        this.command = temp.substring(0,6)
         switch (command){
             case("add"):
                 result = value1 + value2;
@@ -105,6 +106,8 @@ public class Executor extends PipelineSegment {
             case("or"):
                 result = value1 | value2;
                 break;
+
+            case("branch"):
 
 
         }

@@ -1,5 +1,6 @@
 package simulation.pipeline;
 
+import simulation.ControlUnit;
 import simulation.Register;
 
 import java.nio.ByteBuffer;
@@ -191,6 +192,7 @@ public class Decode extends PipelineSegment {
      */
     public void execute(){
         read();
+        ControlUnit.newInstructionBin(instBin);
         write();
 
     }

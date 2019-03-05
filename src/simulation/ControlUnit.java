@@ -20,6 +20,11 @@ public class ControlUnit {
 
     private ArrayList<String> instructions;
 
+    private ArrayList<Boolean> flags;
+
+    private static final boolean ASSERT   = true;
+    private static final boolean DEASSERT = false;
+
     /** Variable to keep track of pipeline halt length. */
     private int stopTimer;
 
@@ -40,6 +45,7 @@ public class ControlUnit {
         this.stopTimer = 0;
         this.haltedStage = -1;
 
+        this.flags = new ArrayList<Boolean>();
     }
 
     /** Private static method to initialize the ControlUnit. */
@@ -59,6 +65,10 @@ public class ControlUnit {
         unit.push(num);
 
         return unit.values.get(num);
+    }
+
+    static public String getInstruction(){
+        return unit.instructions.get(0);
     }
 
     /**
@@ -85,35 +95,104 @@ public class ControlUnit {
         return true; //No stoppage, run stage.
     }
 
-    /**
-     * Takes a binary instruction and puts flags into the first array and second array.
-     * @param instBin Either the full instruction binary or just the first 11 bits.
-     */
-    static public void newInstructionBin(int instBin) {
-        if(unit == null) {
+    static public void newInstructionBin(int instBin){
+        if(unit == null){
             makeUnit();
         }
 
 
-//        ArrayList<Boolean> flags = new ArrayList<>();
-//        for(int i = 0; i < 11; i++) {
-//
-//        }
-//        unit.values.set(0, flags);
 
+        String temp = Integer.toBinaryString(instBin);
+        char format = '\0';
+        String check = temp.substring(2,7);
+        if(check.matches("_100_")){
+            format = 'i';
+            unit.flags.set(0,ASSERT);   //Reg2Loc
+            unit.flags.set(1,DEASSERT); //ALUOp1
+            unit.flags.set(2,DEASSERT); //ALUOp2
+            unit.flags.set(3,ASSERT);   //ALUSrc
+            unit.flags.set(4,DEASSERT); //Branch
+            unit.flags.set(5,DEASSERT); //MemRead
+            unit.flags.set(6,DEASSERT); //MemWrite
+            unit.flags.set(7,ASSERT);   //RegWrite
+            unit.flags.set(8,DEASSERT); //Mem2Reg
+
+
+        }
+        else if(check.matches("101_")){
+            format = 'b';
+            unit.flags.set(0,ASSERT); //Reg2Loc
+            unit.flags.set(1,DEASSERT); //ALUOp1
+            unit.flags.set(2,DEASSERT); //ALUOp2
+            unit.flags.set(3,DEASSERT); //ALUSrc
+            unit.flags.set(4,DEASSERT); //Branch
+            unit.flags.set(5,DEASSERT); //MemRead
+            unit.flags.set(6,DEASSERT); //MemWrite
+            unit.flags.set(7,ASSERT);   //RegWrite
+            unit.flags.set(8,DEASSERT); //Mem2Reg
+
+        }
+        else if(check.matches("_101")){
+            format = 'r';
+            unit.flags.set(0,DEASSERT); //Reg2Loc
+            unit.flags.set(1,DEASSERT); //ALUOp1
+            unit.flags.set(2,DEASSERT); //ALUOp2
+            unit.flags.set(3,DEASSERT); //ALUSrc
+            unit.flags.set(4,DEASSERT); //Branch
+            unit.flags.set(5,DEASSERT); //MemRead
+            unit.flags.set(6,DEASSERT); //MemWrite
+            unit.flags.set(7,ASSERT);   //RegWrite
+            unit.flags.set(8,DEASSERT); //Mem2Reg
+
+        }
+        else if(check.matches("_1_0")){
+            format = 'd';
+            unit.flags.set(0,ASSERT);   //Reg2Loc
+            unit.flags.set(1,DEASSERT); //ALUOp1
+            unit.flags.set(2,DEASSERT); //ALUOp2
+            unit.flags.set(3,ASSERT);   //ALUSrc
+            unit.flags.set(4,DEASSERT); //Branch
+            unit.dFlagger();
+
+        }
+        unit.values.set(0,unit.flags);
         unit.push(0);
     }
 
+    private void dFlagger(){
+        if(instructions.get(0).matches("s.*")) {
+            unit.flags.set(5, DEASSERT); //MemRead
+            unit.flags.set(6, ASSERT);   //MemWrite
+            unit.flags.set(7, DEASSERT); //RegWrite
+            unit.flags.set(8, DEASSERT); //Mem2Reg
+        }else {
+            unit.flags.set(5, ASSERT);   //MemRead
+            unit.flags.set(6, DEASSERT); //MemWrite
+            unit.flags.set(7, ASSERT);   //RegWrite
+            unit.flags.set(8, ASSERT);   //Mem2Reg
 
-    static public void newInstruction(String inst) {
-        if(unit == null) {
-            makeUnit();
         }
 
-        unit.instructions.add(inst);
     }
 
+    /**
+     * Takes a binary instruction and puts flags into the first array and second array.
+     * @param inst Either the full instruction binary or just the first 11 bits.
+     */
+    static public void newInstruction(String inst) {
+            if(unit == null) {
+                makeUnit();
+            }
 
+        ArrayList<Boolean> flags = new ArrayList<>();
+        for(int i = 0; i < 11; i++) {
+
+        }
+        unit.instructions.add(inst);
+        unit.values.set(0, flags);
+
+        unit.push(0);
+    }
 
 //    private static boolean
 
