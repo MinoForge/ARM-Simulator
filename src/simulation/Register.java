@@ -5,6 +5,7 @@ import javafx.beans.property.*;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -278,29 +279,48 @@ public class Register {
         return getBinary(0, this.length);
     }
 
+    //Tested working 3/4
+    public Integer getInt(int startByte) {
+        if(startByte < 0 || startByte > length - Integer.BYTES) {
+            return null;
+        }
+
+        int word = ByteBuffer.wrap(Arrays.copyOfRange(bytes, startByte, startByte + Integer.BYTES)).getInt();
+        return word;
+    }
+
     //GENERAL TESTING
     public static void main(String... args) {
         Controller control = new Controller("file", true);
-        Register reg = new Register(5);
-        String test = "110010000000001100100111";
-        System.out.println(test.length());
-        reg.append(test);
-        System.out.println(reg.getBinary(1, 3));
-        System.out.println(reg.getBinary());
-        System.out.println(reg.index);
-        String str = test.substring(8,24);
-        System.out.println(str.length());
-        System.out.println(str);
-        reg.append(str);
-        System.out.println(reg.getBinary());
-//        System.out.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
-        System.out.println(reg.writeBinaryAtIndex(3, "0011001111001100"));
-        System.out.println(reg.getBinary());
+        Register reg = new Register(4);
+        reg.testFunctions();
+//        String test = "110010000000001100100111";
+//        System.out.println(test.length());
+//        reg.append(test);
+//        System.out.println(reg.getBinary(1, 3));
+//        System.out.println(reg.getBinary());
+//        System.out.println(reg.index);
+//        String str = test.substring(8,24);
+//        System.out.println(str.length());
+//        System.out.println(str);
+//        reg.append(str);
+//        System.out.println(reg.getBinary());
+////        System.out.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
+//        System.out.println(reg.writeBinaryAtIndex(3, "0011001111001100"));
+//        System.out.println(reg.getBinary());
 
     }
 
     private int testFunctions() {
-        //TODO coverage
+        // INIT TEST
+        String test = "11110000110000110000001100000000";
+        System.out.println(test);
+        System.out.println(test.length());
+        append(test);
+        //END INIT
+
+        System.out.println(Integer.parseUnsignedInt(test, 2));
+        System.out.println(getInt(0));
         return 0;
     }
 

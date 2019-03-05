@@ -86,8 +86,8 @@ public class Executor extends PipelineSegment {
 //     *
 //     */
     private void read(){
-        String temp = ControlUnit.getInstruction();
-        this.command = temp.substring(0,6)
+        String temp = ControlUnit.getInstruction(3);
+        this.command = temp.substring(0,6);
         switch (command){
             case("add"):
                 result = value1 + value2;

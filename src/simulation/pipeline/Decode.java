@@ -37,38 +37,22 @@ public class Decode extends PipelineSegment {
         this.format       = "r";
     }
 
-    /**
-     * Method that reads and interprets the IFID register.
-     * @return a string representing the binary representation of the
-     * instruction
-     */
-    public String interpretPipeReg(){
+//    /**
+//     * Method that reads and interprets the IFID register.
+//     * @return a string representing the binary representation of the
+//     * instruction
+//     */
+//    public String interpretPipeReg(){
+//
+//
+//
+//        return ifidRegister.getBinary();
+//
+//    }
 
-
-
-        return ifidRegister.getBinary();
-
-
-//        byte[] instBytes = new byte[4];
-//        for(int i = 0; i < ifidRegister[1].length - 4; i++){
-//            instBytes[i] = ifidRegister[1][i];
-//        }
-//        ByteBuffer buf = ByteBuffer.allocate(4);
-//        buf.order(ByteOrder.LITTLE_ENDIAN);
-//        buf.put(instBytes);
-//        buf.flip();
-//        int temp = buf.getInt();
-
-
-//        System.out.println("\nStarting Decode\n-------------------------" +
-//                "---------------------------------\n");
-//        System.out.println(("This is the binary string to decode: \n\n\t\t\t"
-//                +Integer.toBinaryString(temp)));
-
-    }
     /**
      * Uses the instruction binary to find the read and write registers, and
-     * will sign extend an immediate value depending on the instruction
+     * will sign extend an immediate value depending on the instruction.
      */
     private void read(){
         instBin = ifidRegister.getBinary(8,12);
@@ -187,12 +171,14 @@ public class Decode extends PipelineSegment {
         //TODO Integrate B format, still need labels
     }
 
+
+
     /**
      * Executes the read and write methods
      */
     public void execute(){
         read();
-        ControlUnit.newInstructionBin(instBin);
+        ControlUnit.newInstructionBin(ifidRegister.getInt(8));
         write();
 
     }

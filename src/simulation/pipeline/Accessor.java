@@ -42,7 +42,7 @@ public class Accessor extends PipelineSegment{
      * from the exmem register.
      */
     private void read(){
-        this.fields = ControlUnit.getControlInstructions(3);
+        this.fields = ControlUnit.getControlBools(3);
         this.write = fields.get(0);
         this.read = fields.get(1);
         this.branch = fields.get(2);

@@ -42,7 +42,7 @@ public class Writer extends PipelineSegment{
      * from the memwb register.
      */
     private void read(){
-        fields = ControlUnit.getControlInstructions(4);
+        fields = ControlUnit.getControlBools(4);
         regWrite = fields.get(0);
         memToReg = fields.get(1);
 

@@ -22,8 +22,11 @@ public class ControlUnit {
 
     private ArrayList<Boolean> flags;
 
-    private static final boolean ASSERT   = true;
-    private static final boolean DEASSERT = false;
+    public static final boolean ASSERT   = true;
+    public static final boolean DEASSERT = false;
+
+    private static final int STAGE_BINARY_LOADED = 1; //0-indexed stage where binary is loaded in.
+    private static final int STAGE_INST_LOADED   = 0; //0-indexed stage where instruction loaded in.
 
     /** Variable to keep track of pipeline halt length. */
     private int stopTimer;
@@ -45,7 +48,7 @@ public class ControlUnit {
         this.stopTimer = 0;
         this.haltedStage = -1;
 
-        this.flags = new ArrayList<Boolean>();
+        this.flags = new ArrayList<>();
     }
 
     /** Private static method to initialize the ControlUnit. */
@@ -55,20 +58,20 @@ public class ControlUnit {
 
     /**
      * Gets the flags specific for the requesting pipeline stage.
-     * @param num The index of the requesting stage.
+     * @param stageNum The index of the requesting stage.
      * @return The list of flags for the requesting stage.
      */
-    static public ArrayList<Boolean> getControlBools(int num) {
+    static public ArrayList<Boolean> getControlBools(int stageNum) {
         if(unit == null) {
             makeUnit();
         }
-        unit.push(num);
+        unit.push(stageNum);
 
-        return unit.values.get(num);
+        return unit.values.get(stageNum);
     }
 
-    static public String getInstruction(){
-        return unit.instructions.get(0);
+    static public String getInstruction(int stageNum){
+        return unit.instructions.get(stageNum);
     }
 
     /**
@@ -155,12 +158,12 @@ public class ControlUnit {
             unit.dFlagger();
 
         }
-        unit.values.set(0,unit.flags);
-        unit.push(0);
+        unit.values.set(STAGE_BINARY_LOADED,unit.flags);
+        unit.push(STAGE_BINARY_LOADED);
     }
 
     private void dFlagger(){
-        if(instructions.get(0).matches("s.*")) {
+        if(instructions.get(0).matches("s.*")) { //TODO if might need to restrict to first few chars (label issues?)
             unit.flags.set(5, DEASSERT); //MemRead
             unit.flags.set(6, ASSERT);   //MemWrite
             unit.flags.set(7, DEASSERT); //RegWrite
@@ -184,14 +187,9 @@ public class ControlUnit {
                 makeUnit();
             }
 
-        ArrayList<Boolean> flags = new ArrayList<>();
-        for(int i = 0; i < 11; i++) {
+        unit.instructions.set(STAGE_INST_LOADED, inst);
 
-        }
-        unit.instructions.add(inst);
-        unit.values.set(0, flags);
-
-        unit.push(0);
+        unit.push(STAGE_INST_LOADED);
     }
 
 //    private static boolean
