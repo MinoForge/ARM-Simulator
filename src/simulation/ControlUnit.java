@@ -52,6 +52,9 @@ public class ControlUnit {
         for(int i = 0; i < 5; i++) {
             instructions.add("");
         }
+        for(int i = 0; i < 9; i++) {
+            flags.add(false);
+        }
     }
 
     /** Private static method to initialize the ControlUnit. */
@@ -107,8 +110,10 @@ public class ControlUnit {
 
         String temp = Integer.toBinaryString(instBin);
         char format = '\0';
+        System.out.println("instBin : " + instBin);
+        System.out.println("temp is " + temp);
         String check = temp.substring(2,7);
-        if(check.matches("_100_")){
+        if(check.matches(".100.")){
             format = 'i';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -122,7 +127,7 @@ public class ControlUnit {
 
 
         }
-        else if(check.matches("101_")){
+        else if(check.matches("101.")){
             format = 'b';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -135,7 +140,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches("_101")){
+        else if(check.matches(".101")){
             format = 'r';
             unit.flags.set(0,DEASSERT); //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -148,7 +153,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches("_1_0")){
+        else if(check.matches(".1.0")){
             format = 'd';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -201,7 +206,7 @@ public class ControlUnit {
      * @param stageNum The stage whose flags are being passed to the next.
      */
     private void push(int stageNum) {
-        if(stageNum != NUM_STAGES) {
+        if(stageNum != NUM_STAGES-1) {
             values.set(stageNum + 1, values.get(stageNum)); //TODO This probably clones unfortunately
             instructions.set(stageNum + 1, instructions.get(stageNum));
         }

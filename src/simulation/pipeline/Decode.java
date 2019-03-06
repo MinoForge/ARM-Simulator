@@ -154,6 +154,8 @@ public class Decode extends PipelineSegment {
     public void execute(){
         if(ControlUnit.getGoAhead(1)) {
             read();
+            System.out.println("this is the thing im sending to control " +
+                    "unit:" + ifidRegister.getInt(8));
             ControlUnit.newInstructionBin(ifidRegister.getInt(8));
             write();
         }

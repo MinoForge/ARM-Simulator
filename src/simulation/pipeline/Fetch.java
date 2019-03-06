@@ -107,13 +107,13 @@ public class Fetch extends PipelineSegment{
 
         char format = '\0';
         String check = instBin.substring(3,7);
-        if(check.matches("100_") || check.matches("_1_0")){
+        if(check.matches("100.") || check.matches(".1.0")){
             format = 'i';
         }
-        else if(check.matches("101_")){
+        else if(check.matches("101.")){
             format = 'b';
         }
-        else if(check.matches("_101")){
+        else if(check.matches(".101")){
             format = 'r';
 
         }
@@ -237,7 +237,7 @@ public class Fetch extends PipelineSegment{
         ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
         System.out.println(ifidRegister.getBinary(0,8));
         ifidRegister.append(instBin);
-        System.out.println(ifidRegister.getBinary());
+        System.out.println(ifidRegister.getBinary(8,12));
         instBin = "";
 
 
