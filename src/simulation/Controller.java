@@ -29,9 +29,9 @@ public class Controller {
 
     private Fetch fetcher;
     private Decode decoder;
-    private Executor executor;
-    private Accessor accessor;
-    private Writer writer;
+    private Execute execute;
+    private Access access;
+    private Writeback writeback;
 
 
     //private  instructor;
@@ -67,9 +67,9 @@ public class Controller {
 
         fetcher = new Fetch(ifid);
         decoder = new Decode(ifid, idex, registers);
-//        executor = new Executor(idex, exmem);
-        //accessor = new Accessor(exmem, memwb);
-        //writer = new Writer(memwb);
+//        execute = new Execute(idex, exmem);
+        //access = new Access(exmem, memwb);
+        //writeback = new Writeback(memwb);
 
 
 
@@ -92,9 +92,9 @@ public class Controller {
 
     public void cycle() {
         while(Controller.PC < instructions.length * 4) {
-            writer.execute();
-            accessor.execute();
-            executor.execute();
+            writeback.execute();
+            access.execute();
+            execute.execute();
             decoder.execute();
             fetcher.execute();
         }

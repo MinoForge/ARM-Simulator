@@ -40,7 +40,6 @@ public class ControlUnit {
     /** Private constructor. Initializes all fields with no information, and no stoppage. */
     private ControlUnit() {
         this.values = new ArrayList<>(NUM_STAGES);
-//        this.runBoolean = new ArrayList<>(NUM_STAGES);
         for(int i = 0; i < NUM_STAGES; i++) {
             this.values.add(new ArrayList<>());
 //            this.runBoolean.add(false);
@@ -48,7 +47,11 @@ public class ControlUnit {
         this.stopTimer = 0;
         this.haltedStage = -1;
 
-        this.flags = new ArrayList<>();
+        this.flags = new ArrayList<>(9);
+        this.instructions = new ArrayList<>(5);
+        for(int i = 0; i < 5; i++) {
+            instructions.add("");
+        }
     }
 
     /** Private static method to initialize the ControlUnit. */

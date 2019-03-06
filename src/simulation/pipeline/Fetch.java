@@ -223,21 +223,8 @@ public class Fetch extends PipelineSegment{
 
     }
 
-    /**
-     * Method to make sure that the binary representation of the registers
-     * have the correct number bits. It concatenates zeros to the front of
-     * the binary string and returns the corrected string.
-     * @param reg the string to be checked/altered
-     *
-     * @return the corrected string
-     */
-    public String correctBits(String reg, int num) {
-        String correct = reg;
-        while (correct.length() < num) {
-            correct = "0" + correct;
-        }
-        return correct;
-    }
+
+
 
     /**
      * Writes the PC and the instruction fetched to the IFID register in bytes.
@@ -254,28 +241,7 @@ public class Fetch extends PipelineSegment{
         instBin = "";
 
 
-        // Creating the buffers that will hold the bytes of the PC and
-        // instruction
-//        ByteBuffer pcBuffer = ByteBuffer.allocate(8);
-//        ByteBuffer instBuffer = ByteBuffer.allocate(4);
-//        pcBuffer.order(ByteOrder.LITTLE_ENDIAN);
-//        pcBuffer.putLong(PC);
-//        byte[] PcBytes = pcBuffer.array();
-//        // Writing the PC to the IFID register
-//        for(int i = 0; i < PcBytes.length; i++){
-//            ifidRegister[0][i] = PcBytes[i];
-//        }
 
-
-//        instBuffer = ByteBuffer.allocate(Long.BYTES);
-//        instBuffer.order(ByteOrder.LITTLE_ENDIAN);
-//        long temp = Long.valueOf(instBin, 2);
-//        instBuffer.putLong(temp);
-//        // Writing the binary to the IFID register
-//        byte[] instBytes = instBuffer.array();
-//        for(int i = 0; i < instBytes.length; i++){
-//            ifidRegister[1][i] = instBytes[i];
-//        }
 
         // Must reinitialize the instruction binary string
     }

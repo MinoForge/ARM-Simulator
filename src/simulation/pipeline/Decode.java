@@ -97,13 +97,7 @@ public class Decode extends PipelineSegment {
         //Only if the opcode dictates
     }
 
-    public String correctBits(String reg, int num) {
-        String correct = reg;
-        while (correct.length() < num) {
-            correct = "0" + correct;
-        }
-        return correct;
-    }
+
 
     /**
      * Writes the information found in read(), in this case the registers we
@@ -148,36 +142,6 @@ public class Decode extends PipelineSegment {
         System.out.println("This is the contents  of idex: " + idexRegister
                 .getBinary());
 
-
-        /*
-        for(int i = 0; i < idexRegister[0].length; i++){
-            idexRegister[0][i] = ifidRegister[0][i];
-        }
-        ByteBuffer regBuf = ByteBuffer.allocate(Long.BYTES);
-        regBuf.order(ByteOrder.LITTLE_ENDIAN);
-        temp = registers[dRegister];
-        regBuf.putLong(temp);
-        byte[] regContents = regBuf.array();
-        for(int i = 0; i < idexRegister[1].length; i++){
-            idexRegister[1][i] = regContents[i];
-        }
-
-        regBuf.clear();
-        temp = registers[nRegister];
-        regBuf.putLong(temp);
-        regContents = regBuf.array();
-        for(int i = 0; i < idexRegister[2].length; i++){
-            idexRegister[2][i] = regContents[i];
-        }
-
-        regBuf.clear();
-        temp = registers[mRegister];
-        regBuf.putLong(temp);
-        regContents = regBuf.array();
-        for(int i = 0; i < idexRegister[3].length; i++){
-            idexRegister[3][i] = regContents[i];
-        }
-        */
 
         //TODO Integrate B format, still need labels
     }

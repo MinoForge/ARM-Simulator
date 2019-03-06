@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @version November 8, 2018
  *
  */
-public class Accessor extends PipelineSegment{
+public class Access extends PipelineSegment{
     private Register  exmemRegister;
     private Register  memwbRegister;
     private ArrayList<Boolean> fields;
@@ -23,7 +23,7 @@ public class Accessor extends PipelineSegment{
     private String    result;
     private String    address;
 
-    public Accessor(Register exmem, Register memwb) {
+    public Access(Register exmem, Register memwb) {
         this.exmemRegister = exmem;
         this.memwbRegister = memwb;
         this.fields = null;
@@ -38,7 +38,7 @@ public class Accessor extends PipelineSegment{
 
 
     /**
-     * Method first receives the information for setting the flags in Accessor, then takes the data
+     * Method first receives the information for setting the flags in Access, then takes the data
      * from the exmem register.
      */
     private void read(){

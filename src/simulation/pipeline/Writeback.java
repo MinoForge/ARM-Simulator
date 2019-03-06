@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version November 8, 2018
  *
  */
-public class Writer extends PipelineSegment{
+public class Writeback extends PipelineSegment{
     
     private Register memwbRegister;
     private ArrayList<Boolean> fields; // holds the info from the control unit  
@@ -27,7 +27,7 @@ public class Writer extends PipelineSegment{
     * Contructor for Write, takes the memwb pipeline register, and the 
     * register array from the simulator.
     */
-    public Writer(Register memwb, Register[] regs) {
+    public Writeback(Register memwb, Register[] regs) {
         this.memwbRegister = memwb;
         this.regWrite = false;
         this.memToReg = false;

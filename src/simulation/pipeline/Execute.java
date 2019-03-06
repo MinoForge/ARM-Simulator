@@ -16,23 +16,22 @@ import java.util.ArrayList;
 // * @version November 8, 2018
 // *
 // */
-public class Executor extends PipelineSegment {
+public class Execute extends PipelineSegment {
     private Register exmemRegister;
     private Register idexRegister;
     private String command;
     private long value1;
     private long value2;
     private long result;
-    private long destReg;
     private ArrayList<Boolean> flags;
 
 
 
-//    /**
+    //    /**
 //     * Constructor to make an Executor Class. Must have the IDEX pipeline
 //     * register implementation and the EXEM register implementation.
 //     */
-    public Executor(Register idex, Register exmem) {
+    public Execute(Register idex, Register exmem) {
         this.exmemRegister = exmem;
         this.idexRegister = idex;
     }
@@ -42,7 +41,7 @@ public class Executor extends PipelineSegment {
      * @return an empty string at the moment
      */
     public String interpretPipeReg(){
-       byte[] regContentsBytes = new byte[8];
+        byte[] regContentsBytes = new byte[8];
 
 
 
@@ -85,7 +84,7 @@ public class Executor extends PipelineSegment {
 
         return new String();
     }
-//    /**
+    //    /**
 //     *
 //     */
     private void read(){
@@ -104,7 +103,7 @@ public class Executor extends PipelineSegment {
 
 
     }
-//
+    //
 //    /**
 //     *
 //     */

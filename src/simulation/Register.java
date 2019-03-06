@@ -289,6 +289,15 @@ public class Register {
         return word;
     }
 
+    public Long getLong(int startByte) {
+        if(startByte < 0 || startByte > length - Long.BYTES) {
+            return null;
+        }
+
+        long word = ByteBuffer.wrap(Arrays.copyOfRange(bytes, startByte, startByte + Long.BYTES)).getInt();
+        return word;
+    }
+
     //GENERAL TESTING
     public static void main(String... args) {
         Controller control = new Controller("file", true);
