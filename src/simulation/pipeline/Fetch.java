@@ -51,6 +51,16 @@ public class Fetch extends PipelineSegment{
         this.opCodes.put("addi","1001000100");
     }
 
+    public Fetch(Register ifid) {
+        this(ifid, new String[0]);
+    }
+
+
+
+    public void setInstructions(String[] insts) {
+        instructions = insts;
+    }
+
     /**
      * Method that builds the binary representation of the instruction
      * corresponding to the current PC, and increments the PC.
@@ -273,8 +283,10 @@ public class Fetch extends PipelineSegment{
      * Runs read and write for Fetch
      */
     public void execute(){
-        read();
-        write();
+        if(ControlUnit.getGoAhead(0)) {
+            read();
+            write();
+        }
     }
 
 

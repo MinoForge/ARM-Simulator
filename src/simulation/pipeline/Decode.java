@@ -177,10 +177,11 @@ public class Decode extends PipelineSegment {
      * Executes the read and write methods
      */
     public void execute(){
-        read();
-        ControlUnit.newInstructionBin(ifidRegister.getInt(8));
-        write();
-
+        if(ControlUnit.getGoAhead(1)) {
+            read();
+            ControlUnit.newInstructionBin(ifidRegister.getInt(8));
+            write();
+        }
     }
 
 

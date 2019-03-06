@@ -134,9 +134,10 @@ public class Executor extends PipelineSegment {
      *
      */
     public void execute(){
-        read();
-        write();
-
+        if(ControlUnit.getGoAhead(2)) {
+            read();
+            write();
+        }
     }
 //
 //

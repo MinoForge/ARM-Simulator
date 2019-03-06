@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class Register {
 
-    private static final short BYTE_SIZE = 8;
+    public static final short DEFAULT_BYTE_SIZE = 8;
 
 
 
@@ -153,13 +153,13 @@ public class Register {
         if(startByteIndex < 0)  { //index
             return -1;
         }
-        if(binary.length() % BYTE_SIZE != 0) { //Will not fit byte-array
+        if(binary.length() % DEFAULT_BYTE_SIZE != 0) { //Will not fit byte-array
             return -1; //TODO Make this an exception instead?
         }
         if(!binary.matches("[01]+")) { //Contains non-binary elements
             return -1;
         }
-        int bytesCnt = binary.length() / BYTE_SIZE; //Number of bytes to write
+        int bytesCnt = binary.length() / DEFAULT_BYTE_SIZE; //Number of bytes to write
         if(bytesCnt > length - startByteIndex) { //Will overflow register
             return -1;
         }
@@ -169,10 +169,10 @@ public class Register {
 
         int i;
         for(i = startByteIndex; i < bytesCnt + startByteIndex; i++) {
-            int strIndex = BYTE_SIZE * (i - startByteIndex); //indices of binary string to parse
+            int strIndex = DEFAULT_BYTE_SIZE * (i - startByteIndex); //indices of binary string to parse
 //            buffer.putInt()
             buffer.put((byte)Integer.parseInt(binary.substring(strIndex, strIndex +
-                    BYTE_SIZE), 2));
+                    DEFAULT_BYTE_SIZE), 2));
             bytes[i] = buffer.get(i-startByteIndex);
 
         }
