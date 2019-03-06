@@ -61,12 +61,11 @@ public class ControlUnit {
      * @param stageNum The index of the requesting stage.
      * @return The list of flags for the requesting stage.
      */
-    static public ArrayList<Boolean> getControlBools(int stageNum) {
+    static public ArrayList<Boolean> getControlFlags(int stageNum) {
         if(unit == null) {
             makeUnit();
         }
         unit.push(stageNum);
-
         return unit.values.get(stageNum);
     }
 
@@ -103,8 +102,6 @@ public class ControlUnit {
             makeUnit();
         }
 
-
-
         String temp = Integer.toBinaryString(instBin);
         char format = '\0';
         String check = temp.substring(2,7);
@@ -124,7 +121,7 @@ public class ControlUnit {
         }
         else if(check.matches("101_")){
             format = 'b';
-            unit.flags.set(0,ASSERT); //Reg2Loc
+            unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
             unit.flags.set(2,DEASSERT); //ALUOp2
             unit.flags.set(3,DEASSERT); //ALUSrc

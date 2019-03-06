@@ -42,9 +42,10 @@ public class Writer extends PipelineSegment{
      * from the memwb register.
      */
     private void read(){
-        fields = ControlUnit.getControlBools(4);
-        regWrite = fields.get(0);
-        memToReg = fields.get(1);
+        System.out.println("STARTING write NOW");
+        fields = ControlUnit.getControlFlags(4);
+        regWrite = fields.get(7);
+        memToReg = fields.get(8);
 
         memData = memwbRegister.getBinary(0,8);
         aluResult = memwbRegister.getBinary(8,16);

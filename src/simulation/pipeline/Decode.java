@@ -34,27 +34,17 @@ public class Decode extends PipelineSegment {
         this.mRegister    = 0;
         this.dRegister    = 0;
         this.registers    = regs;
+        this.immediate    = 0;
+        //Testing only
         this.format       = "r";
     }
-
-//    /**
-//     * Method that reads and interprets the IFID register.
-//     * @return a string representing the binary representation of the
-//     * instruction
-//     */
-//    public String interpretPipeReg(){
-//
-//
-//
-//        return ifidRegister.getBinary();
-//
-//    }
 
     /**
      * Uses the instruction binary to find the read and write registers, and
      * will sign extend an immediate value depending on the instruction.
      */
     private void read(){
+        System.out.println("Starting DECODE now!");
         instBin = ifidRegister.getBinary(8,12);
         String opCode, regM, regN, regD;
 
@@ -107,6 +97,14 @@ public class Decode extends PipelineSegment {
         //Only if the opcode dictates
     }
 
+    public String correctBits(String reg, int num) {
+        String correct = reg;
+        while (correct.length() < num) {
+            correct = "0" + correct;
+        }
+        return correct;
+    }
+
     /**
      * Writes the information found in read(), in this case the registers we
      * are manipulating, and writes them into the idex pipeline registers,
@@ -120,22 +118,35 @@ public class Decode extends PipelineSegment {
             System.out.println(ifidRegister.getBinary(0,8));
             idexRegister.append(ifidRegister.getBinary(0,8));
 
-            //idexRegister.append(registers[dRegister].getBinary());
+            System.out.println("This is the first operand: " +
+                    registers[nRegister].getBinary());
 
             idexRegister.append(registers[nRegister].getBinary());
             if(format.equals("r")){
+                System.out.println("This is the second operand: " +
+                        registers[mRegister].getBinary());
+
                 idexRegister.append(registers[mRegister].getBinary());
             } else{
                 idexRegister.append(Long.toBinaryString(immediate));
             }
 
-            idexRegister.append(Long.toBinaryString(immediate));
+            System.out.println("This is the immediate: " + correctBits(Long
+                            .toBinaryString(immediate), 64));
+            idexRegister.append(correctBits(Long.toBinaryString(immediate),
+                    64));
+
+            // Added because of book but might not be needed
+            System.out.println("This is the opcode: " + instBin.substring(0,12));
             idexRegister.append(instBin.substring(0,12));
+
+            System.out.println("This is the dest register bin: " +
+                    instBin.substring(27,32));
             idexRegister.append(instBin.substring(27,32));
 
         }
-        System.out.println(idexRegister.getBinary());
-
+        System.out.println("This is the contents  of idex: " + idexRegister
+                .getBinary());
 
 
         /*

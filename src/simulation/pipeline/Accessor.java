@@ -42,12 +42,13 @@ public class Accessor extends PipelineSegment{
      * from the exmem register.
      */
     private void read(){
-        this.fields = ControlUnit.getControlBools(3);
-        this.write = fields.get(0);
-        this.read = fields.get(1);
-        this.branch = fields.get(2);
+        System.out.println("Starting ACCESS now");
+        this.fields = ControlUnit.getControlFlags(3);
+        this.write = fields.get(6);
+        this.read = fields.get(5);
+        this.branch = fields.get(4);
 
-        this.address = exmemRegister.getBinary(16,23);
+        this.address = exmemRegister.getBinary(16,24);
         this.result = exmemRegister.getBinary(8,16);
 
     }

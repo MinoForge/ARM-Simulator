@@ -118,7 +118,7 @@ public class Fetch extends PipelineSegment{
 
         }
 
-
+        System.out.println("This is the format: " + format);
         // Initializing the register strings
         String reg1,reg2,reg3;
 
@@ -245,6 +245,7 @@ public class Fetch extends PipelineSegment{
     private void write(){
         //Adding the
         System.out.println(Controller.PC);
+        System.out.println("This is the binary string: " + instBin);
 
         ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
         System.out.println(ifidRegister.getBinary(0,8));

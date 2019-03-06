@@ -5,6 +5,8 @@ import simulation.Register;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+
 //
 ///**
 // * A class to model the Execution segment of the ARM pipeline.
@@ -22,6 +24,7 @@ public class Executor extends PipelineSegment {
     private long value2;
     private long result;
     private long destReg;
+    private ArrayList<Boolean> flags;
 
 
 
@@ -86,33 +89,15 @@ public class Executor extends PipelineSegment {
 //     *
 //     */
     private void read(){
-        String temp = ControlUnit.getInstruction(3);
-        this.command = temp.substring(0,6);
-        switch (command){
-            case("add"):
-                result = value1 + value2;
-                break;
-
-
-            case("and"):
-                result = value1 & value2;
-                break;
-
-
-            case("sub"):
-                result = value1 - value2;
-                break;
-
-            case("or"):
-                result = value1 | value2;
-                break;
-
-            case("branch"):
-
-
+        System.out.println("Starting EXECUTE now:");
+        String temp = ControlUnit.getInstruction(2);
+        this.command = temp.substring(0,temp.indexOf(' ') + 1);
+        value1 = Long.parseUnsignedLong(idexRegister.getBinary(8,16),2);
+        if(!flags.get(3)) { //ALUSrc deasserted
+            value2 = Long.parseUnsignedLong(idexRegister.getBinary(16, 24), 2);
+        }else{              //ALUSrc asserted
+            value2 = Long.parseUnsignedLong(idexRegister.getBinary(24,32), 2);
         }
-
-
         // TODO a lot
         //It will have to run all the operations that come thorough, any
         // arithmetic, logic or branch calculation
@@ -126,7 +111,19 @@ public class Executor extends PipelineSegment {
     private void write(){
         // TODO Add above to the ex/mem register
         // give the results of the executions to the ex/mem register.
+
+        exmemRegister.append(idexRegister.getBinary(0,8));
+
+        System.out.println("This is the result: " + Long.toBinaryString(result));
         exmemRegister.append(Long.toBinaryString(result));
+
+        System.out.println("This is the data from reg2:" +
+                idexRegister.getBinary(16,24));
+        exmemRegister.append(idexRegister.getBinary(16,24));
+
+        System.out.println("This is the dest reg binary:" + idexRegister
+                .getBinary(33,34));
+        exmemRegister.append(idexRegister.getBinary(33,34));
 
     }
 
@@ -135,7 +132,31 @@ public class Executor extends PipelineSegment {
      */
     public void execute(){
         if(ControlUnit.getGoAhead(2)) {
+            flags = ControlUnit.getControlFlags(2);
             read();
+            switch (command){
+                case("add"):
+                    result = value1 + value2;
+                    break;
+
+
+                case("and"):
+                    result = value1 & value2;
+                    break;
+
+
+                case("sub"):
+                    result = value1 - value2;
+                    break;
+
+                case("orr"):
+                    result = value1 | value2;
+                    break;
+
+                case("b"):
+                    //TODO BRANCH MAGIC
+
+            }
             write();
         }
     }
