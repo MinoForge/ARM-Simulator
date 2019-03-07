@@ -29,8 +29,13 @@ public class Fetch extends PipelineSegment{
     /** The binary of the instruction. */
     private String instBin;
 
+    /** The full assembly of the instruction. */
+    private String inst;
+
     /** InstructionName -> Binary opCode */
     private HashMap<String,String> opCodes;
+
+
 
 
 
@@ -44,11 +49,13 @@ public class Fetch extends PipelineSegment{
         this.instructions = instructions;
         this.ifidRegister = ifid;
         this.instBin = "";
+        this.inst = "";
         this.opCodes = new HashMap<>();
         //TODO Might make Enumerations out of these
         this.opCodes.put("add", "10001011000");
         this.opCodes.put("and", "10001010000");
         this.opCodes.put("addi","1001000100");
+//        this.opCodes.put("orr", )
     }
 
     public Fetch(Register ifid) {
@@ -70,9 +77,11 @@ public class Fetch extends PipelineSegment{
                 "Fetch\n------------------------------------------" +
                 "----------------\n");
 
-        String inst = instructions[Controller.PC/4];
+        inst = instructions[Controller.PC/4];
         Controller.PC+=4;
-        ControlUnit.newInstruction(inst);
+
+
+
 
         /*
          *Code meant simply for the demo
@@ -252,7 +261,11 @@ public class Fetch extends PipelineSegment{
     public void execute(){
         if(ControlUnit.getGoAhead(0)) {
             read();
+            ControlUnit.newInstruction(inst);
+
+            ifidRegister.zeroOut();
             write();
+
         }
     }
 

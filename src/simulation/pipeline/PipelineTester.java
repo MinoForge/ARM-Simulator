@@ -62,8 +62,8 @@ public class PipelineTester {
 
 
         String test1 = "add r1, r2, r3";
-        String test2 = "AND r1, r3, r4";
-        String test3 = "orr r1, r2, r5";
+        String test2 = "Add r2, r4, r8";
+        String test3 = "ADD r1, r2, r5";
         String test4 = "add r4, r7, r9";
         String test5 = "add r4, r5, r1";
 
@@ -87,23 +87,46 @@ public class PipelineTester {
         fetch.execute();
         scanIn.next();
         decode.execute();
+        fetch.execute();
         scanIn.next();
         execute.execute();
+        decode.execute();
+        fetch.execute();
         scanIn.next();
+        access.execute();
+        execute.execute();
+        decode.execute();
+        fetch.execute();
+        scanIn.next();
+        writeback.execute();
+        access.execute();
+        execute.execute();
+        decode.execute();
+        fetch.execute();
+        scanIn.next();
+        writeback.execute();
+        access.execute();
+        execute.execute();
+        decode.execute();
+        scanIn.next();
+        writeback.execute();
+        access.execute();
+        execute.execute();
+        scanIn.next();
+        writeback.execute();
         access.execute();
         scanIn.next();
         writeback.execute();
-        scanIn.next();
 
 
 
 
         //executor.interpretPipeReg();
         //test2
-        fetch.execute();
-        scanIn.next();
-        decode.execute();
-        scanIn.next();
+//        fetch.execute();
+//        scanIn.next();
+//        decode.execute();
+//        scanIn.next();
 
     }
 }

@@ -24,6 +24,8 @@ public class ControlUnit {
 
     public static final boolean ASSERT   = true;
     public static final boolean DEASSERT = false;
+    public static final String[] FLAG_NAMES = {"Reg2Loc", "AluOp1", "AluOp2", "ALUSrc", "Branch",
+                                            "MemRead", "MemWrite", "RegWrite", "Mem2Reg"};
 
     private static final int STAGE_BINARY_LOADED = 1; //0-indexed stage where binary is loaded in.
     private static final int STAGE_INST_LOADED   = 0; //0-indexed stage where instruction loaded in.
@@ -115,6 +117,7 @@ public class ControlUnit {
         String check = temp.substring(2,7);
         if(check.matches(".100.")){
             format = 'i';
+
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
             unit.flags.set(2,DEASSERT); //ALUOp2
@@ -127,7 +130,7 @@ public class ControlUnit {
 
 
         }
-        else if(check.matches("101.")){
+        else if(check.matches(".101.")){
             format = 'b';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -140,7 +143,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches(".101")){
+        else if(check.matches("..101")){
             format = 'r';
             unit.flags.set(0,DEASSERT); //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -153,7 +156,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches(".1.0")){
+        else if(check.matches("..1.0")){
             format = 'd';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -163,7 +166,12 @@ public class ControlUnit {
             unit.dFlagger();
 
         }
+//        System.out.println("Detected as " + format + " type");
+//        for(int i = 0; i < unit.flags.size(); i++) {
+//            System.out.println(FLAG_NAMES[i] + ":" + unit.flags.get(i));
+//        }
         unit.values.set(STAGE_BINARY_LOADED,unit.flags);
+//        System.out.println(ControlUnit.getState(STAGE_BINARY_LOADED));
         unit.push(STAGE_BINARY_LOADED);
     }
 
@@ -197,9 +205,6 @@ public class ControlUnit {
         unit.push(STAGE_INST_LOADED);
     }
 
-//    private static boolean
-
-
 
     /**
      * Private method to push the boolean array from a particular stage to the next.
@@ -207,7 +212,7 @@ public class ControlUnit {
      */
     private void push(int stageNum) {
         if(stageNum != NUM_STAGES-1) {
-            values.set(stageNum + 1, values.get(stageNum)); //TODO This probably clones unfortunately
+            values.set(stageNum + 1, new ArrayList<>(values.get(stageNum))); //TODO This definitely clones unfortunately
             instructions.set(stageNum + 1, instructions.get(stageNum));
         }
 
@@ -255,13 +260,47 @@ public class ControlUnit {
         if(unit == null) {
             makeUnit();
         }
+
         unit.haltedStage = stageToHalt;
         unit.stopTimer = haltTimer;
+    }
+
+    //Tested working 3/7
+    public static String getState(int stageNum) {
+        if(unit == null) {
+            makeUnit();
+        }
+
+        StringBuilder str = new StringBuilder();
+        for(int i = 0; i < unit.values.get(stageNum).size(); i++) {
+            str.append(FLAG_NAMES[i]);
+            str.append(':');
+            str.append(unit.values.get(stageNum).get(i));
+            str.append("\n");
+        }
+        return str.toString();
     }
 
 
     /** Testing. */
     public static void main(String... args) {
+        makeUnit();
+        ControlUnit ctrl = unit;
+        ArrayList<Boolean> arr = new ArrayList<>();
+        arr.add(true);
+        arr.add(false);
+        arr.add(true);
+        arr.add(false);
+        arr.add(false);
+        arr.add(false);
+        arr.add(true);
+        arr.add(true);
+        arr.add(true);
+        ctrl.values.set(0, arr);
+        ctrl.push(0);
+        arr.set(0, false);
+        System.out.println(ControlUnit.getState(0));
+        System.out.println(ControlUnit.getState(1));
 
     }
 

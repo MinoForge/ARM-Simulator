@@ -43,13 +43,16 @@ public class Writeback extends PipelineSegment{
      */
     private void read(){
         System.out.println("STARTING write NOW");
-        fields = ControlUnit.getControlFlags(4);
-        regWrite = fields.get(7);
-        memToReg = fields.get(8);
+
 
         memData = memwbRegister.getBinary(0,8);
+        System.out.println("This is the data from main mem: " + memData);
+
         aluResult = memwbRegister.getBinary(8,16);
+        System.out.println("This is the data direct from Execute: " + aluResult);
+
         rdField = memwbRegister.getBinary(16,17);
+        System.out.println("This is the address of the write-back register: " + rdField);
     }
 
     /**
@@ -64,10 +67,13 @@ public class Writeback extends PipelineSegment{
             //if memToReg is true then we are writing data from memory to
             //the destination register, else write the alu result.
             if(memToReg){
+                System.out.println("Writing from memory");
                 regs[Integer.parseInt(rdField,2)].writeBinary(memData);
             }else{
+                System.out.println("Writing from ALU output");
                 regs[Integer.parseInt(rdField,2)].writeBinary(aluResult);
             }
+            System.out.println("Result being written to reg" + Integer.parseInt(rdField,2) + ": " + regs[Integer.parseInt(rdField,2)]);
         }
     }
 
@@ -78,6 +84,11 @@ public class Writeback extends PipelineSegment{
     public void execute(){
         if(ControlUnit.getGoAhead(4)){
             read();
+//            System.out.println(ControlUnit.getState(4));
+            fields = ControlUnit.getControlFlags(4);
+
+            regWrite = fields.get(7);
+            memToReg = fields.get(8);
             write();
         }
     }
