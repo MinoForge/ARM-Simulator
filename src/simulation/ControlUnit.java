@@ -22,6 +22,8 @@ public class ControlUnit {
 
     private ArrayList<Boolean> flags;
 
+    private boolean[] validData;
+
     public static final boolean ASSERT   = true;
     public static final boolean DEASSERT = false;
     public static final String[] FLAG_NAMES = {"Reg2Loc", "AluOp1", "AluOp2", "ALUSrc", "Branch",
@@ -57,6 +59,8 @@ public class ControlUnit {
         for(int i = 0; i < 9; i++) {
             flags.add(false);
         }
+        this.validData = new boolean[5];
+        validData[0] = ASSERT;
     }
 
     /** Private static method to initialize the ControlUnit. */
@@ -77,12 +81,20 @@ public class ControlUnit {
         return unit.values.get(stageNum);
     }
 
+    static public void setStageDataValid(int stageNum, boolean value) {
+        if(unit == null) {
+            makeUnit();
+        }
+
+        unit.validData[stageNum] = value;
+    }
+
     static public String getInstruction(int stageNum){
         return unit.instructions.get(stageNum);
     }
 
     /**
-     * Checks for stoppage in the line for the requesting stage.
+     * Checks for stoppage in the line for the requesting stage. //TODO write better comment
      * @param stageNum The index of the requesting stage.
      * @return true if stage is free to execute. false if a stoppage affects stage.
      */
@@ -90,6 +102,11 @@ public class ControlUnit {
         if(unit == null) {
             makeUnit();
         }
+
+        if(!unit.validData[stageNum]) {
+            return false;
+        }
+
         if(0 < unit.stopTimer) { //stopTimer positive
             if(stageNum <= unit.haltedStage) { //Current stage is at or before the halted stage
                 if (unit.haltedStage == stageNum) { //Current Stage is the one halted
@@ -196,9 +213,9 @@ public class ControlUnit {
      * @param inst Either the full instruction binary or just the first 11 bits.
      */
     static public void newInstruction(String inst) {
-            if(unit == null) {
-                makeUnit();
-            }
+        if(unit == null) {
+            makeUnit();
+        }
 
         unit.instructions.set(STAGE_INST_LOADED, inst);
 
@@ -212,19 +229,25 @@ public class ControlUnit {
      */
     private void push(int stageNum) {
         if(stageNum != NUM_STAGES-1) {
-            values.set(stageNum + 1, new ArrayList<>(values.get(stageNum))); //TODO This definitely clones unfortunately
+            values.set(stageNum + 1, new ArrayList<>(values.get(stageNum)));
             instructions.set(stageNum + 1, instructions.get(stageNum));
+            validData[stageNum + 1] = ASSERT;
         }
 
     }
 
+
+
     /**
-     * Flushes flags for the stages specified. Used for hazard control.
+     * "Empties" the specified stages of data, by telling these stages that the information
+     * they are receiving is invalid. These stages will not run until their data is set as valid
+     * (in push(), or setStageDataValid()).
+     * Used for hazard control.
      * @param stageToStart Stage where clearing starts.
      * @param stageToEnd Stage where clearing ends (inclusive).
      * @return false with bad stage indices. true otherwise
      */
-    static public boolean flushPipeControl(int stageToStart, int stageToEnd) {
+    static public boolean flushPipe(int stageToStart, int stageToEnd) {
         if(unit == null) {
             makeUnit();
         }
@@ -232,12 +255,13 @@ public class ControlUnit {
         if(stageToStart < 0 || stageToEnd < 0 ||
                 stageToEnd >= NUM_STAGES || stageToStart >= NUM_STAGES) {
 
-            System.err.println("Halting Stage indices out of range: " +
+            System.err.println("Stage indices out of range: " +
                     stageToStart + ":" + stageToEnd);
             return false;
         }
+
         for(int i = stageToStart; i <= stageToEnd; i++) {
-            unit.values.set(i, new ArrayList<>());
+            unit.validData[i] = DEASSERT;
         }
         return true;
     }
@@ -247,8 +271,8 @@ public class ControlUnit {
      * @param stageToStart Stage to flush.
      * @return false on a bad stage index. true otherwise
      */
-    static public boolean flushPipeControl(int stageToStart) {
-        return flushPipeControl(stageToStart, stageToStart);
+    static public boolean flushPipe(int stageToStart) {
+        return flushPipe(stageToStart, stageToStart);
     }
 
     /**

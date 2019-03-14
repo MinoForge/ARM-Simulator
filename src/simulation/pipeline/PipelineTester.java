@@ -1,5 +1,6 @@
 package simulation.pipeline;
 
+import simulation.ControlUnit;
 import simulation.Register;
 
 import java.util.Scanner;
@@ -78,8 +79,7 @@ public class PipelineTester {
     }
 
     /**
-     * The testing method. Currently only for demo. DOES NOT TEST FUNCTIONALITY
-     * TODO Make tests actually useful?
+     *
      */
     public void test(){
         //test1
@@ -94,6 +94,7 @@ public class PipelineTester {
         fetch.execute();
         scanIn.next();
         access.execute();
+        ControlUnit.flushPipe(1,3);
         execute.execute();
         decode.execute();
         fetch.execute();
@@ -117,16 +118,5 @@ public class PipelineTester {
         access.execute();
         scanIn.next();
         writeback.execute();
-
-
-
-
-        //executor.interpretPipeReg();
-        //test2
-//        fetch.execute();
-//        scanIn.next();
-//        decode.execute();
-//        scanIn.next();
-
     }
 }
