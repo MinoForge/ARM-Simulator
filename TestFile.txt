@@ -1,7 +1,4 @@
 ENTRY
-
-
 AND r2, r3, r3
-Add r1, r1
-
+Add r1, r1, r7
 END

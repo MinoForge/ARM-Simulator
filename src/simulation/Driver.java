@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Scanner;
 
@@ -68,8 +69,15 @@ public class Driver implements ANTLRErrorListener{
 //            usage();
 //            System.exit(1);
 //        }
-        Driver drive = new Driver(arg);
-        drive.parseInput();
+        Assembler assemble = new Assembler(arg);
+        if(assemble.parseInput()) {
+            ArrayList<String> bin = assemble.makeBinaryList();
+            for (String s : bin) {
+                System.out.println(s);
+            }
+        }
+//        Driver drive = new Driver(arg);
+//        drive.parseInput();
 
 
     }

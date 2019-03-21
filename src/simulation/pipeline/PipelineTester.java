@@ -1,7 +1,10 @@
 package simulation.pipeline;
 
+import simulation.Assembler;
+import simulation.Driver;
 import simulation.Register;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -61,19 +64,24 @@ public class PipelineTester {
     public static void main(String... args){
 
 
-        String test1 = "add r1, r2, r3";
-        String test2 = "AND r1, r3, r4";
-        String test3 = "orr r1, r2, r5";
-        String test4 = "add r4, r7, r9";
-        String test5 = "add r4, r5, r1";
+//        String test1 = "add r1, r2, r3";
+//        String test2 = "AND r1, r3, r4";
+//        String test3 = "orr r1, r2, r5";
+//        String test4 = "add r4, r7, r9";
+//        String test5 = "add r4, r5, r1";
 
-
-
-
+        Assembler assemble = new Assembler("TestFile.txt");
+        ArrayList<String> bin = new ArrayList<>();
+        if(assemble.parseInput()){
+            bin = assemble.makeBinaryList();
+            for (String s : bin) {
+                System.out.println(s);
+            }
+        }
         PipelineTester test = new PipelineTester();
-        test.instructions = new String[] {test1, test2, test3, test4, test5};
-        test.fetch.setInstructions
-                (test.instructions);
+//        test.instructions = new String[] {test1, test2, test3, test4, test5};
+        test.fetch.setInstructions(assemble.getInstructionArray());
+        test.fetch.setBins(bin);
         test.test();
     }
 
