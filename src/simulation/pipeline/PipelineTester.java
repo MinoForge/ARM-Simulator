@@ -2,6 +2,7 @@ package simulation.pipeline;
 
 import simulation.Assembler;
 import simulation.Driver;
+import simulation.ControlUnit;
 import simulation.Register;
 
 import java.util.ArrayList;
@@ -86,8 +87,7 @@ public class PipelineTester {
     }
 
     /**
-     * The testing method. Currently only for demo. DOES NOT TEST FUNCTIONALITY
-     * TODO Make tests actually useful?
+     * Good tests now
      */
     public void test(){
         //test1
@@ -95,23 +95,36 @@ public class PipelineTester {
         fetch.execute();
         scanIn.next();
         decode.execute();
+        fetch.execute();
         scanIn.next();
         execute.execute();
+        decode.execute();
+        fetch.execute();
         scanIn.next();
+        access.execute();
+        ControlUnit.flushPipe(1,3);
+        execute.execute();
+        decode.execute();
+        fetch.execute();
+        scanIn.next();
+        writeback.execute();
+        access.execute();
+        execute.execute();
+        decode.execute();
+        fetch.execute();
+        scanIn.next();
+        writeback.execute();
+        access.execute();
+        execute.execute();
+        decode.execute();
+        scanIn.next();
+        writeback.execute();
+        access.execute();
+        execute.execute();
+        scanIn.next();
+        writeback.execute();
         access.execute();
         scanIn.next();
         writeback.execute();
-        scanIn.next();
-
-
-
-
-        //executor.interpretPipeReg();
-        //test2
-        fetch.execute();
-        scanIn.next();
-        decode.execute();
-        scanIn.next();
-
     }
 }

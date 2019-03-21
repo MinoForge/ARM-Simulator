@@ -22,8 +22,12 @@ public class ControlUnit {
 
     private ArrayList<Boolean> flags;
 
+    private boolean[] validData;
+
     public static final boolean ASSERT   = true;
     public static final boolean DEASSERT = false;
+    public static final String[] FLAG_NAMES = {"Reg2Loc", "AluOp1", "AluOp2", "ALUSrc", "Branch",
+                                            "MemRead", "MemWrite", "RegWrite", "Mem2Reg"};
 
     private static final int STAGE_BINARY_LOADED = 1; //0-indexed stage where binary is loaded in.
     private static final int STAGE_INST_LOADED   = 0; //0-indexed stage where instruction loaded in.
@@ -55,6 +59,8 @@ public class ControlUnit {
         for(int i = 0; i < 9; i++) {
             flags.add(false);
         }
+        this.validData = new boolean[5];
+        validData[0] = ASSERT;
     }
 
     /** Private static method to initialize the ControlUnit. */
@@ -75,12 +81,20 @@ public class ControlUnit {
         return unit.values.get(stageNum);
     }
 
+    static public void setStageDataValid(int stageNum, boolean value) {
+        if(unit == null) {
+            makeUnit();
+        }
+
+        unit.validData[stageNum] = value;
+    }
+
     static public String getInstruction(int stageNum){
         return unit.instructions.get(stageNum);
     }
 
     /**
-     * Checks for stoppage in the line for the requesting stage.
+     * Checks for stoppage in the line for the requesting stage. //TODO write better comment
      * @param stageNum The index of the requesting stage.
      * @return true if stage is free to execute. false if a stoppage affects stage.
      */
@@ -88,6 +102,11 @@ public class ControlUnit {
         if(unit == null) {
             makeUnit();
         }
+
+        if(!unit.validData[stageNum]) {
+            return false;
+        }
+
         if(0 < unit.stopTimer) { //stopTimer positive
             if(stageNum <= unit.haltedStage) { //Current stage is at or before the halted stage
                 if (unit.haltedStage == stageNum) { //Current Stage is the one halted
@@ -115,6 +134,7 @@ public class ControlUnit {
         String check = temp.substring(2,7);
         if(check.matches(".100.")){
             format = 'i';
+
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
             unit.flags.set(2,DEASSERT); //ALUOp2
@@ -127,7 +147,7 @@ public class ControlUnit {
 
 
         }
-        else if(check.matches("101.")){
+        else if(check.matches(".101.")){
             format = 'b';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -140,7 +160,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches(".101")){
+        else if(check.matches("..101")){
             format = 'r';
             unit.flags.set(0,DEASSERT); //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -153,7 +173,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches(".1.0")){
+        else if(check.matches("..1.0")){
             format = 'd';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -163,7 +183,12 @@ public class ControlUnit {
             unit.dFlagger();
 
         }
+//        System.out.println("Detected as " + format + " type");
+//        for(int i = 0; i < unit.flags.size(); i++) {
+//            System.out.println(FLAG_NAMES[i] + ":" + unit.flags.get(i));
+//        }
         unit.values.set(STAGE_BINARY_LOADED,unit.flags);
+//        System.out.println(ControlUnit.getState(STAGE_BINARY_LOADED));
         unit.push(STAGE_BINARY_LOADED);
     }
 
@@ -188,17 +213,14 @@ public class ControlUnit {
      * @param inst Either the full instruction binary or just the first 11 bits.
      */
     static public void newInstruction(String inst) {
-            if(unit == null) {
-                makeUnit();
-            }
+        if(unit == null) {
+            makeUnit();
+        }
 
         unit.instructions.set(STAGE_INST_LOADED, inst);
 
         unit.push(STAGE_INST_LOADED);
     }
-
-//    private static boolean
-
 
 
     /**
@@ -207,19 +229,25 @@ public class ControlUnit {
      */
     private void push(int stageNum) {
         if(stageNum != NUM_STAGES-1) {
-            values.set(stageNum + 1, values.get(stageNum)); //TODO This probably clones unfortunately
+            values.set(stageNum + 1, new ArrayList<>(values.get(stageNum)));
             instructions.set(stageNum + 1, instructions.get(stageNum));
+            validData[stageNum + 1] = ASSERT;
         }
 
     }
 
+
+
     /**
-     * Flushes flags for the stages specified. Used for hazard control.
+     * "Empties" the specified stages of data, by telling these stages that the information
+     * they are receiving is invalid. These stages will not run until their data is set as valid
+     * (in push(), or setStageDataValid()).
+     * Used for hazard control.
      * @param stageToStart Stage where clearing starts.
      * @param stageToEnd Stage where clearing ends (inclusive).
      * @return false with bad stage indices. true otherwise
      */
-    static public boolean flushPipeControl(int stageToStart, int stageToEnd) {
+    static public boolean flushPipe(int stageToStart, int stageToEnd) {
         if(unit == null) {
             makeUnit();
         }
@@ -227,12 +255,13 @@ public class ControlUnit {
         if(stageToStart < 0 || stageToEnd < 0 ||
                 stageToEnd >= NUM_STAGES || stageToStart >= NUM_STAGES) {
 
-            System.err.println("Halting Stage indices out of range: " +
+            System.err.println("Stage indices out of range: " +
                     stageToStart + ":" + stageToEnd);
             return false;
         }
+
         for(int i = stageToStart; i <= stageToEnd; i++) {
-            unit.values.set(i, new ArrayList<>());
+            unit.validData[i] = DEASSERT;
         }
         return true;
     }
@@ -242,8 +271,8 @@ public class ControlUnit {
      * @param stageToStart Stage to flush.
      * @return false on a bad stage index. true otherwise
      */
-    static public boolean flushPipeControl(int stageToStart) {
-        return flushPipeControl(stageToStart, stageToStart);
+    static public boolean flushPipe(int stageToStart) {
+        return flushPipe(stageToStart, stageToStart);
     }
 
     /**
@@ -255,13 +284,47 @@ public class ControlUnit {
         if(unit == null) {
             makeUnit();
         }
+
         unit.haltedStage = stageToHalt;
         unit.stopTimer = haltTimer;
+    }
+
+    //Tested working 3/7
+    public static String getState(int stageNum) {
+        if(unit == null) {
+            makeUnit();
+        }
+
+        StringBuilder str = new StringBuilder();
+        for(int i = 0; i < unit.values.get(stageNum).size(); i++) {
+            str.append(FLAG_NAMES[i]);
+            str.append(':');
+            str.append(unit.values.get(stageNum).get(i));
+            str.append("\n");
+        }
+        return str.toString();
     }
 
 
     /** Testing. */
     public static void main(String... args) {
+        makeUnit();
+        ControlUnit ctrl = unit;
+        ArrayList<Boolean> arr = new ArrayList<>();
+        arr.add(true);
+        arr.add(false);
+        arr.add(true);
+        arr.add(false);
+        arr.add(false);
+        arr.add(false);
+        arr.add(true);
+        arr.add(true);
+        arr.add(true);
+        ctrl.values.set(0, arr);
+        ctrl.push(0);
+        arr.set(0, false);
+        System.out.println(ControlUnit.getState(0));
+        System.out.println(ControlUnit.getState(1));
 
     }
 

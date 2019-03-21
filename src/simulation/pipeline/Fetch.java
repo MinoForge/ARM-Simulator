@@ -106,7 +106,11 @@ public class Fetch extends PipelineSegment{
     public void execute(){
         if(ControlUnit.getGoAhead(0)) {
             read();
+            ControlUnit.newInstruction(inst);
+
+            ifidRegister.zeroOut();
             write();
+
         }
     }
 

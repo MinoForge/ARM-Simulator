@@ -3,9 +3,6 @@ package simulation.pipeline;
 import simulation.ControlUnit;
 import simulation.Register;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 /**
  * A class to model the Instruction Decoding segment of the ARM pipeline.
  *
@@ -107,7 +104,7 @@ public class Decode extends PipelineSegment {
     private void write(){
         //First put PC into the ex/mem
         if(!format.matches("[ri]")){
-            //do branch magic crap
+            //do branch magic
         }else{
             System.out.println(ifidRegister.getBinary(0,8));
             idexRegister.append(ifidRegister.getBinary(0,8));
@@ -131,12 +128,12 @@ public class Decode extends PipelineSegment {
                     64));
 
             // Added because of book but might not be needed
-            System.out.println("This is the opcode: " + instBin.substring(0,12));
-            idexRegister.append(instBin.substring(0,12));
+            System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,12) + ":" + instBin.substring(27,32));
+//            idexRegister.append(instBin.substring(0,12) );
 
-            System.out.println("This is the dest register bin: " +
-                    instBin.substring(27,32));
-            idexRegister.append(instBin.substring(27,32));
+//            System.out.println("This is the dest register bin: " +
+//                    instBin.substring(27,32));
+            idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32));
 
         }
         System.out.println("This is the contents  of idex: " + idexRegister
@@ -157,6 +154,8 @@ public class Decode extends PipelineSegment {
             System.out.println("this is the thing im sending to control " +
                     "unit:" + ifidRegister.getInt(8));
             ControlUnit.newInstructionBin(ifidRegister.getInt(8));
+            idexRegister.zeroOut();
+
             write();
         }
     }

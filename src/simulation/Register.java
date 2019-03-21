@@ -66,10 +66,11 @@ public class Register {
         zeroOut();
     }
 
-    private void zeroOut() {
+    public void zeroOut() {
         for (int i = 0; i < length; i++) {
             bytes[i] = 0;
         }
+        index = 0;
     }
 
 
