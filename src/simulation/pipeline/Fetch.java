@@ -32,6 +32,8 @@ public class Fetch extends PipelineSegment{
     /** The binary of the instruction. */
     private String instBin;
 
+    private String inst;
+
 
 
 
@@ -46,6 +48,7 @@ public class Fetch extends PipelineSegment{
         this.ifidRegister = ifid;
         this.instBin = "";
         this.bins = bins;
+        this.inst = "";
     }
 
     public Fetch(Register ifid) {
@@ -71,11 +74,10 @@ public class Fetch extends PipelineSegment{
                 "Fetch\n------------------------------------------" +
                 "----------------\n");
 
-        String inst = instructions[Controller.PC / 4];
+        inst = instructions[Controller.PC / 4];
         instBin = bins[Controller.PC / 4];
 
         Controller.PC += 4;
-        ControlUnit.newInstruction(inst);
     }
 
 

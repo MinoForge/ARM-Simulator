@@ -78,12 +78,13 @@ public class PipelineTester {
             for (String s : bin) {
                 System.out.println(s);
             }
-        }
-        PipelineTester test = new PipelineTester();
+            PipelineTester test = new PipelineTester();
 //        test.instructions = new String[] {test1, test2, test3, test4, test5};
-        test.fetch.setInstructions(assemble.getInstructionArray());
-        test.fetch.setBins(bin);
-        test.test();
+            test.fetch.setInstructions(assemble.getInstructionArray());
+            test.fetch.setBins(bin);
+            test.test();
+        }
+
     }
 
     /**
@@ -102,7 +103,7 @@ public class PipelineTester {
         fetch.execute();
         scanIn.next();
         access.execute();
-        ControlUnit.flushPipe(1,3);
+        //ControlUnit.flushPipe(1,3);
         execute.execute();
         decode.execute();
         fetch.execute();
