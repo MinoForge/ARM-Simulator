@@ -61,8 +61,8 @@ public class Fetch extends PipelineSegment{
     }
 
     /**
-     * Method that builds the binary representation of the instruction
-     * corresponding to the current PC, and increments the PC.
+     * Pulls binary corresponding to the current PC from the array of binary instructions
+     * and updates PC.
      */
     private void read() {
         System.out.println("\nStarting " +
@@ -81,7 +81,6 @@ public class Fetch extends PipelineSegment{
      * Writes the PC and the instruction fetched to the IFID register in bytes.
      */
     private void write(){
-        //Adding the
         System.out.println(Controller.PC);
         System.out.println("This is the binary string: " + instBin);
 
@@ -98,7 +97,7 @@ public class Fetch extends PipelineSegment{
     }
 
     /**
-     * Runs read and write for Fetch
+     * Runs read and write for Fetch and pushes assembly instruction to ControlUnit.
      */
     public void execute(){
         if(ControlUnit.getGoAhead(0)) {

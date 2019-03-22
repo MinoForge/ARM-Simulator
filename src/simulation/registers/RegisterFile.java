@@ -89,11 +89,19 @@ public class RegisterFile {
         return registers[index];
     }
 
+    /**
+     * Resets a particular register's read/write flags.
+     * @param index The index of the register being freed for use.
+     */
     public void freeRegister(int index) {
         beingWritten[index] = false;
         beingRead[index] = false;
     }
 
+    /**
+     * Utility to 'lock' a register and disallow it from being written to. Used by architecture.
+     * @param index The index of the register being locked.
+     */
     public void lockRegister(int index) {
         Register.lock(registers[index]);
     }

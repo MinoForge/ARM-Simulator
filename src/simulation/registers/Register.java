@@ -67,6 +67,9 @@ public class Register {
         zeroOut();
     }
 
+    /**
+     * Puts zeroes into all bytes of the register.
+     */
     public void zeroOut() {
         if(!locked) {
             for (int i = 0; i < length; i++) {
@@ -301,6 +304,7 @@ public class Register {
     }
 
     //Tested working 3/4
+    /** Returns a 4-byte sequence starting at a given byte of the register. */
     public Integer getInt(int startByte) {
         if(startByte < 0 || startByte > length - Integer.BYTES) {
             return null;
@@ -310,6 +314,7 @@ public class Register {
         return word;
     }
 
+    /** Returns an 8-byte sequence starting at a given byte of the register. */
     public Long getLong(int startByte) {
         if(startByte < 0 || startByte > length - Long.BYTES) {
             return null;

@@ -18,10 +18,6 @@ import static simulation.pipeline.PipelineSegment.correctBits;
 
 public class Assembler implements ANTLRErrorListener {
 
-    //TODO Take file, return binary.
-    //TODO Cry a lot.
-    //TODO A lot.
-
     /** The file to be read from. */
     private File file;
 
@@ -37,7 +33,10 @@ public class Assembler implements ANTLRErrorListener {
     /** InstructionName -> Binary opCode */
     private HashMap<String,String> opCodes;
 
-
+    /**
+     * Constructor.
+     * @param fileName The file being assembled.
+     */
     public Assembler(String fileName){
         // File input;
         Scanner fileIn = null;
@@ -68,6 +67,10 @@ public class Assembler implements ANTLRErrorListener {
     }
 
 
+    /**
+     * Parses the given file.
+     * @return true if no syntax errors, false otherwise.
+     */
     public boolean parseInput() {
         boolean passesParse = true;
         LEGGramLexer lexer = new LEGGramLexer(CharStreams.fromString(this.fileString));
@@ -84,6 +87,8 @@ public class Assembler implements ANTLRErrorListener {
 
         return passesParse;
     }
+
+    //Begin ErrorListener implementation.
 
     public void syntaxError(Recognizer<?, ?> recognizer,
                             Object offendingSymbol,
@@ -124,6 +129,11 @@ public class Assembler implements ANTLRErrorListener {
         System.err.println("java Driver <filename>");
     }
 
+
+    /**
+     * Assembles the file into an ArrayList containing the binary strings.
+     * @return an ArrayList containing the translated instructions.
+     */
     public ArrayList<String> makeBinaryList(){
         ArrayList<String> instructions = new ArrayList<>();
         /*
@@ -146,6 +156,12 @@ public class Assembler implements ANTLRErrorListener {
         return instructions;
     }
 
+
+    /**
+     * Turns a single instruction, split into pieces, into binary.
+     * @param instruction the instruction being translated, split into tokens.
+     * @return translated binary string
+     */
     public String findBin(String[] instruction){
         String instBin = "";
         for (int j  = 0; j < instruction.length; j++){
@@ -249,6 +265,10 @@ public class Assembler implements ANTLRErrorListener {
         return instBin;
     }
 
+    /**
+     * Getter for all instructions, in assembly language, from the file.
+     * @return an array of all instructions, represented as assembly code.
+     */
     public String[] getInstructionArray() {
         ArrayList<String> justInstructions = new ArrayList<>();
         for(String s : instructionArray){
