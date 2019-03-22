@@ -1,10 +1,8 @@
 package simulation.pipeline;
 
-import simulation.ControlUnit;
-import simulation.Register;
+import simulation.control.ControlUnit;
+import simulation.registers.Register;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 
@@ -29,7 +27,7 @@ public class Execute extends PipelineSegment {
 
     /**
      * Constructor to make an Executor Class. Must have the IDEX pipeline
-     * register implementation and the EXEM register implementation.
+     * register implementation and the EXMEM register implementation.
      */
     public Execute(Register idex, Register exmem) {
         this.exmemRegister = exmem;

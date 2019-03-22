@@ -1,7 +1,7 @@
 grammar LEGGram;
 
 @header {
-    package parsing.antlr;
+    package assembling.parsing.antlr;
 }
 
 /* Tokens */

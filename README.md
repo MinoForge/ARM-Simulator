@@ -19,7 +19,7 @@ Pipeline Demo:
     //Known bug where some of the prints in decode do not come from the instruction
     //being run.
     
-parsing Demo:
+assembling.parsing Demo:
 
     java simulation.Driver <TestFile.txt>
     //Note, a test file has been included, but you may choose your own.

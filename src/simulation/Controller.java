@@ -1,6 +1,7 @@
 package simulation;
 
 import simulation.pipeline.*;
+import simulation.registers.Register;
 
 import java.nio.ByteOrder;
 

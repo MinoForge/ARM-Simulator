@@ -1,10 +1,10 @@
-package simulation;
+package assembling;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import parsing.antlr.LEGGramLexer;
-import parsing.antlr.LEGGramParser;
+import assembling.parsing.antlr.LEGGramLexer;
+import assembling.parsing.antlr.LEGGramParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -147,7 +147,7 @@ public class Assembler implements ANTLRErrorListener {
     }
 
     public String findBin(String[] instruction){
-        String instBin = new String();
+        String instBin = "";
         for (int j  = 0; j < instruction.length; j++){
             instruction[j] = instruction[j].replace(",", "");
         }

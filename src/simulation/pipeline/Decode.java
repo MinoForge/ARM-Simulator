@@ -1,7 +1,7 @@
 package simulation.pipeline;
 
-import simulation.ControlUnit;
-import simulation.Register;
+import simulation.control.ControlUnit;
+import simulation.registers.Register;
 
 /**
  * A class to model the Instruction Decoding segment of the ARM pipeline.

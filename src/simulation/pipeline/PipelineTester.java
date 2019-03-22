@@ -1,9 +1,7 @@
 package simulation.pipeline;
 
-import simulation.Assembler;
-import simulation.Driver;
-import simulation.ControlUnit;
-import simulation.Register;
+import assembling.Assembler;
+import simulation.registers.Register;
 
 import java.util.ArrayList;
 import java.util.Scanner;

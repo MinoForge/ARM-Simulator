@@ -1,4 +1,4 @@
-package parsing.antlr;
+package assembling.parsing.antlr;
 
 // Generated from LEGGram.g4 by antlr 4.7.1
 

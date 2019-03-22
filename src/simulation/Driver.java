@@ -1,7 +1,8 @@
 package simulation;
 
-import parsing.antlr.LEGGramLexer;
-import parsing.antlr.LEGGramParser;
+import assembling.Assembler;
+import assembling.parsing.antlr.LEGGramLexer;
+import assembling.parsing.antlr.LEGGramParser;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
@@ -84,7 +85,7 @@ public class Driver implements ANTLRErrorListener{
 
     /**
      * Method to parse the String set in fileString.
-     * @return true if no problems were encountered in parsing. False otherwise.
+     * @return true if no problems were encountered in assembling.parsing. False otherwise.
      */
     public boolean parseInput() {
         boolean passesParse = true;

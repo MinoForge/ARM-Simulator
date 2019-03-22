@@ -1,6 +1,6 @@
 package simulation.pipeline;
-import simulation.ControlUnit;
-import simulation.Register;
+import simulation.control.ControlUnit;
+import simulation.registers.Register;
 import java.util.ArrayList;
 
 /**

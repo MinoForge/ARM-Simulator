@@ -1,12 +1,10 @@
-package simulation;
+package simulation.registers;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.beans.property.*;
+import simulation.Controller;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Class to represent a Register. This will eventually be refactored into the main Simulator
@@ -48,6 +46,8 @@ public class Register {
 
     private int index;
 
+    private boolean locked;
+
     /**
      * Constructor which creates a Register with a specified number of bytes.
      * @param numBytes The size of the Register, in bytes.
@@ -63,17 +63,34 @@ public class Register {
         this.length = numBytes;
         this.bytes = new byte[numBytes];
         this.index = 0;
+        this.locked = false;
         zeroOut();
     }
 
     public void zeroOut() {
-        for (int i = 0; i < length; i++) {
-            bytes[i] = 0;
+        if(!locked) {
+            for (int i = 0; i < length; i++) {
+                bytes[i] = 0;
+            }
+            index = 0;
         }
-        index = 0;
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
 
+    private void setLocked(boolean val) {
+        this.locked = val;
+    }
+
+    public static void lock(Register reg) {
+        reg.setLocked(true);
+    }
+
+    public static void unlock(Register reg) {
+        reg.setLocked(false);
+    }
 
     /** Gets the actual String for the hexVal. */
     public String getHexVal() {
@@ -151,6 +168,9 @@ public class Register {
      * the index after the final byte written.
      */
     public int writeBinaryAtIndex(int startByteIndex, String binary) {
+        if(locked) {
+            return -1;
+        }
         if(startByteIndex < 0)  { //index
             return -1;
         }

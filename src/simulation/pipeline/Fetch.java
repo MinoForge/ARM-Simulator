@@ -1,15 +1,10 @@
 package simulation.pipeline;
 
-import simulation.ControlUnit;
+import simulation.control.ControlUnit;
 import simulation.Controller;
-import simulation.Register;
+import simulation.registers.Register;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static simulation.Controller.PC;
 
 /**
  * A class to model the Instruction Fetching segment of the ARM pipeline.

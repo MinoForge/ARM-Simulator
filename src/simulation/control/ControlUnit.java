@@ -1,4 +1,4 @@
-package simulation;
+package simulation.control;
 
 import java.util.ArrayList;
 
@@ -131,8 +131,8 @@ public class ControlUnit {
         char format = '\0';
         System.out.println("instBin : " + instBin);
         System.out.println("temp is " + temp);
-        String check = temp.substring(2,7);
-        if(check.matches(".100.")){
+        String check = temp.substring(3,7);
+        if(check.matches("100.")){
             format = 'i';
 
             unit.flags.set(0,ASSERT);   //Reg2Loc
@@ -147,7 +147,7 @@ public class ControlUnit {
 
 
         }
-        else if(check.matches(".101.")){
+        else if(check.matches("101.")){
             format = 'b';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -160,7 +160,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches("..101")){
+        else if(check.matches(".101")){
             format = 'r';
             unit.flags.set(0,DEASSERT); //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
@@ -173,7 +173,7 @@ public class ControlUnit {
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }
-        else if(check.matches("..1.0")){
+        else if(check.matches(".1.0")){
             format = 'd';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
