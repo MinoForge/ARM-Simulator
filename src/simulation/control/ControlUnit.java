@@ -144,8 +144,6 @@ public class ControlUnit {
             unit.flags.set(6,DEASSERT); //MemWrite
             unit.flags.set(7,ASSERT);   //RegWrite
             unit.flags.set(8,DEASSERT); //Mem2Reg
-
-
         }
         else if(check.matches("101.")){
             format = 'b';
@@ -205,6 +203,12 @@ public class ControlUnit {
             unit.flags.set(8, ASSERT);   //Mem2Reg
 
         }
+
+//        boolean flag = instructions.get(0).matches("s.*");
+//        unit.flags.set(5, DEASSERT | !flag); //MemRead
+//        unit.flags.set(6, ASSERT & flag);   //MemWrite
+//        unit.flags.set(7, DEASSERT | !flag); //RegWrite
+//        unit.flags.set(8, DEASSERT | !flag); //Mem2Reg
 
     }
 
