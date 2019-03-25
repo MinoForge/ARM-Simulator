@@ -1,5 +1,7 @@
 package simulation.registers;
 
+import simulation.Controller;
+
 /**
  * A class to hold and keep track of CPU register states.
  *
@@ -17,7 +19,7 @@ public class RegisterFile {
      * Default constructor which creates 0 registers, with 0 bytes capacity.
      */
     public RegisterFile() {
-        this(0, 0);
+        this(Controller.DEFAULT_REGISTER_NUM, Register.DEFAULT_BYTE_SIZE);
     }
 
     /**
@@ -66,6 +68,8 @@ public class RegisterFile {
         beingRead[index] = true;
         return registers[index];
     }
+
+
 
     /**
      * Getter for a specific Register, which checks for Write-after-Read and Write-after-Write

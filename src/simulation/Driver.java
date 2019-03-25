@@ -22,7 +22,7 @@ import java.util.Scanner;
  * @version November 30, 2018
  *
  */
-public class Driver implements ANTLRErrorListener{
+public class Driver {
 
     /** The file to be read from. */
     private File file;
@@ -61,84 +61,20 @@ public class Driver implements ANTLRErrorListener{
      * Main method to start up the Simulator.
      * @param args Takes a fileName.
      */
-    public static void main(String... args){ //TODO add functionality
+    public static void main(String... args) { //TODO add functionality
         String arg = "TestFile.txt";
-        if(args.length == 1) //{
+        if (args.length == 1) //{
             arg = args[0];
 //        } else {
 //            System.out.println("Wrong number of arguments.");
 //            usage();
 //            System.exit(1);
 //        }
-        Assembler assemble = new Assembler(arg);
-        if(assemble.parseInput()) {
-            ArrayList<String> bin = assemble.makeBinaryList();
-            for (String s : bin) {
-                System.out.println(s);
-            }
-        }
-//        Driver drive = new Driver(arg);
-//        drive.parseInput();
+        Controller control = new Controller(arg, true);
+        control.setTestRegs();
 
-
+        control.cycle();
     }
-
-    /**
-     * Method to parse the String set in fileString.
-     * @return true if no problems were encountered in assembling.parsing. False otherwise.
-     */
-    public boolean parseInput() {
-        boolean passesParse = true;
-        LEGGramLexer lexer = new LEGGramLexer(CharStreams.fromString(this.fileString));
-        LEGGramParser parser = new LEGGramParser(new CommonTokenStream(lexer));
-        parser.removeErrorListeners();
-        parser.addErrorListener(this);
-
-        parser.prog();
-
-        System.err.println(this.errorMsg);
-        if(!this.errorMsg.equals("")) {
-            passesParse = false;
-        }
-
-        return passesParse;
-    }
-
-    //Begin ErrorListener implementation.
-    @Override
-    public void syntaxError(Recognizer<?, ?> recognizer,
-                            Object offendingSymbol,
-                            int line,
-                            int charPositionInLine,
-                            String msg,
-                            RecognitionException re) {
-
-
-        String sourceName = recognizer.getInputStream().getSourceName();
-        if (!sourceName.isEmpty()) {
-            sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
-        }
-
-//        System.err.println(sourceName+"line "+line+":"+charPositionInLine+" "+msg);
-        errorMsg = errorMsg + "\n" + sourceName+"line "+line+":"+charPositionInLine+" "+msg;
-    }
-
-
-    public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
-        System.out.println("reportAmbiguity not handled.");
-    }
-
-    @Override
-    public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
-        System.out.println("reportAttemptingFullContext not handled.");
-    }
-
-    @Override
-    public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
-        System.out.println("reportContextSensitivity not handled.");
-    }
-
-    //End ErrorListener implementation.
 
     public static void usage() {
         System.err.println("java Driver <filename>");

@@ -12,7 +12,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import simulation.Controller;
 import simulation.registers.Register;
+import simulation.registers.RegisterFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,11 +59,17 @@ public class GUI extends Application {
         this.theStage = primaryStage;
         this.theStage.setTitle("ARM & pipeline");
 
+        String file = "TestFile.txt";
+
+        Controller control = new Controller(file, true);
+
+
         //Make sections of GUI.
         Parent top = makeTop();
-        Parent mid = makeMid("This is where the file contents go\n" +
-                "This isn't a file though.");
+        Parent mid = makeMid(control.getFile(file), control.getRegFile());
         Parent bot = makeBot();
+
+
 
         //Attach sections together.
         SplitPane midBot = new SplitPane(mid, bot);
@@ -73,6 +81,13 @@ public class GUI extends Application {
         theScene = new Scene(mainWindow, WIDTH, HEIGHT);
         theStage.setScene(theScene);
         theStage.show();
+
+        test(control);
+    }
+
+    public void test(Controller control) {
+        control.setTestRegs();
+        control.cycle();
     }
 
 
@@ -104,7 +119,7 @@ public class GUI extends Application {
      * @param fileContents The contents of the File to be displayed.
      * @return The pane containing the text, and a table of registers.
      */
-    private SplitPane makeMid(String fileContents) {
+    private SplitPane makeMid(String fileContents, RegisterFile regFile) {
         //Text Pane and resizing code.
         TextArea fileText = new TextArea(fileContents);
         fileText.setEditable(false);
@@ -113,7 +128,7 @@ public class GUI extends Application {
         filePane.setFitToHeight(true);
 
         //Register Table Pane and resizing code.
-        TableView<Register> regTable = makeRegTable();
+        TableView<Register> regTable = makeRegTable(regFile);
         ScrollPane regPane = new ScrollPane(regTable);
         regPane.setFitToWidth(true);
         regPane.setFitToHeight(true);
@@ -132,13 +147,14 @@ public class GUI extends Application {
      * Helper method to create the Table for the Registers. For mockup, creates default registers.
      * @return The Table of all Registers and their current values.
      */
-    private TableView<Register> makeRegTable() {
-        ArrayList<Register> regList = new ArrayList<>(32);
-        for(int i = 0; i < 32; i++) {
-            regList.add(new Register(i));
-        }
+    private TableView<Register> makeRegTable(RegisterFile regFile) {
+//        ArrayList<Register> regList = new ArrayList<>(32);
+//        for(int i = 0; i < 32; i++) {
+//            regList.add(new Register(i));
+//        }
 
-        ObservableList<Register> obsRegList = FXCollections.observableArrayList(regList);
+
+        ObservableList<Register> obsRegList = FXCollections.observableArrayList(regFile.getRegisters());
         TableView<Register> regTable = new TableView<>(obsRegList);
 
         TableColumn<Register, String> colOne = new TableColumn<>("Reg #");
@@ -149,10 +165,11 @@ public class GUI extends Application {
         colThree.setCellValueFactory(new PropertyValueFactory<>("decVal"));
         TableColumn<Register, String> colFour = new TableColumn<>("Hex");
         colFour.setCellValueFactory(new PropertyValueFactory<>("hexVal"));
-        TableColumn<Register, String> colFive = new TableColumn<>("Bytes");
-        colFive.setCellValueFactory(new PropertyValueFactory<>("bytes"));
+//        TableColumn<Register, String> colFive = new TableColumn<>("Bytes");
+//        colFive.setCellValueFactory(new PropertyValueFactory<>("bytes"));
 
-        regTable.getColumns().setAll(colOne, colTwo, colThree, colFour, colFive);
+        regTable.getColumns().setAll(colOne, colTwo, colThree, colFour);
+//        regTable.getColumns().setAll(colOne, colTwo, colThree, colFour, colFive);
 
         regTable.setFixedCellSize(25);
         regTable.prefHeightProperty().bind(regTable.fixedCellSizeProperty().multiply(Bindings.size(
@@ -178,6 +195,7 @@ public class GUI extends Application {
         simScroll.setFitToWidth(true);
         simScroll.setFitToHeight(true);
         //TODO attach simText to Simulator Message Output.
+
         Tab tabOne = new Tab("Simulator Messages", simScroll);
 
         TextArea sysText = new TextArea("This will be system output from the 'chip'.");

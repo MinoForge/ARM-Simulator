@@ -70,7 +70,9 @@ public class Fetch extends PipelineSegment{
                 "----------------\n");
 
         inst = instructions[Controller.PC / 4];
+//        System.out.println(inst);
         instBin = bins[Controller.PC / 4];
+//        System.out.println(instBin);
 
         Controller.PC += 4;
     }

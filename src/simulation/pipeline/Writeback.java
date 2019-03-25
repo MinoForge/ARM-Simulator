@@ -1,6 +1,8 @@
 package simulation.pipeline;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
+import simulation.registers.RegisterFile;
+
 import java.util.ArrayList;
 
 /**
@@ -20,21 +22,21 @@ public class Writeback extends PipelineSegment{
     private String  aluResult;// the result from the alu in Execute
     private String  memData;  // data recieved from memory
     private String  rdField;  // the destination register number
-    private Register[] regs;  // the array of registers
+    private RegisterFile regFile;  // the array of registers
 
 
    /**
     * Contructor for Write, takes the memwb pipeline register, and the 
     * register array from the simulator.
     */
-    public Writeback(Register memwb, Register[] regs) {
+    public Writeback(Register memwb, RegisterFile regFile) {
         this.memwbRegister = memwb;
         this.regWrite = false;
         this.memToReg = false;
         this.aluResult= "";
         this.memData  = "";
         this.fields   = null;
-        this.regs = regs;
+        this.regFile = regFile;
     }
 
     /**
@@ -66,14 +68,18 @@ public class Writeback extends PipelineSegment{
         if(regWrite){
             //if memToReg is true then we are writing data from memory to
             //the destination register, else write the alu result.
+            int regToWrite = Integer.parseInt(rdField,2);
             if(memToReg){
                 System.out.println("Writing from memory");
-                regs[Integer.parseInt(rdField,2)].writeBinary(memData);
+
+                regFile.getRegister(regToWrite).writeBinary(memData);
+
             }else{
                 System.out.println("Writing from ALU output");
-                regs[Integer.parseInt(rdField,2)].writeBinary(aluResult);
+                regFile.getRegister(regToWrite).writeBinary(aluResult);
             }
-            System.out.println("Result being written to reg" + Integer.parseInt(rdField,2) + ": " + regs[Integer.parseInt(rdField,2)]);
+            regFile.freeRegister(regToWrite);
+            System.out.println("Result being written to reg" + Integer.parseInt(rdField,2) + ": " + regFile.getRegister(regToWrite));
         }
     }
 

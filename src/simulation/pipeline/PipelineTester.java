@@ -2,6 +2,7 @@ package simulation.pipeline;
 
 import assembling.Assembler;
 import simulation.registers.Register;
+import simulation.registers.RegisterFile;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -30,16 +31,15 @@ public class PipelineTester {
     private Register exmem;
     private Register memwb;
 
-    private Register[] registerFile;
+    private RegisterFile regFile;
 
     private String[] instructions;
 
     public PipelineTester() {
-        registerFile = new Register[DEFAULT_REGISTER_NUM];
+        this.regFile = new RegisterFile();
         for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
-            registerFile[i] = new Register(Register.DEFAULT_BYTE_SIZE);
-            registerFile[i].writeBinary(PipelineSegment.correctBits(Integer.toBinaryString(i) + "", 64)); //TODO change to writeLong()
-            System.out.println("Register#" + i + " :: " + registerFile[i]);
+            regFile.getRegister(i).writeBinary(PipelineSegment.correctBits(
+                    Integer.toBinaryString(i) + "", 64)); //TODO change to writeLong()
         }
 
 
@@ -49,10 +49,10 @@ public class PipelineTester {
         memwb = new Register(MEMWB_SIZE);
 
         fetch = new Fetch(ifid);
-        decode = new Decode(ifid, idex, registerFile);
+        decode = new Decode(ifid, idex, regFile);
         execute = new Execute(idex, exmem);
         access = new Access(exmem, memwb);
-        writeback = new Writeback(memwb, registerFile);
+        writeback = new Writeback(memwb, regFile);
     }
 
 
@@ -78,7 +78,7 @@ public class PipelineTester {
             }
             PipelineTester test = new PipelineTester();
 //        test.instructions = new String[] {test1, test2, test3, test4, test5};
-            test.fetch.setInstructions(assemble.getInstructionArray());
+            test.fetch.setInstructions(assemble.getInstructionList().toArray(new String[0]));
             test.fetch.setBins(bin);
             test.test();
         }

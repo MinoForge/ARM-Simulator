@@ -2,6 +2,7 @@ package simulation.pipeline;
 
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
+import simulation.registers.RegisterFile;
 
 /**
  * A class to model the Instruction Decoding segment of the ARM pipeline.
@@ -20,17 +21,17 @@ public class Decode extends PipelineSegment {
     private int mRegister;
     private int dRegister;
     private long immediate;
-    private Register[] registers;
+    private RegisterFile regFile;
     private String format;
 
-    public Decode(Register ifid, Register idex, Register[] regs) {
+    public Decode(Register ifid, Register idex, RegisterFile regFile) {
         this.ifidRegister = ifid;
         this.idexRegister = idex;
         this.instBin      = "";
         this.nRegister    = 0;
         this.mRegister    = 0;
         this.dRegister    = 0;
-        this.registers    = regs;
+        this.regFile    = regFile;
         this.immediate    = 0;
         //Testing only
         this.format       = "r";
@@ -95,7 +96,8 @@ public class Decode extends PipelineSegment {
     }
 
 
-
+    //TODO This method still needs to be abstracted a bit. Does not support d-type?
+    //TODO Should read flags from CU.
     /**
      * Writes the information found in read(), in this case the registers we
      * are manipulating, and writes them into the idex pipeline registers,
@@ -110,14 +112,14 @@ public class Decode extends PipelineSegment {
             idexRegister.append(ifidRegister.getBinary(0,8));
 
             System.out.println("This is the first operand: " +
-                    registers[nRegister].getBinary());
+                    regFile.getRegister(nRegister).getBinary());
 
-            idexRegister.append(registers[nRegister].getBinary());
+            idexRegister.append(regFile.getRegister(nRegister).getBinary());
             if(format.equals("r")){
                 System.out.println("This is the second operand: " +
-                        registers[mRegister].getBinary());
+                        regFile.getRegister(mRegister).getBinary());
 
-                idexRegister.append(registers[mRegister].getBinary());
+                idexRegister.append(regFile.getRegister(mRegister).getBinary());
             } else{
                 idexRegister.append(Long.toBinaryString(immediate));
             }

@@ -1,8 +1,10 @@
 package simulation.registers;
 
 import javafx.beans.property.*;
+import javafx.util.converter.BigIntegerStringConverter;
 import simulation.Controller;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -20,11 +22,11 @@ public class Register {
 
 
 
-//    /** The identifier for the register */
-//    private IntegerProperty regNum;
+    /** The identifier for the register */
+    private IntegerProperty regNum;
 
     /** The actual value of the Register. Will need to be a byte array in the end, probably */
-    private LongProperty trueVal;
+    private StringProperty trueVal;
 
     /** The value of the register, in a binary String. */
     private StringProperty binVal;
@@ -48,18 +50,28 @@ public class Register {
 
     private boolean locked;
 
+    private static Integer regCounter;
+
     /**
      * Constructor which creates a Register with a specified number of bytes.
      * @param numBytes The size of the Register, in bytes.
      */
     public Register(int numBytes) { //TODO Make a static register index so
         // that cannot make duplicates.
+        if(regCounter == null) {
+            regCounter = 0;
+        }
+        this.regNum = new SimpleIntegerProperty(regCounter++);
+
+
 //        this.regNum = new SimpleIntegerProperty();
-//        this.trueVal = new SimpleLongProperty();
-//        this.binVal = new SimpleStringProperty();
+//        this.trueVal = new SimpleStringProperty();
+        this.binVal = new SimpleStringProperty();
 ////        this.octVal = new SimpleStringProperty();
-//        this.decVal = new SimpleStringProperty();
-//        this.hexVal = new SimpleStringProperty();
+        this.decVal = new SimpleStringProperty();
+        this.hexVal = new SimpleStringProperty();
+//        setVals("0");
+
         this.length = numBytes;
         this.bytes = new byte[numBytes];
         this.index = 0;
@@ -77,6 +89,7 @@ public class Register {
             }
             index = 0;
         }
+        setVals(getBinary());
     }
 
     public boolean isLocked() {
@@ -95,6 +108,10 @@ public class Register {
         reg.setLocked(false);
     }
 
+    public int getRegNum() {
+        return regNum.get();
+    }
+
     /** Gets the actual String for the hexVal. */
     public String getHexVal() {
         return hexVal.get();
@@ -110,24 +127,18 @@ public class Register {
         return decVal.get();
     }
 
-    /** Gets the actual Long for the trueVal. */
-    public Long getTrueVal() {
-        return trueVal.getValue();
-    }
+
 
     /**
      * Sets the value of the Register to a new value given.
      * @param newVal The new value to be written to the Register.
      */
-    public void setVals(Long newVal) {
-        trueVal.set(newVal);
-        String bin = Long.toString(newVal, 2);
-        String dec = Long.toString(newVal, 10);
-        String hex = Long.toString(newVal, 16);
+    public void setVals(String newVal) {
+        binVal.set(newVal);
+        BigInteger val = new BigInteger(newVal, 2);
+        decVal.set(val.toString(10));
+        hexVal.set(val.toString(16));
 //        System.out.println(bin + " :: " + dec + " :: " + hex);
-        binVal.set(bin);
-        decVal.set(dec);
-        hexVal.set(hex);
     }
 
 
@@ -135,11 +146,6 @@ public class Register {
 //    public IntegerProperty regNumProperty() {
 //        return regNum;
 //    }
-
-    /** Gets the LongProperty for trueVal. */
-    public LongProperty trueValProperty() {
-        return trueVal;
-    }
 
     /** Gets the StringProperty for binVal. */
     public StringProperty binValProperty() {
@@ -202,7 +208,7 @@ public class Register {
         }
 
 //        bytes = buffer.array();
-
+        setVals(getBinary());
         return i;
     }
 

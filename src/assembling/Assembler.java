@@ -269,17 +269,18 @@ public class Assembler implements ANTLRErrorListener {
      * Getter for all instructions, in assembly language, from the file.
      * @return an array of all instructions, represented as assembly code.
      */
-    public String[] getInstructionArray() {
+    public ArrayList<String> getInstructionList() {
         ArrayList<String> justInstructions = new ArrayList<>();
         for(String s : instructionArray){
             if (!(s.equals("ENTRY") || s.equals("END"))) {
                 justInstructions.add(s);
             }
         }
-        String[] temp = new String[justInstructions.size()];
-        for(int i = 0; i < temp.length; i++){
-            temp[i] = justInstructions.get(i);
-        }
-        return temp;
+        return justInstructions;
+//        String[] temp = new String[justInstructions.size()];
+//        for(int i = 0; i < temp.length; i++){
+//            temp[i] = justInstructions.get(i);
+//        }
+//        return temp;
     }
 }
