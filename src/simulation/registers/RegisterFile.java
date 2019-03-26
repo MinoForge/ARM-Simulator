@@ -63,6 +63,7 @@ public class RegisterFile {
      */
     public Register getRegisterForRead(int index) {
         if(beingWritten[index]) { //Blocks Read-after-Write hazard
+            System.out.println("Register " + index + " is currently locked for writing.");
             return null;
         }
         beingRead[index] = true;
@@ -82,11 +83,13 @@ public class RegisterFile {
 //        if(beingRead[index]) {
 //            //If code is added for concurrent execution/forwarding,
 //            //there must be logic to handle Write-after-Read hazard.
+//            return null;
 //        }
 //
 //        if(beingWritten[index]) {
 //            //If code is added for concurrent execution/forwarding,
 //            //there must be logic to handle Write-after-Write hazard.
+//            return null;
 //        }
 
         beingWritten[index] = true;

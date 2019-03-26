@@ -145,7 +145,7 @@ public class ControlUnit {
             unit.flags.set(7,ASSERT);   //RegWrite
             unit.flags.set(8,DEASSERT); //Mem2Reg
         }
-        else if(check.matches("101.")){
+        else if(check.matches("101.")){ //TODO These seem wrong for branches
             format = 'b';
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1

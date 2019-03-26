@@ -1,17 +1,7 @@
 package simulation;
 
-import assembling.Assembler;
-import assembling.parsing.antlr.LEGGramLexer;
-import assembling.parsing.antlr.LEGGramParser;
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Scanner;
 
 /**
@@ -73,7 +63,7 @@ public class Driver {
         Controller control = new Controller(arg, true);
         control.setTestRegs();
 
-        control.cycle();
+        control.cycleToEnd();
     }
 
     public static void usage() {

@@ -45,6 +45,8 @@ public class Execute extends PipelineSegment {
         }else{              //ALUSrc asserted
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(24,32), 2);
         }
+        System.out.println(value1);
+        System.out.println(value2);
         // TODO a lot
         //It will have to run all the operations that come thorough, any
         // arithmetic, logic or branch calculation

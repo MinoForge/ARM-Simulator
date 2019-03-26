@@ -76,6 +76,7 @@ public class Controller {
             instructions.add("add r31, r31, r31");
             instBins.add("10001011000111110000001111111111");//TODO change to nop
         }
+        Register.lock(regFile.getRegister(31));
         System.out.println(instructions.toString());
 
         Register ifid = new Register(IFID_SIZE);
@@ -106,19 +107,26 @@ public class Controller {
     }
 
 
-
-
     public void cycle() {
         int size = instructions.size() * 4;
+        if(Controller.PC < size) {
+            writeback.execute();
+            access.execute();
+            execute.execute();
+            decoder.execute();
+            fetcher.execute();
+        }
+    }
+
+    public void cycleToEnd() {
+        int size = instructions.size() * 4;
         System.out.println(size);
-//        Scanner scanin = new Scanner(System.in);
         while(Controller.PC < size) {
             writeback.execute();
             access.execute();
             execute.execute();
             decoder.execute();
             fetcher.execute();
-//            scanin.nextLine();
         }
     }
 

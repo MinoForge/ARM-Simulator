@@ -4,6 +4,10 @@ import simulation.control.ControlUnit;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
+import java.util.ArrayList;
+
+import static simulation.control.ControlUnit.DEASSERT;
+
 /**
  * A class to model the Instruction Decoding segment of the ARM pipeline.
  *
@@ -22,7 +26,8 @@ public class Decode extends PipelineSegment {
     private int dRegister;
     private long immediate;
     private RegisterFile regFile;
-    private String format;
+//    private String format;
+    private ArrayList<Boolean> flags;
 
     public Decode(Register ifid, Register idex, RegisterFile regFile) {
         this.ifidRegister = ifid;
@@ -34,7 +39,7 @@ public class Decode extends PipelineSegment {
         this.regFile    = regFile;
         this.immediate    = 0;
         //Testing only
-        this.format       = "r";
+//        this.format       = "r";
     }
 
     /**
@@ -43,52 +48,68 @@ public class Decode extends PipelineSegment {
      */
     private void read(){
         System.out.println("Starting DECODE now!");
+        System.out.flush();
         instBin = ifidRegister.getBinary(8,12);
-        String opCode, regM, regN, regD;
+        String regN, regM, regD;
 
-        switch (format){
-            case("r"):
-
-                //pulling apart the bin string
-                opCode = instBin.substring(0,11);
-                //System.out.println("this is the opcode : " + opCode);
-                regM =  instBin.substring(11,16);
-                //System.out.println("this is the regM : " + regM);
-                //String shmt = "000000";
-                regN = instBin.substring(22,27);
-                //System.out.println("this is the regN : " + regN);
-                regD = instBin.substring(27,32);
-                //System.out.println("this is the regD : " + regD);
-
-
-
-                // Getting the register indices
-                nRegister = Integer.parseInt(regN, 2);
-                //System.out.println("The first operand register: " +
-                // nRegister);
-                mRegister = Integer.parseInt(regM, 2);
-                //System.out.println("The second operand register: " +
-                //    mRegister);
-                dRegister = Integer.parseInt(regD, 2);
-                //System.out.println("The destination register: " + dRegister);
-
-                break;
-
-
-            case("i"):
-                //opCode = instBin.substring(0,10);
-                regD = instBin.substring(27,32);
-                regN = instBin.substring(22,27);
-                String imme = instBin.substring(10,22);
-
-                dRegister = Integer.parseInt(regD, 2);
-
-                nRegister = Integer.parseInt(regN, 2);
-                int temp = Integer.parseInt(imme,2);
-                immediate = ((long)temp << (64 - 12) >> (64-12));
-                //sign extend the immediate value
-//                immediate = (long)temp;
+        regN = instBin.substring(22,27);
+        if(flags.get(0)) {
+            regM = instBin.substring(27, 32);
+        } else {
+            regM = instBin.substring(11, 16);
         }
+
+
+        regD = instBin.substring(27, 32);
+
+        nRegister = Integer.parseInt(regN, 2);
+        mRegister = Integer.parseInt(regM, 2);
+        dRegister = Integer.parseInt(regD, 2);
+
+        String imm = "";
+        int temp;
+        if(flags.get(5) | flags.get(6)) { //D-type
+            imm = instBin.substring(11, 20);
+        } else {
+            imm = instBin.substring(10, 22); //TODO Immediate not always 12 digits. See ldur.
+        }
+        temp = Integer.parseInt(imm, 2);
+        immediate = ((long)temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
+
+//
+//        switch (format){
+//            case("r"):
+//
+//                regM =  instBin.substring(11,16);
+//                regN = instBin.substring(22,27);
+//                regD = instBin.substring(27,32);
+//
+//
+//
+//                // Getting the register indices
+//                mRegister = Integer.parseInt(regM, 2);
+//                nRegister = Integer.parseInt(regN, 2);
+//                dRegister = Integer.parseInt(regD, 2);
+//
+//                break;
+//
+//
+//            case("i"):
+//                //opCode = instBin.substring(0,10);
+//
+//                regN = instBin.substring(22,27);
+//                regD = instBin.substring(27,32);
+//
+//
+//
+//
+//                nRegister = Integer.parseInt(regN, 2);
+//                dRegister = Integer.parseInt(regD, 2);
+//
+//                int temp = Integer.parseInt(imme,2);
+//                immediate = ((long)temp << (64 - 12) >> (64-12)); //sign extend the immediate value
+//
+//        }
 
 
         //TODO finish for B type, needs labels
@@ -104,10 +125,14 @@ public class Decode extends PipelineSegment {
      * also writes the PC to the idex register.
      */
     private void write(){
+
         //First put PC into the ex/mem
-        if(!format.matches("[ri]")){
+//        idexRegister.append(ifidRegister.getBinary(0,8));
+
+
+//        if(!format.matches("[ri]")){
             //do branch magic
-        }else{
+//        }else{
             System.out.println(ifidRegister.getBinary(0,8));
             idexRegister.append(ifidRegister.getBinary(0,8));
 
@@ -115,14 +140,11 @@ public class Decode extends PipelineSegment {
                     regFile.getRegister(nRegister).getBinary());
 
             idexRegister.append(regFile.getRegister(nRegister).getBinary());
-            if(format.equals("r")){
-                System.out.println("This is the second operand: " +
-                        regFile.getRegister(mRegister).getBinary());
 
-                idexRegister.append(regFile.getRegister(mRegister).getBinary());
-            } else{
-                idexRegister.append(Long.toBinaryString(immediate));
-            }
+            System.out.println("This is the second operand: " +
+                    regFile.getRegister(mRegister).getBinary());
+
+            idexRegister.append(regFile.getRegister(mRegister).getBinary());
 
             System.out.println("This is the immediate: " + correctBits(Long
                             .toBinaryString(immediate), 64));
@@ -130,14 +152,10 @@ public class Decode extends PipelineSegment {
                     64));
 
             // Added because of book but might not be needed
-            System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,12) + ":" + instBin.substring(27,32));
-//            idexRegister.append(instBin.substring(0,12) );
-
-//            System.out.println("This is the dest register bin: " +
-//                    instBin.substring(27,32));
+            System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
             idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32));
 
-        }
+//        }
         System.out.println("This is the contents  of idex: " + idexRegister
                 .getBinary());
 
@@ -152,14 +170,35 @@ public class Decode extends PipelineSegment {
      */
     public void execute(){
         if(ControlUnit.getGoAhead(1)) {
-            read();
-            System.out.println("this is the thing im sending to control " +
-                    "unit:" + ifidRegister.getInt(8));
+//            System.out.println("this is the thing im sending to control " +
+//                    "unit:" + ifidRegister.getInt(8));
             ControlUnit.newInstructionBin(ifidRegister.getInt(8));
+            flags = ControlUnit.getControlFlags(1);
+            read();
             idexRegister.zeroOut();
-
-            write();
+            if(registersAvailable()) {
+                write();
+            } else {
+                System.out.println("Stalling at Decode.");
+                ControlUnit.haltPipe(0, 1);
+            }
         }
+    }
+
+    private boolean registersAvailable() {
+        if(regFile.getRegisterForRead(nRegister) == null) {
+            return false;
+        }
+
+        if(flags.get(0) == DEASSERT && regFile.getRegisterForRead(mRegister) == null) {
+            return false;
+        }
+
+        if(regFile.getRegisterForWrite(dRegister) == null) { //TODO if RegisterFile.getRegisterForWrite() is fleshed out, move print there.
+            System.out.println("Register " + mRegister + " is currently locked.");
+            return false;
+        }
+        return true;
     }
 
 

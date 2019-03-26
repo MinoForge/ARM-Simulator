@@ -18,6 +18,7 @@ import simulation.registers.RegisterFile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 /**
@@ -87,7 +88,10 @@ public class GUI extends Application {
 
     public void test(Controller control) {
         control.setTestRegs();
-        control.cycle();
+        Scanner scanIn = new Scanner(System.in);
+        while(!scanIn.nextLine().equals("q")) {
+            control.cycle();
+        }
     }
 
 
