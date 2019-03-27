@@ -241,7 +241,7 @@ public class GUI extends Application {
 
     private Button makeStopButton() {
         Button button = new Button("Stop Run");
-        button.setOnMouseReleased(event -> control.doInstruction());
+        button.setOnMouseReleased(event -> control.stop());
         return button;
     }
 
