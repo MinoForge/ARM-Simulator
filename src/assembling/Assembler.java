@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 import static simulation.pipeline.PipelineSegment.correctBits;
 
-
+//TODO DOES NOT SUPPORT IMMEDIATES IN ADD
 public class Assembler implements ANTLRErrorListener {
 
     /** The file to be read from. */

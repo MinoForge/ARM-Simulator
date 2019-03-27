@@ -39,6 +39,8 @@ public class GUI extends Application {
     /** The file being read. */
     private File currentFile;
 
+    private Controller control;
+
     /** The width of the window. */
     private static final int WIDTH = 1200;
 
@@ -62,7 +64,7 @@ public class GUI extends Application {
 
         String file = "TestFile.txt";
 
-        Controller control = new Controller(file, true);
+        control = new Controller(file, true);
 
 
         //Make sections of GUI.
@@ -83,38 +85,16 @@ public class GUI extends Application {
         theStage.setScene(theScene);
         theStage.show();
 
-        test(control);
+        test();
     }
 
-    public void test(Controller control) {
+    public void test() {
         control.setTestRegs();
-        Scanner scanIn = new Scanner(System.in);
-        while(!scanIn.nextLine().equals("q")) {
-            control.cycle();
-        }
-    }
-
-
-    /**
-     * Method to make the strip of Buttons to go along the top of the window.
-     * @return The strip of Buttons.
-     */
-    private HBox makeTop() {
-        HBox buttonPane = new HBox();
-        ArrayList<Button> buttons = new ArrayList<>();
-        buttons.add(new Button("New File"));
-        buttons.add(new Button("Open File"));
-        buttons.add(new Button("Save File"));
-        buttons.add(new Button("Step Back"));
-        buttons.add(new Button("Stop Run"));
-        buttons.add(new Button("Pause Run"));
-        buttons.add(new Button("Assembly, Assemble!"));
-        buttons.add(new Button("Start/Continue"));
-        buttons.add(new Button("Step Forward"));
-        buttons.add(new Button("Cycles/Sec"));
-//        buttons.add(new Button("0x"));
-        buttonPane.getChildren().addAll(buttons);
-        return buttonPane;
+//        control.cycleToEnd();
+//        Scanner scanIn = new Scanner(System.in);
+//        while(!scanIn.nextLine().equals("q")) {
+//            control.cycle();
+//        }
     }
 
 
@@ -152,11 +132,6 @@ public class GUI extends Application {
      * @return The Table of all Registers and their current values.
      */
     private TableView<Register> makeRegTable(RegisterFile regFile) {
-//        ArrayList<Register> regList = new ArrayList<>(32);
-//        for(int i = 0; i < 32; i++) {
-//            regList.add(new Register(i));
-//        }
-
 
         ObservableList<Register> obsRegList = FXCollections.observableArrayList(regFile.getRegisters());
         TableView<Register> regTable = new TableView<>(obsRegList);
@@ -180,6 +155,8 @@ public class GUI extends Application {
                 regTable.getItems()).add(1.01)));
         regTable.minHeightProperty().bind(regTable.prefHeightProperty());
         regTable.maxHeightProperty().bind(regTable.prefHeightProperty());
+        regTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        regTable.getColumns().get(0).setMaxWidth(20); //TODO Fix gui
 
         return regTable;
     }
@@ -217,6 +194,55 @@ public class GUI extends Application {
         tabTwo.setClosable(false);
 
         return outPane;
+    }
+
+    /**
+     * Method to make the strip of Buttons to go along the top of the window.
+     * @return The strip of Buttons.
+     */
+    private HBox makeTop() {
+        HBox buttonPane = new HBox();
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(new Button("New File"));
+        buttons.add(new Button("Open File"));
+        buttons.add(new Button("Save File"));
+        buttons.add(new Button("Step Back"));
+        buttons.add(new Button("Stop Run"));
+        buttons.add(new Button("Pause Run"));
+        buttons.add(new Button("Assembly, Assemble!"));
+
+        buttons.add(makeRunButton());
+        buttons.add(makeInstructButton());
+        buttons.add(makeStepButton());
+
+        buttons.add(new Button("Cycles/Sec"));
+//        buttons.add(new Button("0x"));
+        buttonPane.getChildren().addAll(buttons);
+        return buttonPane;
+    }
+
+    private Button makeStepButton() {
+        Button button = new Button("Cycle CPU");
+        button.setOnMouseReleased(event -> control.cycle());
+        return button;
+    }
+
+    private Button makeRunButton() {
+        Button button = new Button("Start/Continue");
+        button.setOnMouseReleased(event -> control.cycleToEnd());
+        return button;
+    }
+
+    private Button makeInstructButton() {
+        Button button = new Button("Step Forward");
+        button.setOnMouseReleased(event -> control.doInstruction());
+        return button;
+    }
+
+    private Button makeStopButton() {
+        Button button = new Button("Stop Run");
+        button.setOnMouseReleased(event -> control.doInstruction());
+        return button;
     }
 
 }

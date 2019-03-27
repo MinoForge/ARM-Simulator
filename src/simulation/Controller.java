@@ -50,9 +50,15 @@ public class Controller {
     //private  instructor;
     public static int PC = 0;
 
+    private String file;
+    private boolean littleEnd;
+
 
     public Controller(String file, boolean littleEnd) {
         //TODO read in from file to data and instructions.
+        this.file = file;
+        this.littleEnd = littleEnd;
+
         this.assembler = new Assembler(file);
         this.regFile = new RegisterFile();
         if(littleEnd) {
@@ -107,7 +113,7 @@ public class Controller {
     }
 
 
-    public void cycle() {
+    public boolean cycle() {
         int size = instructions.size() * 4;
         if(Controller.PC < size) {
             writeback.execute();
@@ -115,6 +121,10 @@ public class Controller {
             execute.execute();
             decoder.execute();
             fetcher.execute();
+            return true;
+        } else {
+            System.out.println("Reached end of instructions.");
+            return false;
         }
     }
 
@@ -127,6 +137,22 @@ public class Controller {
             execute.execute();
             decoder.execute();
             fetcher.execute();
+        }
+        System.out.println("Reached end of instructions.");
+    }
+
+    public boolean doInstruction() {
+        int size = instructions.size() * 4;
+        if(Controller.PC < size) {
+            fetcher.execute();
+            decoder.execute();
+            execute.execute();
+            access.execute();
+            writeback.execute();
+            return true;
+        } else {
+            System.out.println("Reached end of instructions.");
+            return false;
         }
     }
 
@@ -155,6 +181,10 @@ public class Controller {
             System.err.println("File not found.");
         }
         return str.toString();
+    }
+
+    public void stop() {
+
     }
 
 
