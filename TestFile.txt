@@ -1,7 +1,7 @@
 ENTRY
 AND r3, r31, r30
 Add r31, r31, r31
-ADD r4, r2, #7
+ADD r4, r2, r7
 Add r1, r1, r7
 Add r1, r1, r7
 Add r1, r1, r7
