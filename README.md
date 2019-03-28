@@ -22,7 +22,7 @@ Pipeline Demo:
 assembling.parsing Demo:
 
     java simulation.Driver <TestFile.txt>
-    //Note, a test file has been included, but you may choose your own.
+    //Note, a test filePath has been included, but you may choose your own.
     
     
 GUI Demo:

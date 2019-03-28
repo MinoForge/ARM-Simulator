@@ -50,40 +50,37 @@ public class Controller {
     //private  instructor;
     public static int PC = 0;
 
-    private String file;
-    private boolean littleEnd;
+    private String filePath;
+    private boolean halt;
 
 
-    public Controller(String file, boolean littleEnd) {
-        //TODO read in from file to data and instructions.
-        this.file = file;
-        this.littleEnd = littleEnd;
+    public Controller(String filePath, boolean littleEnd) {
+        this.filePath = filePath;
 
-        this.assembler = new Assembler(file);
         this.regFile = new RegisterFile();
+        regFile.lockRegister(31); //Zero Register
+
         if(littleEnd) {
             BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
         } else {
             BYTE_ORDER = ByteOrder.BIG_ENDIAN;
         }
 //        this.data = assembler.getDataArray();
+
+
+
+    }
+
+    public void assemble() {
+        this.assembler = new Assembler(filePath);
         this.instructions = assembler.getInstructionList();
         this.instBins = assembler.makeBinaryList();
         init();
+
     }
 
-
-    /**
-     * Initializes the simulator, registers, stack, etc.
-     */
-    public void init() {
-        int extra = 4;
-        while(extra-- > 0) {
-            instructions.add("add r31, r31, r31");
-            instBins.add("10001011000111110000001111111111");//TODO change to nop
-        }
-        Register.lock(regFile.getRegister(31));
-        System.out.println(instructions.toString());
+    public void start() {
+        halt = false;
 
         Register ifid = new Register(IFID_SIZE);
         Register idex = new Register(IDEX_SIZE);
@@ -100,6 +97,22 @@ public class Controller {
 
         readData(); //initialize data stuff
         setUpStack(); //stack initialization
+    }
+
+
+    /**
+     * Initializes the simulator, registers, stack, etc.
+     */
+    private void init() {
+        int extra = 4;
+        while(extra-- > 0) {
+            instructions.add("add r31, r31, r31");
+            instBins.add("10001011000111110000001111111111");//TODO change to nop
+        }
+
+        System.out.println(instructions.toString());
+
+
 
         //this.instructor = new Instructor();
     }
@@ -122,23 +135,22 @@ public class Controller {
             decoder.execute();
             fetcher.execute();
             return true;
-        } else {
-            System.out.println("Reached end of instructions.");
-            return false;
         }
+        return false;
+
     }
 
     public void cycleToEnd() {
         int size = instructions.size() * 4;
         System.out.println(size);
-        while(Controller.PC < size) {
+        while(Controller.PC < size && !halt) {
             writeback.execute();
             access.execute();
             execute.execute();
             decoder.execute();
             fetcher.execute();
         }
-        System.out.println("Reached end of instructions.");
+
     }
 
     public boolean doInstruction() {
@@ -150,10 +162,8 @@ public class Controller {
             access.execute();
             writeback.execute();
             return true;
-        } else {
-            System.out.println("Reached end of instructions.");
-            return false;
         }
+        return false;
     }
 
     public void setTestRegs() {
@@ -183,8 +193,18 @@ public class Controller {
         return str.toString();
     }
 
-    public void stop() {
+    public void setHalt(boolean val) {
+        this.halt = val;
+    }
 
+    public void stop() {
+        this.halt = true;
+        Controller.PC = 0;
+    }
+
+    public void resetReg() {
+        regFile.reset();
+        setTestRegs();
     }
 
 

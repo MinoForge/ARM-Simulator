@@ -113,6 +113,12 @@ public class RegisterFile {
         Register.lock(registers[index]);
     }
 
+    public void reset() {
+        for(Register r: registers) {
+            r.zeroOut();
+        }
+    }
+
     public static void main(String... args) {
         RegisterFile test = new RegisterFile(32, 64);
 

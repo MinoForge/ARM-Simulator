@@ -37,7 +37,7 @@ public class GUI extends Application {
     private Scene theScene;
 
     /** The file being read. */
-    private File currentFile;
+    private String file;
 
     private Controller control;
 
@@ -62,7 +62,7 @@ public class GUI extends Application {
         this.theStage = primaryStage;
         this.theStage.setTitle("ARM & pipeline");
 
-        String file = "TestFile.txt";
+        file = "TestFile.txt";
 
         control = new Controller(file, true);
 
@@ -202,47 +202,14 @@ public class GUI extends Application {
      */
     private HBox makeTop() {
         HBox buttonPane = new HBox();
-        ArrayList<Button> buttons = new ArrayList<>();
-        buttons.add(new Button("New File"));
-        buttons.add(new Button("Open File"));
-        buttons.add(new Button("Save File"));
-        buttons.add(new Button("Step Back"));
-        buttons.add(new Button("Stop Run"));
-        buttons.add(new Button("Pause Run"));
-        buttons.add(new Button("Assembly, Assemble!"));
 
-        buttons.add(makeRunButton());
-        buttons.add(makeInstructButton());
-        buttons.add(makeStepButton());
+        ButtonStrip bStrip = new ButtonStrip(control);
+        ArrayList<Button> buttons = bStrip.getButtons();
 
-        buttons.add(new Button("Cycles/Sec"));
-//        buttons.add(new Button("0x"));
         buttonPane.getChildren().addAll(buttons);
         return buttonPane;
     }
 
-    private Button makeStepButton() {
-        Button button = new Button("Cycle CPU");
-        button.setOnMouseReleased(event -> control.cycle());
-        return button;
-    }
 
-    private Button makeRunButton() {
-        Button button = new Button("Start/Continue");
-        button.setOnMouseReleased(event -> control.cycleToEnd());
-        return button;
-    }
-
-    private Button makeInstructButton() {
-        Button button = new Button("Step Forward");
-        button.setOnMouseReleased(event -> control.doInstruction());
-        return button;
-    }
-
-    private Button makeStopButton() {
-        Button button = new Button("Stop Run");
-        button.setOnMouseReleased(event -> control.stop());
-        return button;
-    }
 
 }
