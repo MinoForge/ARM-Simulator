@@ -35,7 +35,7 @@ STRING        : '".*"';
 /* Rules */
 
 //Total File
-file    : prog  data;
+filePath    : prog  data;
 //TODO re-add labels to prog?? Was ambiguous.
 
 //Consumes all instructions

@@ -116,6 +116,7 @@ public class RegisterFile {
     public void reset() {
         for(Register r: registers) {
             r.zeroOut();
+            freeRegister(r.getRegNum());
         }
     }
 

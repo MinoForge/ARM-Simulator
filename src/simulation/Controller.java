@@ -1,6 +1,7 @@
 package simulation;
 
 import assembling.Assembler;
+import simulation.control.ControlUnit;
 import simulation.pipeline.*;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
@@ -142,7 +143,6 @@ public class Controller {
 
     public void cycleToEnd() {
         int size = instructions.size() * 4;
-        System.out.println(size);
         while(Controller.PC < size && !halt) {
             writeback.execute();
             access.execute();
@@ -155,12 +155,14 @@ public class Controller {
 
     public boolean doInstruction() {
         int size = instructions.size() * 4;
-        if(Controller.PC < size) {
+        if(Controller.PC < size - 4) {
             fetcher.execute();
             decoder.execute();
             execute.execute();
             access.execute();
             writeback.execute();
+            ControlUnit.flushPipe(0,4);
+            ControlUnit.setStageDataValid(0, true);
             return true;
         }
         return false;
@@ -200,6 +202,8 @@ public class Controller {
     public void stop() {
         this.halt = true;
         Controller.PC = 0;
+        ControlUnit.flushPipe(0,4);
+        ControlUnit.setStageDataValid(0, true);
     }
 
     public void resetReg() {

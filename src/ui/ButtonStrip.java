@@ -108,12 +108,14 @@ public class ButtonStrip {
     }
 
     private Button makeAssembleButton() {
-        Button button = new Button("Assemble");
+        Button button = new Button("Assemble!");
         button.setOnMouseReleased(event -> {
+            control.setHalt(false);
             control.assemble();
             runProgramButton.setDisable(false);
             runCycleButton.setDisable(false);
             runInstructionButton.setDisable(false);
+
         });
         return button;
     }
@@ -123,6 +125,7 @@ public class ButtonStrip {
         button.setOnMouseReleased(event -> {
             if(Controller.PC == 0) {
                 control.start();
+                control.resetReg();
             }
             if(!control.cycle()) {
                 System.out.println("Reached end of instructions.");
@@ -141,11 +144,19 @@ public class ButtonStrip {
             button.setDisable(true);
             stopRunButton.setDisable(false);
             pauseRunButton.setDisable(false);
+            runInstructionButton.setDisable(true);
+            runCycleButton.setDisable(true);
             if(Controller.PC == 0) {
                 control.start();
+                control.resetReg();
             }
             control.cycleToEnd();
             System.out.println("Reached end of instructions.");
+            button.setDisable(true);
+            pauseRunButton.setDisable(true);
+            stopRunButton.setDisable(true);
+            control.stop();
+            System.out.println(Controller.PC);
         });
         button.setDisable(true);
         return button;
@@ -156,12 +167,14 @@ public class ButtonStrip {
         button.setOnMouseReleased(event -> {
             if(Controller.PC == 0) {
                 control.start();
+                control.resetReg();
             }
             if(!control.doInstruction()) {
                 System.out.println("Reached end of instructions.");
                 button.setDisable(true);
                 runProgramButton.setDisable(true);
                 runCycleButton.setDisable(true);
+                control.stop();
             }
         });
         button.setDisable(true);
