@@ -156,7 +156,11 @@ public class GUI extends Application {
         regTable.minHeightProperty().bind(regTable.prefHeightProperty());
         regTable.maxHeightProperty().bind(regTable.prefHeightProperty());
         regTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        regTable.getColumns().get(0).setMaxWidth(20); //TODO Fix gui
+        regTable.getColumns().get(0).setMaxWidth(70);
+        regTable.getColumns().get(1).setMinWidth(300);
+        regTable.getColumns().get(1).setMaxWidth(600);
+        regTable.getColumns().get(2).setMaxWidth(120);
+        regTable.getColumns().get(3).setMaxWidth(60);//TODO Fix gui
 
         return regTable;
     }
