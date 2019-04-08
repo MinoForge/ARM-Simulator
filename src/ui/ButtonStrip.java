@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ButtonStrip {
 
     private Controller control;
+    private GUI gui;
 
     private Button newButton;
     private Button openButton;
@@ -27,8 +28,9 @@ public class ButtonStrip {
 
 
 
-    public ButtonStrip(Controller control) {
+    public ButtonStrip(Controller control, GUI gui) {
         this.control = control;
+        this.gui = gui;
 
         newButton = makeNewButton();
         openButton = makeOpenButton();
@@ -115,7 +117,7 @@ public class ButtonStrip {
             runProgramButton.setDisable(false);
             runCycleButton.setDisable(false);
             runInstructionButton.setDisable(false);
-
+            gui.getOutPane().getSelectionModel().select(1);
         });
         return button;
     }

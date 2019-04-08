@@ -1,6 +1,7 @@
 package ui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,9 @@ import simulation.Controller;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
-import java.io.File;
+import javax.lang.model.type.PrimitiveType;
+import javax.xml.soap.Text;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -47,6 +50,12 @@ public class GUI extends Application {
     /** The height of the window. */
     private static final int HEIGHT = 800;
 
+    private TextArea simOut;
+
+    private TextArea simErr;
+
+    private TabPane outPane;
+
 
     /** Main. */
     public static void main(String[] args) {
@@ -63,6 +72,8 @@ public class GUI extends Application {
         this.theStage.setTitle("ARM & pipeline");
 
         file = "TestFile.txt";
+//
+//        Process proc = Runtime.getRuntime().exec
 
         control = new Controller(file, true);
 
@@ -165,6 +176,10 @@ public class GUI extends Application {
         return regTable;
     }
 
+    private void appendText(TextArea out, String str) {
+        Platform.runLater(() -> out.appendText(str));
+    }
+
     /**
      * Method to create the TabPane which will have output messages from the simulator,
      * and I/O to the 'chip' itself.
@@ -173,27 +188,47 @@ public class GUI extends Application {
      */
     private TabPane makeBot() {
 
-        TextArea simText = new TextArea("This will be messages from the simulator.");
-        simText.setMinWidth(WIDTH);
-        simText.setEditable(false);
-        ScrollPane simScroll = new ScrollPane(simText);
+        this.simErr = new TextArea("Welcome to ARM & Simulator!\nError messages will show here");
+        simErr.setMinWidth(WIDTH);
+        simErr.setEditable(false);
+        OutputStream err = new OutputStream() {
+            public void write(int b) throws IOException {
+                appendText(simErr, String.valueOf((char) b));
+            }
+        };
+
+        //Intellij is weird. Uncomment for hilarity with previous line of code.
+//        OutputStream er = (int b) -> {
+//            appendText(simErr, String.valueOf((char) b));
+//        };
+        System.setErr(new PrintStream(err, true));
+
+        ScrollPane simScroll = new ScrollPane(simErr);
         simScroll.setFitToWidth(true);
         simScroll.setFitToHeight(true);
-        //TODO attach simText to Simulator Message Output.
+
 
         Tab tabOne = new Tab("Simulator Messages", simScroll);
 
-        TextArea sysText = new TextArea("This will be system output from the 'chip'.");
-//        sysText.setEditable(false);
-        sysText.setMinWidth(WIDTH);
-        ScrollPane sysScroll = new ScrollPane(sysText);
+        this.simOut = new TextArea("Simulator I/O");
+        simOut.setEditable(true);
+        simOut.setMinWidth(WIDTH);
+        OutputStream out = new OutputStream() {
+            public void write(int b) throws IOException {
+                appendText(simOut, String.valueOf((char) b));
+            }
+        };
+        System.setOut(new PrintStream(out, true));
+//        InputStream
+
+        ScrollPane sysScroll = new ScrollPane(simOut);
         sysScroll.setFitToWidth(true);
         sysScroll.setFitToHeight(true);
         //TODO attach sysText to 'System' output/input
         Tab tabTwo = new Tab("System I/O", sysScroll);
 
 
-        TabPane outPane = new TabPane(tabOne, tabTwo);
+        this.outPane = new TabPane(tabOne, tabTwo);
         tabOne.setClosable(false);
         tabTwo.setClosable(false);
 
@@ -207,13 +242,16 @@ public class GUI extends Application {
     private HBox makeTop() {
         HBox buttonPane = new HBox();
 
-        ButtonStrip bStrip = new ButtonStrip(control);
+        ButtonStrip bStrip = new ButtonStrip(control, this);
         ArrayList<Button> buttons = bStrip.getButtons();
 
         buttonPane.getChildren().addAll(buttons);
         return buttonPane;
     }
 
+    public TabPane getOutPane() {
+        return outPane;
+    }
 
 
 }
