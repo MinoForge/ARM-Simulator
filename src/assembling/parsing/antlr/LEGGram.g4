@@ -11,12 +11,16 @@ ADD     : [Aa][Dd][Dd][ ];
 SUB     : [Ss][Uu][Bb][ ];
 MOV     : [Mm][Oo][Vv][ ];
 AND     : [Aa][Nn][Dd][ ];
-OR      : [Oo][Rr][ ];
+ORR      : [Oo][Rr][Rr][ ];
 //Begin new instructions
-LDUR    : [Ll][Dd][Uu][Rr];
-STUR    : [Ss][Tt][Uu][Rr];
-B       : [Bb];
-CBZ     : [Cc][Bb][Zz];
+MUL		: [Mm][Uu][Ll][ ];
+DIV		: [Dd][Ii][Vv][ ];
+BL		: [Bb][Ll][ ];
+LDUR	: [Ll][Dd][Uu][Rr][ ];
+STUR	: [Ss][Tt][Uu][Rr][ ];
+B		: [Bb][ ];
+CBZ		: [Cc][Bb][Zz][ ];
+CBNZ	: [Cc][Bb][Nn][Zz][ ];
 //End Instructions
 
 //Important Symbols
@@ -35,16 +39,18 @@ LCWORD        : [a-z]+;
 DIRECTIVE     : '.';
 DATA          : '.data';
 STRING        : '".*"';
+LBRACK        : '[';
+RBRACK        : ']';
 //End Symbols
 
 /* Rules */
 
 //Total File
-filePath    : prog  data;
+filePath    : data? prog data?;
 //TODO re-add labels to prog?? Was ambiguous.
 
 //Consumes all instructions
-prog    : ENTRY (inst | WS)+ END
+prog    : ENTRY (label | inst | WS)+ END
         ;
 
 //Not implemented yet
@@ -67,7 +73,16 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  SUB reg SEPARATOR reg SEPARATOR (reg | imm)
         |  MOV reg SEPARATOR reg
         |  AND reg SEPARATOR reg SEPARATOR reg
-        |  OR reg SEPARATOR reg SEPARATOR reg )
+        |  ORR reg SEPARATOR reg SEPARATOR reg
+        |  MUL reg SEPARATOR reg SEPARATOR reg
+        |  DIV reg SEPARATOR reg SEPARATOR reg
+        |  B (label | imm)
+        |  BL (label | imm)
+        |  CBZ reg SEPARATOR imm
+        |  CBNZ reg SEPARATOR imm
+        |  LDUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
+        |  STUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
+        )
         ;
 
 

@@ -1,0 +1,8 @@
+MUL
+DIV
+BL
+LDUR
+STUR
+B
+CBZ
+CBNZ

@@ -20,12 +20,16 @@ public class MakeRegEx {
             String str = scanner.nextLine();
             str = str.toUpperCase();
             StringBuilder out = new StringBuilder();
-            out.append(str + "\t\t: ");
+            out.append(str);
+            if(str.length() < 4) {
+                out.append("\t");
+            }
+            out.append("\t: ");
             for(int i = 0; i < str.length(); i++) {
                 char c = str.charAt(i);
-                out.append("[" + str.charAt(i) + (c - 26) + "]");
+                out.append("[" + str.charAt(i) + (char)(c + 32) + "]");
             }
-            out.append(";");
+            out.append("[ ];");
             System.out.println(out);
         }
     }
