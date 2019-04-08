@@ -35,7 +35,7 @@ public class Register {
 //    private StringProperty octVal;
 
     /** The value of the register, in a decimal String. */
-    private StringProperty decVal;
+    private LongProperty decVal;
 
     /** The value of the register, in a hexadecimal String. */
     private StringProperty hexVal;
@@ -68,7 +68,7 @@ public class Register {
 //        this.trueVal = new SimpleStringProperty();
         this.binVal = new SimpleStringProperty();
 ////        this.octVal = new SimpleStringProperty();
-        this.decVal = new SimpleStringProperty();
+        this.decVal = new SimpleLongProperty();
         this.hexVal = new SimpleStringProperty();
 //        setVals("0");
 
@@ -123,7 +123,7 @@ public class Register {
     }
 
     /** Gets the actual String for the decVal. */
-    public String getDecVal() {
+    public Long getDecVal() {
         return decVal.get();
     }
 
@@ -136,7 +136,7 @@ public class Register {
     public void setVals(String newVal) {
         binVal.set(newVal);
         BigInteger val = new BigInteger(newVal, 2);
-        decVal.set(val.toString(10));
+        decVal.set(val.longValue());
         hexVal.set(val.toString(16));
 //        System.out.println(bin + " :: " + dec + " :: " + hex);
     }
@@ -153,7 +153,7 @@ public class Register {
     }
 
     /** Gets the StringProperty for decVal. */
-    public StringProperty decValProperty() {
+    public LongProperty decValProperty() {
         return decVal;
     }
 

@@ -7,11 +7,16 @@ grammar LEGGram;
 /* Tokens */
 
 //Instructions
-ADD    : [Aa][Dd][Dd][ ];
-SUB    : [Ss][Uu][Bb][ ];
-MOV    : [Mm][Oo][Vv][ ];
-AND    : [Aa][Nn][Dd][ ];
-OR     : [Oo][Rr][ ];
+ADD     : [Aa][Dd][Dd][ ];
+SUB     : [Ss][Uu][Bb][ ];
+MOV     : [Mm][Oo][Vv][ ];
+AND     : [Aa][Nn][Dd][ ];
+OR      : [Oo][Rr][ ];
+//Begin new instructions
+LDUR    : [Ll][Dd][Uu][Rr];
+STUR    : [Ss][Tt][Uu][Rr];
+B       : [Bb];
+CBZ     : [Cc][Bb][Zz];
 //End Instructions
 
 //Important Symbols

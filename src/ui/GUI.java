@@ -17,11 +17,8 @@ import simulation.Controller;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
-import javax.lang.model.type.PrimitiveType;
-import javax.xml.soap.Text;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 /**

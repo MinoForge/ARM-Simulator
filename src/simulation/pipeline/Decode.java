@@ -151,7 +151,7 @@ public class Decode extends PipelineSegment {
             idexRegister.append(correctBits(Long.toBinaryString(immediate),
                     64));
 
-            // Added because of book but might not be needed
+
             System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
             idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32));
 

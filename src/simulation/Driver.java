@@ -1,7 +1,10 @@
 package simulation;
 
+import ui.GUI;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -61,7 +64,21 @@ public class Driver {
 //            System.exit(1);
 //        }
         Controller control = new Controller(arg, true);
+        control.assemble();
         control.setTestRegs();
+        control.start();
+
+//        GUI gui = new GUI();
+//        GUI.main(new String[0]);
+//        try {
+//            Process proc = Runtime.getRuntime().exec("java GUI");
+//        } catch (IOException ioe) {
+//            System.out.println(ioe.getStackTrace());
+//        }
+
+
+
+
 
         control.cycleToEnd();
     }
