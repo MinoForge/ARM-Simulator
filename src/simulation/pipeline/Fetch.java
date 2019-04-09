@@ -74,6 +74,7 @@ public class Fetch extends PipelineSegment{
         instBin = bins[Controller.PC / 4];
 //        System.out.println(instBin);
 
+
         Controller.PC += 4;
     }
 

@@ -29,6 +29,8 @@ public class Decode extends PipelineSegment {
 //    private String format;
     private ArrayList<Boolean> flags;
 
+    private static final byte RETURN_ADDRESS = 30;
+
     public Decode(Register ifid, Register idex, RegisterFile regFile) {
         this.ifidRegister = ifid;
         this.idexRegister = idex;
@@ -59,8 +61,14 @@ public class Decode extends PipelineSegment {
             regM = instBin.substring(11, 16);
         }
 
-
-        regD = instBin.substring(27, 32);
+        //TODO technically, if this is a branch, this could be set to 30.
+        //However, that begs the question: What happens if we're branching without linking?
+        //Because this avenue would set the RA to 0 always.
+        if(flags.get(4) && flags.get(7)) { //Branch with Link must write to ReturnAddress reg.
+            regD = "" + RETURN_ADDRESS;
+        } else { //Anything else writes or does not write to regD as determined by flags[7]
+            regD = instBin.substring(27, 32);
+        }
 
         nRegister = Integer.parseInt(regN, 2);
         mRegister = Integer.parseInt(regM, 2);

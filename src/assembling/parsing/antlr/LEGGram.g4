@@ -15,12 +15,15 @@ ORR      : [Oo][Rr][Rr][ ];
 //Begin new instructions
 MUL		: [Mm][Uu][Ll][ ];
 DIV		: [Dd][Ii][Vv][ ];
-BL		: [Bb][Ll][ ];
 LDUR	: [Ll][Dd][Uu][Rr][ ];
 STUR	: [Ss][Tt][Uu][Rr][ ];
 B		: [Bb][ ];
+BL		: [Bb][Ll][ ];
+BR      : [Bb][Rr][ ];
+BLR     : [Bb][Ll][Rr][ ];
 CBZ		: [Cc][Bb][Zz][ ];
 CBNZ	: [Cc][Bb][Nn][Zz][ ];
+MADD	: [Mm][Aa][Dd][Dd][ ];
 //End Instructions
 
 //Important Symbols
@@ -47,7 +50,6 @@ RBRACK        : ']';
 
 //Total File
 filePath    : data? prog data?;
-//TODO re-add labels to prog?? Was ambiguous.
 
 //Consumes all instructions
 prog    : ENTRY (label | inst | WS)+ END
@@ -65,7 +67,7 @@ imm     : (HASH NEG ? INT);
 //Not implemented yet
 memcall : (EQUALS WORD);
 
-//De-implemented. See TODO above
+//Consumes a word ending colon.
 label   : (WORD COLON);
 
 //Consumes all instructions. More added as more implemented.
@@ -75,9 +77,12 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  AND reg SEPARATOR reg SEPARATOR reg
         |  ORR reg SEPARATOR reg SEPARATOR reg
         |  MUL reg SEPARATOR reg SEPARATOR reg
+        |  MADD reg SEPARATOR reg SEPARATOR reg SEPARATOR reg
         |  DIV reg SEPARATOR reg SEPARATOR reg
-        |  B (label | imm)
-        |  BL (label | imm)
+        |  BL label | imm
+        |  B label | imm
+        |  BR reg //TODO add to assembler
+        |  BLR reg //TODO add to assembler
         |  CBZ reg SEPARATOR imm
         |  CBNZ reg SEPARATOR imm
         |  LDUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK

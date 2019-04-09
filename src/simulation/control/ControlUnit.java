@@ -309,6 +309,10 @@ public class ControlUnit {
         return str.toString();
     }
 
+    public void setFlag(int stage, int flag, boolean value) {
+        values.get(stage).set(flag, value);
+    }
+
 
     /** Testing. */
     public static void main(String... args) {

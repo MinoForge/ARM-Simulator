@@ -326,7 +326,7 @@ public class Register {
             return null;
         }
 
-        long word = ByteBuffer.wrap(Arrays.copyOfRange(bytes, startByte, startByte + Long.BYTES)).getInt();
+        long word = ByteBuffer.wrap(Arrays.copyOfRange(bytes, startByte, startByte + Long.BYTES)).getLong();
         return word;
     }
 
