@@ -1,8 +1,9 @@
 ENTRY
 AND r10, r9, r9
 Add r31, r31, r31
-ADD r4, r2, r7
-Add r1, r1, r7
-Add r1, r1, r7
-Add r1, r1, r7
+sub r2, r1, r7
+orr r2, r1, r7
+Add r2, r2, #13
+sub r2, r2, #10
+and r2, r2, #0
 END
