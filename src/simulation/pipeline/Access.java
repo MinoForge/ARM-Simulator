@@ -1,5 +1,6 @@
 package simulation.pipeline;
 
+import simulation.Controller;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
 
@@ -70,6 +71,10 @@ public class Access extends PipelineSegment{
             // Integer.parseInt(memAddress) + 8);
         } else {
             System.out.println("Bypassing Main Memory");
+        }
+
+        if(branch) {
+            Controller.PC = (int)Long.parseUnsignedLong(exmemRegister.getBinary(0,8), 2);
         }
 
         memwbRegister.append(correctBits(memData, 64));
