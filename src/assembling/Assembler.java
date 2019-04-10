@@ -61,9 +61,21 @@ public class Assembler implements ANTLRErrorListener {
 
         this.opCodes = new HashMap<>();
         //TODO Might make Enumerations out of these
-        this.opCodes.put("add", "10001011000");
-        this.opCodes.put("and", "10001010000");
-        this.opCodes.put("addi","1001000100");
+        this.opCodes.put("add",  "10001011000");
+        this.opCodes.put("and",  "10001010000");
+        this.opCodes.put("andi", "1001001000");
+        this.opCodes.put("addi", "1001000100");
+        this.opCodes.put("orr",  "10101010000");
+        this.opCodes.put("orri", "1011001000");
+        this.opCodes.put("sub",  "11001011000");
+        this.opCodes.put("subi", "1101000100");
+        this.opCodes.put("ldur", "11111000010");
+        this.opCodes.put("stur", "11111000000");
+        this.opCodes.put("cbz",  "10110100");
+        this.opCodes.put("cbnz", "10110101");
+        this.opCodes.put("b",    "000101");
+        this.opCodes.put("bl",   "100101");
+        this.opCodes.put("mul",  "10011011000");
     }
 
 
@@ -168,8 +180,16 @@ public class Assembler implements ANTLRErrorListener {
             instruction[j] = instruction[j].replace(",", "");
         }
         String temp = instruction[0].toLowerCase();
-        instBin = instBin + opCodes.get(temp);
 
+        if(instruction.length < 4) {
+            instBin = instBin + opCodes.get(temp);
+        }else{
+            if(instruction[3].matches("[#][0-9]+")) {
+                instBin = instBin + opCodes.get(temp + "i");
+            } else{
+                instBin = instBin + opCodes.get(temp);
+            }
+        }
         char format = '\0';
         String check = instBin.substring(3,7);
         if(check.matches("100.") || check.matches(".1.0")){
@@ -180,6 +200,12 @@ public class Assembler implements ANTLRErrorListener {
         }
         else if(check.matches(".101")){
             format = 'r';
+        }
+        else if(check.matches("....")){
+            format = 'c';
+        }
+        else if(check.matches("...")){
+            format = 'd';
         }
 
         String reg1,reg2,reg3;
@@ -259,7 +285,13 @@ public class Assembler implements ANTLRErrorListener {
                 String memLocation;
 
                 break;
+            case('c'):
 
+                break;
+
+            case('d'):
+
+                break;
         }
 
         return instBin;
