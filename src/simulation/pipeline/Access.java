@@ -74,7 +74,10 @@ public class Access extends PipelineSegment{
         }
 
         if(branch) {
-            Controller.PC = (int)Long.parseUnsignedLong(exmemRegister.getBinary(0,8), 2);
+            System.out.println("PC is being altered to: " + (int)Long.parseUnsignedLong(exmemRegister
+                    .getBinary(0,8), 2));
+            Controller.PC = (int)Long.parseUnsignedLong(exmemRegister
+                    .getBinary(0,8), 2);
         }
 
         memwbRegister.append(correctBits(memData, 64));

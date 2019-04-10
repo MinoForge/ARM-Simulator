@@ -1,6 +1,8 @@
 package simulation.control;
 
+import java.nio.channels.Pipe;
 import java.util.ArrayList;
+import simulation.pipeline.PipelineSegment;
 
 /**
  * Created by Caleb on 1/30/2019.
@@ -127,11 +129,13 @@ public class ControlUnit {
             makeUnit();
         }
 
-        String temp = Integer.toBinaryString(instBin);
+        String temp = PipelineSegment.correctBits(Integer.toBinaryString
+                (instBin), 32);
         char format = '\0';
         System.out.println("instBin : " + instBin);
         System.out.println("temp is " + temp);
         String check = temp.substring(3,7);
+        System.out.println("Check is: " + check);
         if(check.matches("100.")){
             format = 'i';
 
@@ -151,7 +155,7 @@ public class ControlUnit {
             unit.flags.set(1,DEASSERT); //ALUOp1
             unit.flags.set(2,DEASSERT); //ALUOp2
             unit.flags.set(3,DEASSERT); //ALUSrc
-            unit.flags.set(4,DEASSERT); //Branch
+            unit.flags.set(4,ASSERT); //Branch
             unit.flags.set(5,DEASSERT); //MemRead
             unit.flags.set(6,DEASSERT); //MemWrite
             //TODO if branch with link, assert this. Else, deasssert.
@@ -182,6 +186,7 @@ public class ControlUnit {
             unit.dFlagger();
 
         }
+        System.out.println(format);
 //        System.out.println("Detected as " + format + " type");
 //        for(int i = 0; i < unit.flags.size(); i++) {
 //            System.out.println(FLAG_NAMES[i] + ":" + unit.flags.get(i));

@@ -1,5 +1,6 @@
 package simulation.pipeline;
 
+import simulation.Controller;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
@@ -181,6 +182,7 @@ public class Decode extends PipelineSegment {
 //            System.out.println("this is the thing im sending to control " +
 //                    "unit:" + ifidRegister.getInt(8));
             ControlUnit.newInstructionBin(ifidRegister.getInt(8));
+            System.out.println(ControlUnit.getState(1));
             flags = ControlUnit.getControlFlags(1);
             read();
             idexRegister.zeroOut();

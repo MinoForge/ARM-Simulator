@@ -96,7 +96,6 @@ public class Assembler implements ANTLRErrorListener {
         if(!this.errorMsg.equals("")) {
             passesParse = false;
         }
-
         return passesParse;
     }
 
@@ -191,21 +190,30 @@ public class Assembler implements ANTLRErrorListener {
             }
         }
         char format = '\0';
-        String check = instBin.substring(3,7);
-        if(check.matches("100.") || check.matches(".1.0")){
-            format = 'i';
-        }
-        else if(check.matches("101.")){
-            format = 'b';
-        }
-        else if(check.matches(".101")){
-            format = 'r';
-        }
-        else if(check.matches("....")){
-            format = 'c';
-        }
-        else if(check.matches("...")){
-            format = 'd';
+        String check  = "";
+        if(instBin.length() > 8){
+            check = instBin.substring(3,7);
+            if(check.matches("100.") || check.matches(".1.0")){
+                format = 'i';
+            }
+//            else if(check.matches("101.")){
+//                format = 'b';
+//            }
+            else if(check.matches(".101")){
+                format = 'r';
+            }
+//            else if(check.matches(".1.0")){
+//                format = 'c';
+//            }
+            else if(check.matches("TODO")){
+                format = 'd';
+            }
+        }else{
+            if(instBin.length() < 8){
+                format = 'b';
+            }else{
+                format = 'c';
+            }
         }
 
         String reg1,reg2,reg3;
@@ -281,8 +289,11 @@ public class Assembler implements ANTLRErrorListener {
                 //temp = instruction[0].toLowerCase();
                 //adding opcode
                 //instBin = instBin + opCodes.get(temp);
-
-                String memLocation;
+                String tmp = instruction[1].replace("#", "");
+                int memLocation = Integer.parseInt(tmp);
+                String memBin = Integer.toBinaryString(memLocation);
+                memBin = correctBits(memBin, 26);
+                instBin = instBin + memBin;
 
                 break;
             case('c'):

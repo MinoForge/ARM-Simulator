@@ -6,4 +6,5 @@ orr r2, r1, r7
 Add r2, r2, #13
 sub r2, r2, #10
 and r2, r2, #0
+b #0
 END
