@@ -69,7 +69,8 @@ public class Execute extends PipelineSegment {
         // TODO Add above to the ex/mem register
         // give the results of the executions to the ex/mem register.
 
-        exmemRegister.append(correctBits("" + localPC, 64));
+        System.out.println("This is the local PC change : " + localPC);
+        exmemRegister.append(correctBits(Long.toBinaryString(localPC), 64));
 
         System.out.println("This is the result: " + Long.toBinaryString(result));
         exmemRegister.append(correctBits(Long.toBinaryString(result), 64));
@@ -79,9 +80,10 @@ public class Execute extends PipelineSegment {
         exmemRegister.append(idexRegister.getBinary(16,24));
 
         System.out.println("This is the dest reg binary:" + idexRegister
-                .getBinary(33,34));
+                .getBinary(33,34).substring(3,8));
         exmemRegister.append(correctBits(idexRegister.getBinary(33,34).substring(3,8), 8));
 
+        System.out.println(exmemRegister);
     }
 
     /**
@@ -120,6 +122,7 @@ public class Execute extends PipelineSegment {
                     value3 = 0L; //Set the added value to 0 to be sure, then fall to madd
                 case("madd"):
                     result = value1 * value2 + value3;
+                    break;
 
                 case("div"):
                     if(value2 == 0) { //Div by zero, but no errors? By manual.

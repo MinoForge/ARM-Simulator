@@ -77,6 +77,7 @@ public class Access extends PipelineSegment{
         memwbRegister.append(aluResult);
         System.out.println("Data from ALU into memwb   : " + aluResult);
         memwbRegister.append(exmemRegister.getBinary(24,25));
+        System.out.println("Write-back register : " + exmemRegister.getBinary(24, 25));
 
     }
 
