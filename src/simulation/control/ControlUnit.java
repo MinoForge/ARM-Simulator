@@ -159,7 +159,7 @@ public class ControlUnit {
             unit.flags.set(5,DEASSERT); //MemRead
             unit.flags.set(6,DEASSERT); //MemWrite
             //TODO if branch with link, assert this. Else, deasssert.
-            unit.flags.set(7,ASSERT);   //RegWrite
+            unit.flags.set(7,DEASSERT);   //RegWrite
             unit.flags.set(8,DEASSERT); //Mem2Reg
 
         }

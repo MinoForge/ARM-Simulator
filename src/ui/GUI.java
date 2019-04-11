@@ -221,7 +221,6 @@ public class GUI extends Application {
         ScrollPane sysScroll = new ScrollPane(simOut);
         sysScroll.setFitToWidth(true);
         sysScroll.setFitToHeight(true);
-        //TODO attach sysText to 'System' output/input
         Tab tabTwo = new Tab("System I/O", sysScroll);
 
 

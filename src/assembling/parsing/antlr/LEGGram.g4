@@ -55,7 +55,7 @@ COMMENT       : [\/][\/]+.*;
 filePath    : data? prog data?;
 
 //Consumes all instructions
-prog    : ENTRY (label | inst | (COMMENT WS) | WS)+ END
+prog    : ENTRY (label | inst | COMMENT | WS)+ END
         ;
 
 //Not implemented yet
