@@ -77,7 +77,7 @@ public class Controller {
         this.instructions = assembler.getInstructionList();
         this.instBins = assembler.makeBinaryList();
         init();
-
+        System.out.println(instructions);
     }
 
     public void start() {

@@ -1,6 +1,6 @@
 ENTRY
-AND r10, r9, r9
-Add r31, r31, r31
+//AND r10, r9, r9
+//Add r31, r31, r31
 sub r2, r1, r7
 orr r2, r1, r7
 Add r2, r2, #13

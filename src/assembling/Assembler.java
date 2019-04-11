@@ -49,8 +49,8 @@ public class Assembler implements ANTLRErrorListener {
         }
         StringBuilder tempStr = new StringBuilder();
         while(fileIn.hasNextLine()) {
-        tempStr.append(fileIn.nextLine());
-        tempStr.append("\n");
+            tempStr.append(fileIn.nextLine());
+            tempStr.append("\n");
         }
         this.fileString = tempStr.toString();
         this.instructionArray = this.fileString.split("\n");
@@ -141,6 +141,8 @@ public class Assembler implements ANTLRErrorListener {
     }
 
 
+    //TODO this method needs help. If anything is in the file other than Entry, End, and instructions
+    //TODO this will not function as intended. May require significant changes elsewhere as well.
     /**
      * Assembles the file into an ArrayList containing the binary strings.
      * @return an ArrayList containing the translated instructions.
@@ -152,9 +154,14 @@ public class Assembler implements ANTLRErrorListener {
          * into an array
          */
 
+
         String curInstruction;
         for(int i = 0; i < instructionArray.length; i++) {
-            if (instructionArray[i].equals("ENTRY") || instructionArray[i].equals("END")) {
+//            System.out.println(instructionArray[i]);
+            if (instructionArray[i].equals("ENTRY") || instructionArray[i].equals("END") ||
+                    instructionArray[i].matches("/+.*")) {
+                System.out.println("Matched: " + instructionArray[i] + "as special. Not adding to" +
+                        " instruction list.");
                 //Do nothing touch
             } else {
                 curInstruction = instructionArray[i];
@@ -315,7 +322,8 @@ public class Assembler implements ANTLRErrorListener {
     public ArrayList<String> getInstructionList() {
         ArrayList<String> justInstructions = new ArrayList<>();
         for(String s : instructionArray){
-            if (!(s.equals("ENTRY") || s.equals("END"))) {
+            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*"))) {
+                System.out.println();
                 justInstructions.add(s);
             }
         }

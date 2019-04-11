@@ -44,7 +44,10 @@ DATA          : '.data';
 STRING        : '".*"';
 LBRACK        : '[';
 RBRACK        : ']';
+//COMSLASH      : '/';
 //End Symbols
+
+COMMENT       : [\/][\/]+.*;
 
 /* Rules */
 
@@ -52,7 +55,7 @@ RBRACK        : ']';
 filePath    : data? prog data?;
 
 //Consumes all instructions
-prog    : ENTRY (label | inst | WS)+ END
+prog    : ENTRY (label | inst | (COMMENT WS) | WS)+ END
         ;
 
 //Not implemented yet
@@ -69,6 +72,8 @@ memcall : (EQUALS WORD);
 
 //Consumes a word ending colon.
 label   : (WORD COLON);
+
+//comment : ([COMSLASH]+ .*);
 
 //Consumes all instructions. More added as more implemented.
 inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
