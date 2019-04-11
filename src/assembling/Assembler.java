@@ -169,8 +169,6 @@ public class Assembler implements ANTLRErrorListener {
                 instructions.add(findBin(tempArray));
             }
         }
-
-
         return instructions;
     }
 
@@ -192,7 +190,7 @@ public class Assembler implements ANTLRErrorListener {
         }else{
             if(instruction[3].matches("[#][0-9]+")) {
                 instBin = instBin + opCodes.get(temp + "i");
-            } else{
+            }else{
                 instBin = instBin + opCodes.get(temp);
             }
         }
@@ -203,15 +201,9 @@ public class Assembler implements ANTLRErrorListener {
             if(check.matches("100.") || check.matches(".1.0")){
                 format = 'i';
             }
-//            else if(check.matches("101.")){
-//                format = 'b';
-//            }
             else if(check.matches(".101")){
                 format = 'r';
             }
-//            else if(check.matches(".1.0")){
-//                format = 'c';
-//            }
             else if(check.matches("TODO")){
                 format = 'd';
             }
@@ -270,7 +262,7 @@ public class Assembler implements ANTLRErrorListener {
                 //grabbing  inst command
                 //temp = instruction[0].toLowerCase();
                 // adding opcode to instruction binary
-                //instBin = instBin + opCodes.get(temp);
+                // instBin = instBin + opCodes.get(temp);
 
                 //pulling the registers from the instruction
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
@@ -304,10 +296,24 @@ public class Assembler implements ANTLRErrorListener {
 
                 break;
             case('c'):
+                //TODO: Need label logic
+                int num = Integer.parseInt(instruction[1].replace
+                        ("[a-zA-Z]", ""));
+                immediate = Integer.toBinaryString(num);
+                immediate = correctBits(immediate, 19);
 
+                instBin = instBin + immediate;
+
+                reg1 = Integer.toBinaryString(Integer.parseInt(instruction[2]
+                        .replaceAll("[a-zA-Z]", "")));
+                reg1 = correctBits(reg1, 5);
+
+                instBin = instBin + reg1;
                 break;
 
             case('d'):
+
+
 
                 break;
         }
