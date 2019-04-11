@@ -184,8 +184,6 @@ public class ControlUnit {
             unit.flags.set(3,ASSERT);   //ALUSrc
             unit.flags.set(4,DEASSERT); //Branch
             unit.dFlagger();
-
-
         }
         System.out.println(format);
 //        System.out.println("Detected as " + format + " type");
