@@ -195,7 +195,7 @@ public class Assembler implements ANTLRErrorListener {
             }
         }
         char format = '\0';
-        String check  = "";
+        String check;
         if(instBin.length() > 8){
             check = instBin.substring(3,7);
             if(check.matches("100.") || check.matches(".1.0")){

@@ -173,9 +173,6 @@ public class GUI extends Application {
         return regTable;
     }
 
-    private void appendText(TextArea out, String str) {
-        Platform.runLater(() -> out.appendText(str));
-    }
 
     /**
      * Method to create the TabPane which will have output messages from the simulator,
@@ -245,9 +242,12 @@ public class GUI extends Application {
         return buttonPane;
     }
 
-    public TabPane getOutPane() {
+    TabPane getOutPane() {
         return outPane;
     }
 
+    private void appendText(TextArea out, String str) {
+        Platform.runLater(() -> out.appendText(str));
+    }
 
 }

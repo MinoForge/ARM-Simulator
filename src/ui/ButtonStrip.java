@@ -8,9 +8,11 @@ import java.util.ArrayList;
 
 public class ButtonStrip {
 
+    /** The Controller and the GUI, to allow modifying their states with the Buttons. */
     private Controller control;
     private GUI gui;
 
+    /** All the buttons. */
     private Button newButton;
     private Button openButton;
     private Button saveButton;
@@ -24,10 +26,16 @@ public class ButtonStrip {
     private Button cyclesPerSecButton;
     private Button resetRegButton;
 
+    /** A list of all the buttons. */
     private ArrayList<Button> buttons;
 
+    /** Whether this is the first time that an instruction is being run since assembly. */
     private boolean firstRun;
 
+    /** Constructor which creates the strip.
+     *  @param control The Controller which this strip will manipulate.
+     *  @param gui The GUI which this strip will manipulate.
+     */
     public ButtonStrip(Controller control, GUI gui) {
         this.control = control;
         this.gui = gui;
@@ -50,6 +58,10 @@ public class ButtonStrip {
         firstRun = true;
     }
 
+    /**
+     * Adds all buttons to a list and returns it.
+     * @return The list of buttons.
+     */
     private ArrayList<Button> initButtons() {
         ArrayList<Button> buttons = new ArrayList<>(11); //Magic number of buttons.
         buttons.add(newButton);
@@ -68,10 +80,12 @@ public class ButtonStrip {
         return buttons;
     }
 
+    /** Gets the list of buttons. */
     public ArrayList<Button> getButtons() {
         return buttons;
     }
 
+    /** The button for newFile. */
     private Button makeNewButton() {
         Button button = new Button("New File");
         button.setOnMouseReleased(event -> {}); //TODO new
@@ -79,12 +93,14 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button for openFile. */
     private Button makeOpenButton() {
         Button button = new Button("Open File");
         button.setOnMouseReleased(event -> new FileChooser());
         return button;
     }
 
+    /** The button for saveFile. */
     private Button makeSaveButton() {
         Button button = new Button("Save File");
         button.setOnMouseReleased(event -> {}); //TODO save
@@ -92,13 +108,15 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to step the simulator back a step. Not implemented. */
     private Button makeStepBackButton() {
         Button button = new Button("Step Back");
-        button.setOnMouseReleased(event -> {});
+        button.setOnMouseReleased(event -> {}); //TODO step back
         button.setDisable(true);
         return button;
     }
 
+    /** The button to pause the simulator in the middle of an instruction. */
     private Button makePauseButton() {
         Button button = new Button("Pause Run");
         button.setOnMouseReleased(event -> {
@@ -111,9 +129,11 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to assemble the open file to machine code and prep the simulator for run. */
     private Button makeAssembleButton() {
         Button button = new Button("Assemble!");
         button.setOnMouseReleased(event -> {
+            firstRun = true;
             control.setHalt(false);
             control.assemble();
             runProgramButton.setDisable(false);
@@ -124,6 +144,7 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to step the simulator forward a single cpu cycle. */
     private Button makeStepButton() {
         Button button = new Button("Cycle CPU");
         button.setOnMouseReleased(event -> {
@@ -143,6 +164,7 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to run the simulator until it finishes. */
     private Button makeRunButton() {
         Button button = new Button("Start/Continue");
         button.setOnMouseReleased(event -> {
@@ -168,6 +190,7 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to run the simulator forward a single instruction */
     private Button makeInstructButton() {
         Button button = new Button("Step Forward");
         button.setOnMouseReleased(event -> {
@@ -188,6 +211,7 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to stop the simulator where it is. */
     private Button makeStopButton() {
         Button button = new Button("Stop Run");
         button.setOnMouseReleased(event -> {
@@ -200,6 +224,7 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to alter the number of cycles per second. Unimplemented */
     private Button makeCyclesPerSecButton() {
         Button button = new Button("Cycles/Sec");
         button.setOnMouseReleased(event -> {});
@@ -207,6 +232,7 @@ public class ButtonStrip {
         return button;
     }
 
+    /** The button to reset the registers to their initial values. */
     private Button makeResetRegButton() {
         Button button = new Button("Reset Registers");
         button.setOnMouseReleased(event -> control.resetReg());

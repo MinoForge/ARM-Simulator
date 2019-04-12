@@ -46,10 +46,13 @@ public class Register {
     /** Length of the register, in bytes. Unused.*/
     private int length;
 
+    /** The current index of the next open byte. Only reliable if using append(). */
     private int index;
 
+    /** Whether this register may be written to */
     private boolean locked;
 
+    /** A counter which tracks how many registers have been created. */
     private static Integer regCounter;
 
     /**
@@ -63,14 +66,9 @@ public class Register {
         }
         this.regNum = new SimpleIntegerProperty(regCounter++);
 
-
-//        this.regNum = new SimpleIntegerProperty();
-//        this.trueVal = new SimpleStringProperty();
         this.binVal = new SimpleStringProperty();
-////        this.octVal = new SimpleStringProperty();
         this.decVal = new SimpleLongProperty();
         this.hexVal = new SimpleStringProperty();
-//        setVals("0");
 
         this.length = numBytes;
         this.bytes = new byte[numBytes];
@@ -92,22 +90,32 @@ public class Register {
         setVals(getBinary());
     }
 
+    /**
+     * @return true if the register is locked, false if not.
+     */
     public boolean isLocked() {
         return locked;
     }
 
+    /**
+     * Helper method to change the state of this register's lock.
+     * @param val the value which the lock will be set to.
+     */
     private void setLocked(boolean val) {
         this.locked = val;
     }
 
+    /** Locks the register against being written to. */
     public static void lock(Register reg) {
         reg.setLocked(true);
     }
 
+    /** Unlocks the register to be written to. */
     public static void unlock(Register reg) {
         reg.setLocked(false);
     }
 
+    /** Gets the actual integer representing the register number. */
     public int getRegNum() {
         return regNum.get();
     }
@@ -128,7 +136,6 @@ public class Register {
     }
 
 
-
     /**
      * Sets the value of the Register to a new value given.
      * @param newVal The new value to be written to the Register.
@@ -142,10 +149,10 @@ public class Register {
     }
 
 
-//    /** Gets the IntegerProperty for regNum. */
-//    public IntegerProperty regNumProperty() {
-//        return regNum;
-//    }
+    /** Gets the IntegerProperty for regNum. */
+    public IntegerProperty regNumProperty() {
+        return regNum;
+    }
 
     /** Gets the StringProperty for binVal. */
     public StringProperty binValProperty() {

@@ -113,6 +113,9 @@ public class RegisterFile {
         Register.lock(registers[index]);
     }
 
+    /**
+     * Resets all registers to zero and frees them to allow writing.
+     */
     public void reset() {
         for(Register r: registers) {
             r.zeroOut();

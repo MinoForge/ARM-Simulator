@@ -22,7 +22,7 @@ public abstract class PipelineSegment {
      * @param num the number of bits needed
      * @return the corrected string
      */
-    public static String correctBits(String reg, int num) {
+    public static String correctBits(String reg, int num) { //TODO needs testing and expansion
         StringBuilder str = new StringBuilder(reg);
 
         while (str.length() < num) {
