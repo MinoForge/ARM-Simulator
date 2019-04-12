@@ -19,8 +19,6 @@ LDUR	: [Ll][Dd][Uu][Rr][ ];
 STUR	: [Ss][Tt][Uu][Rr][ ];
 B		: [Bb][ ];
 BL		: [Bb][Ll][ ];
-BR      : [Bb][Rr][ ];
-BLR     : [Bb][Ll][Rr][ ];
 CBZ		: [Cc][Bb][Zz][ ];
 CBNZ	: [Cc][Bb][Nn][Zz][ ];
 MADD	: [Mm][Aa][Dd][Dd][ ];
