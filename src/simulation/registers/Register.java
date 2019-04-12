@@ -177,20 +177,28 @@ public class Register {
      * the index after the final byte written.
      */
     public int writeBinaryAtIndex(int startByteIndex, String binary) {
+//        System.out.println(startByteIndex);
+//        System.out.println(binary);
+
         if(locked) {
+            System.out.println("Locked");
             return -1;
         }
         if(startByteIndex < 0)  { //index
+            System.out.println("Negative Index not allowed");
             return -1;
         }
         if(binary.length() % DEFAULT_BYTE_SIZE != 0) { //Will not fit byte-array
+            System.out.println("Byte array doesn't align");
             return -1; //TODO Make this an exception instead?
         }
         if(!binary.matches("[01]+")) { //Contains non-binary elements
+            System.out.println("Contains non-binary elements.");
             return -1;
         }
         int bytesCnt = binary.length() / DEFAULT_BYTE_SIZE; //Number of bytes to write
         if(bytesCnt > length - startByteIndex) { //Will overflow register
+            System.out.println("Overflowing register.");
             return -1;
         }
 

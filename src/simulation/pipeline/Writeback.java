@@ -80,6 +80,8 @@ public class Writeback extends PipelineSegment{
             }
             regFile.freeRegister(regToWrite);
             System.out.println("Result being written to reg" + Integer.parseInt(rdField,2) + ": " + regFile.getRegister(regToWrite));
+        } else {
+            System.out.println("No write back.");
         }
     }
 

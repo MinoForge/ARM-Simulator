@@ -74,6 +74,8 @@ public class Decode extends PipelineSegment {
         nRegister = Integer.parseInt(regN, 2);
         mRegister = Integer.parseInt(regM, 2);
         dRegister = Integer.parseInt(regD, 2);
+        System.out.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
+        System.out.println(regFile.getRegister(nRegister));
 
         String imm = "";
         int temp;
@@ -143,26 +145,27 @@ public class Decode extends PipelineSegment {
             //do branch magic
 //        }else{
             System.out.println(ifidRegister.getBinary(0,8));
-            idexRegister.append(ifidRegister.getBinary(0,8));
+            idexRegister.append(ifidRegister.getBinary(0,8));  //0-7
 
             System.out.println("This is the first operand: " +
                     regFile.getRegister(nRegister).getBinary());
+        System.out.println(regFile.getRegister(nRegister));
 
-            idexRegister.append(regFile.getRegister(nRegister).getBinary());
+            idexRegister.append(regFile.getRegister(nRegister).getBinary()); //8-15
 
+            //This is inaccurate and for immediates is irrelevant.
             System.out.println("This is the second operand: " +
                     regFile.getRegister(mRegister).getBinary());
 
-            idexRegister.append(regFile.getRegister(mRegister).getBinary());
+            idexRegister.append(regFile.getRegister(mRegister).getBinary()); //16-23
 
             System.out.println("This is the immediate: " + correctBits(Long
                             .toBinaryString(immediate), 64));
-            idexRegister.append(correctBits(Long.toBinaryString(immediate),
-                    64));
+            idexRegister.append(correctBits(Long.toBinaryString(immediate),64)); //24-31
 
 
             System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
-            idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32));
+            idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32)); //32-33
 
 //        }
         System.out.println("This is the contents  of idex: " + idexRegister

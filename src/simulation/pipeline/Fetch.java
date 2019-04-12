@@ -86,11 +86,14 @@ public class Fetch extends PipelineSegment{
     private void write(){
         System.out.println(Controller.PC);
         System.out.println("This is the binary string: " + instBin);
+        System.out.println(instBin);
+        System.out.println(ifidRegister);
 
         ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
-        System.out.println(ifidRegister.getBinary(0,8));
-        ifidRegister.append(instBin);
+        System.out.println(ifidRegister.append(instBin));
         System.out.println(ifidRegister.getBinary(8,12));
+        System.out.println(ifidRegister);
+        System.out.println(instBin);
         instBin = "";
 
 

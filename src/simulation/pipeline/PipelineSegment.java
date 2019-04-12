@@ -28,6 +28,12 @@ public abstract class PipelineSegment {
         while (str.length() < num) {
             str.insert(0, '0');
         }
+
+        while(str.length() > num) {
+//            if(reg.charAt(0) == '0') {
+                str.deleteCharAt(0);
+//            }
+        }
         return str.toString();
     }
 

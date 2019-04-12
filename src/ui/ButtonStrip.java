@@ -26,7 +26,7 @@ public class ButtonStrip {
 
     private ArrayList<Button> buttons;
 
-
+    private boolean firstRun;
 
     public ButtonStrip(Controller control, GUI gui) {
         this.control = control;
@@ -46,6 +46,8 @@ public class ButtonStrip {
         resetRegButton = makeResetRegButton();
 
         buttons = initButtons();
+
+        firstRun = true;
     }
 
     private ArrayList<Button> initButtons() {
@@ -125,9 +127,10 @@ public class ButtonStrip {
     private Button makeStepButton() {
         Button button = new Button("Cycle CPU");
         button.setOnMouseReleased(event -> {
-            if(Controller.PC == 0) {
+            if(firstRun) {
                 control.start();
                 control.resetReg();
+                firstRun = false;
             }
             if(!control.cycle()) {
                 System.out.println("Reached end of instructions.");
@@ -148,9 +151,10 @@ public class ButtonStrip {
             pauseRunButton.setDisable(false);
             runInstructionButton.setDisable(true);
             runCycleButton.setDisable(true);
-            if(Controller.PC == 0) {
+            if(firstRun) {
                 control.start();
                 control.resetReg();
+                firstRun = false;
             }
             control.cycleToEnd();
             System.out.println("Reached end of instructions.");
@@ -167,9 +171,10 @@ public class ButtonStrip {
     private Button makeInstructButton() {
         Button button = new Button("Step Forward");
         button.setOnMouseReleased(event -> {
-            if(Controller.PC == 0) {
+            if(firstRun) {
                 control.start();
                 control.resetReg();
+                firstRun = false;
             }
             if(!control.doInstruction()) {
                 System.out.println("Reached end of instructions.");

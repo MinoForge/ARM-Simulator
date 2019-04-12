@@ -47,11 +47,15 @@ public class Execute extends PipelineSegment {
         System.out.println("Starting EXECUTE now:");
         String temp = ControlUnit.getInstruction(2);
         this.command = temp.substring(0,temp.indexOf(' ')).toLowerCase();
-        localPC = (int)(long)(idexRegister.getLong(0));
+//        localPC = (int)(long)(idexRegister.getLong(0));
+        localPC = (int)Long.parseUnsignedLong(idexRegister.getBinary(0, 8), 2);
         value1 = Long.parseUnsignedLong(idexRegister.getBinary(8,16),2); //TODO replace calls with getLong()
-        if(!flags.get(3)) { //ALUSrc deasserted
+        if(!flags.get(3) && !flags.get(4)) { //ALUSrc deasserted
+            System.out.println("Register instruction");
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(16, 24), 2);
         }else{              //ALUSrc asserted
+            System.out.println("Immediate instruction");
+            System.out.println(idexRegister.getBinary(24,32));
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(24,32), 2);
         }
         destReg = idexRegister.getBytes(32, 33)[0];
@@ -78,6 +82,8 @@ public class Execute extends PipelineSegment {
         System.out.println("This is the data from reg2:" +
                 idexRegister.getBinary(16,24));
         exmemRegister.append(idexRegister.getBinary(16,24));
+
+
 
         System.out.println("This is the dest reg binary:" + idexRegister
                 .getBinary(33,34).substring(3,8));
@@ -136,6 +142,7 @@ public class Execute extends PipelineSegment {
                 case("bl"): //Set register for return, then fall through to b
                     result = localPC + 4;
                 case("b"):
+//                    System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
                     localPC = (int)value2 << 2;
                     break;
 

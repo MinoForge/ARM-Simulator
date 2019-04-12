@@ -154,7 +154,7 @@ public class ControlUnit {
             unit.flags.set(0,ASSERT);   //Reg2Loc
             unit.flags.set(1,DEASSERT); //ALUOp1
             unit.flags.set(2,DEASSERT); //ALUOp2
-            unit.flags.set(3,DEASSERT); //ALUSrc
+            unit.flags.set(3,DEASSERT); //ALUSrc //TODO this should be deasserted unless immediate
             unit.flags.set(4,ASSERT); //Branch
             unit.flags.set(5,DEASSERT); //MemRead
             unit.flags.set(6,DEASSERT); //MemWrite
