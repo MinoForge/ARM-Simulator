@@ -59,8 +59,7 @@ public class Access extends PipelineSegment{
      * by exmem register. On a read, we retrieve what is in memory at the specified memAddress and load
      * it into the memwb register.
      */
-    private void write(){
-        //
+    private void write() {
 
         if(write){
             System.out.println("Writing to Main Memory");
@@ -73,7 +72,7 @@ public class Access extends PipelineSegment{
             System.out.println("Bypassing Main Memory");
         }
 
-        if(branch) {
+        if(branch) { //If we are branching.
             System.out.println("PC is being altered to: " + (int)Long.parseUnsignedLong(exmemRegister
                     .getBinary(0,8), 2));
             Controller.PC = (int)Long.parseUnsignedLong(exmemRegister

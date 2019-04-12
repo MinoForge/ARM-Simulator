@@ -11,9 +11,6 @@ import simulation.pipeline.PipelineSegment;
  */
 public class ControlUnit {
 
-    //TODO By diagrams in book, ControlUnit is not initialized until Decode. However it doesn't
-    //TODO really affect anything? Shouldn't matter.
-
     /** Singleton */
     static private ControlUnit unit;
 
@@ -314,6 +311,7 @@ public class ControlUnit {
         return str.toString();
     }
 
+    /** Setter for specific flags in specific stages, in case hacky functionality is needed. */
     public void setFlag(int stage, int flag, boolean value) {
         values.get(stage).set(flag, value);
     }

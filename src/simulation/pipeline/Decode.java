@@ -1,6 +1,5 @@
 package simulation.pipeline;
 
-import simulation.Controller;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
@@ -18,6 +17,7 @@ import static simulation.control.ControlUnit.DEASSERT;
  *
  */
 public class Decode extends PipelineSegment {
+
 
     private Register ifidRegister;
     private Register idexRegister;
@@ -41,8 +41,6 @@ public class Decode extends PipelineSegment {
         this.dRegister    = 0;
         this.regFile    = regFile;
         this.immediate    = 0;
-        //Testing only
-//        this.format       = "r";
     }
 
     /**
@@ -87,41 +85,6 @@ public class Decode extends PipelineSegment {
         temp = Integer.parseInt(imm, 2);
         immediate = ((long)temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
 
-//
-//        switch (format){
-//            case("r"):
-//
-//                regM =  instBin.substring(11,16);
-//                regN = instBin.substring(22,27);
-//                regD = instBin.substring(27,32);
-//
-//
-//
-//                // Getting the register indices
-//                mRegister = Integer.parseInt(regM, 2);
-//                nRegister = Integer.parseInt(regN, 2);
-//                dRegister = Integer.parseInt(regD, 2);
-//
-//                break;
-//
-//
-//            case("i"):
-//                //opCode = instBin.substring(0,10);
-//
-//                regN = instBin.substring(22,27);
-//                regD = instBin.substring(27,32);
-//
-//
-//
-//
-//                nRegister = Integer.parseInt(regN, 2);
-//                dRegister = Integer.parseInt(regD, 2);
-//
-//                int temp = Integer.parseInt(imme,2);
-//                immediate = ((long)temp << (64 - 12) >> (64-12)); //sign extend the immediate value
-//
-//        }
-
 
         //TODO finish for B type, needs labels
         //Only if the opcode dictates
@@ -136,38 +99,30 @@ public class Decode extends PipelineSegment {
      * also writes the PC to the idex register.
      */
     private void write(){
+        System.out.println(ifidRegister.getBinary(0,8));
+        idexRegister.append(ifidRegister.getBinary(0,8));  //0-7
 
-        //First put PC into the ex/mem
-//        idexRegister.append(ifidRegister.getBinary(0,8));
-
-
-//        if(!format.matches("[ri]")){
-            //do branch magic
-//        }else{
-            System.out.println(ifidRegister.getBinary(0,8));
-            idexRegister.append(ifidRegister.getBinary(0,8));  //0-7
-
-            System.out.println("This is the first operand: " +
-                    regFile.getRegister(nRegister).getBinary());
+        System.out.println("This is the first operand: " +
+                regFile.getRegister(nRegister).getBinary());
         System.out.println(regFile.getRegister(nRegister));
 
-            idexRegister.append(regFile.getRegister(nRegister).getBinary()); //8-15
+        idexRegister.append(regFile.getRegister(nRegister).getBinary()); //8-15
 
-            //This is inaccurate and for immediates is irrelevant.
-            System.out.println("This is the second operand: " +
-                    regFile.getRegister(mRegister).getBinary());
+        //This is inaccurate and for immediates is irrelevant.
+        System.out.println("This is the second operand: " +
+                regFile.getRegister(mRegister).getBinary());
 
-            idexRegister.append(regFile.getRegister(mRegister).getBinary()); //16-23
+        idexRegister.append(regFile.getRegister(mRegister).getBinary()); //16-23
 
-            System.out.println("This is the immediate: " + correctBits(Long
-                            .toBinaryString(immediate), 64));
-            idexRegister.append(correctBits(Long.toBinaryString(immediate),64)); //24-31
+        System.out.println("This is the immediate: " + correctBits(Long
+                        .toBinaryString(immediate), 64));
+        idexRegister.append(correctBits(Long.toBinaryString(immediate),64)); //24-31
 
 
-            System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
-            idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32)); //32-33
+        System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
+        idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32)); //32-33
 
-//        }
+
         System.out.println("This is the contents  of idex: " + idexRegister
                 .getBinary());
 
@@ -198,6 +153,10 @@ public class Decode extends PipelineSegment {
         }
     }
 
+    /**
+     * Checks whether the registers being requested are available for the requested operation.
+     * @return true if they are available, false otherwise.
+     */
     private boolean registersAvailable() {
         if(regFile.getRegisterForRead(nRegister) == null) {
             return false;

@@ -118,15 +118,17 @@ public class Controller {
         //this.instructor = new Instructor();
     }
 
+    /** Unimplemented */
     private void readData() {
 
     }
 
+    /** Unimplemented. */
     private void setUpStack() {
 
     }
 
-
+    /** A single cycle of the cpu. */
     public boolean cycle() {
         int size = instructions.size() * 4;
         if(Controller.PC < size) {
@@ -141,6 +143,7 @@ public class Controller {
 
     }
 
+    /** Cycles to the end of the instructions */
     public void cycleToEnd() {
         int size = instructions.size() * 4;
         while(Controller.PC < size && !halt) {
@@ -153,6 +156,7 @@ public class Controller {
 
     }
 
+    /** Runs a single instruction from Fetch to Writeback. */
     public boolean doInstruction() {
         int size = instructions.size() * 4;
         if(Controller.PC < size - 4) {
@@ -168,17 +172,13 @@ public class Controller {
         return false;
     }
 
-    public void setTestRegs() {
-        for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
-            regFile.getRegister(i).writeBinary(
-                    PipelineSegment.correctBits(Integer.toBinaryString((31-i)), 64));
-        }
-    }
 
+    /** Returns the registerFile. */
     public RegisterFile getRegFile() {
         return regFile;
     }
 
+    /** Returns the text from the open file. */
     public String getFile(String file) {
         StringBuilder str = new StringBuilder();
         try {
@@ -195,10 +195,12 @@ public class Controller {
         return str.toString();
     }
 
+    /** Sets the halt boolean to a value. If true, the simulator should stop when checked. */
     public void setHalt(boolean val) {
         this.halt = val;
     }
 
+    /** Stops the simulator and flushes all pipeline values. */
     public void stop() {
         this.halt = true;
         Controller.PC = 0;
@@ -206,12 +208,20 @@ public class Controller {
         ControlUnit.setStageDataValid(0, true);
     }
 
+    /** Resets the registers to their default values. Currently sets to testValues, rather than 0.*/
     public void resetReg() {
         regFile.reset();
         setTestRegs();
     }
 
 
+    /** Sets registers to testing values. */
+    public void setTestRegs() {
+        for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
+            regFile.getRegister(i).writeBinary(
+                    PipelineSegment.correctBits(Integer.toBinaryString((31-i)), 64));
+        }
+    }
 
 
 

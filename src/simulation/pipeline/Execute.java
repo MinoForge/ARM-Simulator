@@ -93,7 +93,7 @@ public class Execute extends PipelineSegment {
     }
 
     /**
-     *
+     * Runs the Execute stage.
      */
     public void execute(){
         if(ControlUnit.getGoAhead(2)) {
