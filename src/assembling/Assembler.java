@@ -15,7 +15,6 @@ import java.util.Scanner;
 
 import static simulation.pipeline.PipelineSegment.correctBits;
 
-//TODO DOES NOT SUPPORT IMMEDIATES IN ADD
 public class Assembler implements ANTLRErrorListener {
 
     /** The file to be read from. */
@@ -38,7 +37,6 @@ public class Assembler implements ANTLRErrorListener {
      * @param fileName The file being assembled.
      */
     public Assembler(String fileName){
-        // File input;
         Scanner fileIn = null;
         try {
             this.file = new File(fileName);
@@ -185,17 +183,25 @@ public class Assembler implements ANTLRErrorListener {
         }
         String temp = instruction[0].toLowerCase();
 
+        // This check is to determine how many arguments are in the instruction
+        // if true then the instruction could be either an i or r type
         if(instruction.length < 4) {
             instBin = instBin + opCodes.get(temp);
         }else{
+            // check to see if the last argument is an immediate
             if(instruction[3].matches("[#][0-9]+")) {
+                // in the hash map the i types are mapped to their r type
+                // equivalents but with i added to the end, so the
+                // immediate add is mapped to "addi"
                 instBin = instBin + opCodes.get(temp + "i");
             }else{
+                //just the r type instruction
                 instBin = instBin + opCodes.get(temp);
             }
         }
         char format = '\0';
-        String check;
+        String check  = "";
+        // Checks to see what format the instruction is
         if(instBin.length() > 8){
             check = instBin.substring(3,7);
             if(check.matches("100.") || check.matches(".1.0")){
@@ -204,6 +210,7 @@ public class Assembler implements ANTLRErrorListener {
             else if(check.matches(".101")){
                 format = 'r';
             }
+            // need to finish for r types
             else if(check.matches("TODO")){
                 format = 'd';
             }
@@ -282,21 +289,21 @@ public class Assembler implements ANTLRErrorListener {
 
 
                 break;
-            // Not started on b types
+
             case('b'):
-                //grabbing instruction command
-                //temp = instruction[0].toLowerCase();
-                //adding opcode
-                //instBin = instBin + opCodes.get(temp);
+                // Not finished need label logic for now this is just immediates
                 String tmp = instruction[1].replace("#", "");
                 int memLocation = Integer.parseInt(tmp);
                 String memBin = Integer.toBinaryString(memLocation);
                 memBin = correctBits(memBin, 26);
+                //finished the instruction binary
                 instBin = instBin + memBin;
-
                 break;
+
             case('c'):
+
                 //TODO: Need label logic
+                // current logic is for an immediate given to the
                 int num = Integer.parseInt(instruction[1].replace
                         ("[a-zA-Z]", ""));
                 immediate = Integer.toBinaryString(num);
@@ -312,8 +319,9 @@ public class Assembler implements ANTLRErrorListener {
                 break;
 
             case('d'):
-
-
+                // TODO:
+                // much trickier to pull apart as the syntax for these
+                // instructions are much different from the others
 
                 break;
         }
@@ -333,10 +341,5 @@ public class Assembler implements ANTLRErrorListener {
             }
         }
         return justInstructions;
-//        String[] temp = new String[justInstructions.size()];
-//        for(int i = 0; i < temp.length; i++){
-//            temp[i] = justInstructions.get(i);
-//        }
-//        return temp;
     }
 }

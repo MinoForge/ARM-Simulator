@@ -21,17 +21,15 @@ public class Execute extends PipelineSegment {
     private Register exmemRegister;
     private Register idexRegister;
     private String command;
-    private int localPC; //TODO change to long once Instructions are in register and get() in Register redone to accept longs.
+    private int localPC; //TODO change to long once Instructions are in
+                         // register and get() in Register redone to accept
+                         // longs.
     private long value1;
     private long value2;
     private long value3;
     private byte destReg;
     private long result;
     private ArrayList<Boolean> flags;
-
-
-
-
 
     /**
      * Constructor to make an Executor Class. Must have the IDEX pipeline
@@ -98,9 +96,6 @@ public class Execute extends PipelineSegment {
     public void execute(){
         if(ControlUnit.getGoAhead(2)) {
             flags = ControlUnit.getControlFlags(2);
-//            command = ControlUnit.getInstruction(2);
-//            command = command.substring(0, command.indexOf(' ');)
-//            System.out.println(command);
             read();
             exmemRegister.zeroOut();
             System.out.println(command);

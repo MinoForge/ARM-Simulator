@@ -7,7 +7,6 @@ import simulation.pipeline.PipelineSegment;
 /**
  * Created by Caleb on 1/30/2019.
  *
- *
  */
 public class ControlUnit {
 
