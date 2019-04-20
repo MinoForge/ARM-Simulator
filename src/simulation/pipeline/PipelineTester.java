@@ -69,19 +69,19 @@ public class PipelineTester {
 //        String test4 = "add r4, r7, r9";
 //        String test5 = "add r4, r5, r1";
 
-        Assembler assemble = new Assembler("TestFile.txt");
-        ArrayList<String> bin = new ArrayList<>();
-        if(assemble.parseInput()){
-            bin = assemble.makeBinaryList();
-            for (String s : bin) {
-                System.out.println(s);
-            }
+//        Assembler assemble = new Assembler("TestFile.txt");
+//        ArrayList<String> bin = new ArrayList<>();
+//        if(assemble.parseInput()){
+////            bin = assemble.makeBinaryList();
+////            for (String s : bin) {
+////                System.out.println(s);
+////            }
             PipelineTester test = new PipelineTester();
-//        test.instructions = new String[] {test1, test2, test3, test4, test5};
-            test.fetch.setInstructions(assemble.getInstructionList().toArray(new String[0]));
-            test.fetch.setBins(bin);
+////        test.instructions = new String[] {test1, test2, test3, test4, test5};
+//            test.fetch.setInstructions(assemble.getInstructionList().toArray(new String[0]));
+//            test.fetch.setBins(bin);
             test.test();
-        }
+//        }
 
     }
 
@@ -90,7 +90,7 @@ public class PipelineTester {
      */
     public void test(){
         //test1
-        Scanner scanIn = new Scanner(System.in);
+        /*Scanner scanIn = new Scanner(System.in);
         fetch.execute();
         scanIn.next();
         decode.execute();
@@ -124,6 +124,8 @@ public class PipelineTester {
         writeback.execute();
         access.execute();
         scanIn.next();
-        writeback.execute();
+        writeback.execute();*/
+
+
     }
 }

@@ -129,8 +129,8 @@ public class ControlUnit {
         String temp = PipelineSegment.correctBits(Integer.toBinaryString
                 (instBin), 32);
         char format = '\0';
-        System.out.println("instBin : " + instBin);
-        System.out.println("temp is " + temp);
+//        System.out.println("instBin : " + instBin);
+        System.out.println("instBin in ControlUnit:       " + temp);
         String check = temp.substring(3,7);
         System.out.println("Check is: " + check);
         if(check.matches("100.")){
@@ -274,11 +274,11 @@ public class ControlUnit {
 
     /**
      * Flushes flags for a single stage.
-     * @param stageToStart Stage to flush.
+     * @param stage Stage to flush.
      * @return false on a bad stage index. true otherwise
      */
-    static public boolean flushPipe(int stageToStart) {
-        return flushPipe(stageToStart, stageToStart);
+    static public boolean flushPipe(int stage) {
+        return flushPipe(stage, stage);
     }
 
     /**

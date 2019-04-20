@@ -73,7 +73,6 @@ public class Decode extends PipelineSegment {
         mRegister = Integer.parseInt(regM, 2);
         dRegister = Integer.parseInt(regD, 2);
         System.out.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
-        System.out.println(regFile.getRegister(nRegister));
 
         String imm = "";
         int temp;
@@ -99,12 +98,11 @@ public class Decode extends PipelineSegment {
      * also writes the PC to the idex register.
      */
     private void write(){
-        System.out.println(ifidRegister.getBinary(0,8));
-        idexRegister.append(ifidRegister.getBinary(0,8));  //0-7
+        System.out.println("This is the local PC in Decode: " + ifidRegister.getBinary(0,8));
+        idexRegister.append(ifidRegister.getBinary(0,8));  //0-7 //TODO maybe actually read this in into a variable in read()?
 
         System.out.println("This is the first operand: " +
-                regFile.getRegister(nRegister).getBinary());
-        System.out.println(regFile.getRegister(nRegister));
+                regFile.getRegister(nRegister));
 
         idexRegister.append(regFile.getRegister(nRegister).getBinary()); //8-15
 
@@ -137,10 +135,10 @@ public class Decode extends PipelineSegment {
      */
     public void execute(){
         if(ControlUnit.getGoAhead(1)) {
-//            System.out.println("this is the thing im sending to control " +
-//                    "unit:" + ifidRegister.getInt(8));
             ControlUnit.newInstructionBin(ifidRegister.getInt(8));
+
             System.out.println(ControlUnit.getState(1));
+
             flags = ControlUnit.getControlFlags(1);
             read();
             idexRegister.zeroOut();

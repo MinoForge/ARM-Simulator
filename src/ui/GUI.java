@@ -85,7 +85,8 @@ public class GUI extends Application {
         //Attach sections together.
         SplitPane midBot = new SplitPane(mid, bot);
         midBot.setOrientation(Orientation.VERTICAL);
-        midBot.setDividerPositions(.8);
+        midBot.setDividerPositions(.2); //Debug Code
+//        midBot.setDividerPositions(.8); //Real code
         VBox mainWindow = new VBox(top, midBot);
 
         //Make scene and put into stage.
@@ -204,7 +205,7 @@ public class GUI extends Application {
 
         Tab tabOne = new Tab("Simulator Messages", simScroll);
 
-        this.simOut = new TextArea("Simulator I/O");
+        this.simOut = new TextArea("Simulator I/O\n");
         simOut.setEditable(true);
         simOut.setMinWidth(WIDTH);
         OutputStream out = new OutputStream() {
@@ -218,7 +219,7 @@ public class GUI extends Application {
         ScrollPane sysScroll = new ScrollPane(simOut);
         sysScroll.setFitToWidth(true);
         sysScroll.setFitToHeight(true);
-        Tab tabTwo = new Tab("System I/O", sysScroll);
+        Tab tabTwo = new Tab("System I/O\n", sysScroll);
 
 
         this.outPane = new TabPane(tabOne, tabTwo);

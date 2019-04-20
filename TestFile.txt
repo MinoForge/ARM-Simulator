@@ -1,18 +1,11 @@
 ENTRY
-//AND r10, r9, r9
-//Add r31, r31, r31
-//sub r2, r1, r7
-//orr r2, r1, r7
-Add r2, r2, #13
-Add r2, r2, #4
-//R works properly on subsequent runs.
-//ADD r4, r2, r2
-Add r4, r4, r4
-//sub r2, r2, #10
-//and r2, r2, #0
-//ORR r0, r31, r30
-b #8
+ADD r2, r2, r0
+sub r2, r1, r7
+//orr r3, r1, r7
+//Add r2, r2, #13
+//Add r4, r31, #18
+//Add r2, r2, #4
+b #-2
 Add r5, r5, r5
 Add r5, r4, r4
 END
-//Hey
