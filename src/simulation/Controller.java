@@ -46,6 +46,7 @@ public class Controller {
     private Writeback writeback;
 
     private RegisterFile regFile;
+    private Register memory;
 
 
 
@@ -67,6 +68,9 @@ public class Controller {
         } else {
             BYTE_ORDER = ByteOrder.BIG_ENDIAN;
         }
+
+
+
 //        this.data = assembler.getDataArray();
 
 
