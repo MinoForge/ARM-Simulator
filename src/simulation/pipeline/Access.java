@@ -79,8 +79,8 @@ public class Access extends PipelineSegment{
                     .getBinary(0,8), 2);
         }
 
-        memwbRegister.append(correctBits(memData, 64));
-        System.out.println("Data from Memory into memwb: " + correctBits(memData, 64));
+        memwbRegister.append(correctBits(memData, 64, 64));
+        System.out.println("Data from Memory into memwb: " + correctBits(memData, 64, 64));
         memwbRegister.append(aluResult);
         System.out.println("Data from ALU into memwb   : " + aluResult);
         memwbRegister.append(exmemRegister.getBinary(24,25));

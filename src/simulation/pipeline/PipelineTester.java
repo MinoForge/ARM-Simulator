@@ -39,7 +39,7 @@ public class PipelineTester {
         this.regFile = new RegisterFile();
         for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
             regFile.getRegister(i).writeBinary(PipelineSegment.correctBits(
-                    Integer.toBinaryString(i) + "", 64)); //TODO change to writeLong()
+                    Long.toBinaryString(i) + "", 64, 64)); //TODO change to writeLong()
         }
 
 

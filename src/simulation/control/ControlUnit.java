@@ -126,7 +126,7 @@ public class ControlUnit {
         }
 
         String temp = PipelineSegment.correctBits(Integer.toBinaryString
-                (instBin), 32);
+                (instBin), 32, 32);
         char format = '\0';
 //        System.out.println("instBin : " + instBin);
         System.out.println("instBin in ControlUnit:       " + temp);

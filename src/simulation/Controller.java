@@ -219,7 +219,7 @@ public class Controller {
     public void setTestRegs() {
         for(int i = 0; i < DEFAULT_REGISTER_NUM; i++) {
             regFile.getRegister(i).writeBinary(
-                    PipelineSegment.correctBits(Integer.toBinaryString((31-i)), 64));
+                    PipelineSegment.correctBits(Long.toBinaryString((31-i)), 64, 64));
         }
     }
 
