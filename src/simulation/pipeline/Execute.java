@@ -140,24 +140,26 @@ public class Execute extends PipelineSegment {
                     result = localPC + 4;
                 case("b"):
                     System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
-//                    localPC = (int)value2 << 2; // Wrong code.
                     localPC = localPC + ((int)value2 << 2);
                     break;
 
                 case("blr"):
                     result = localPC + 4; //Set register for return, then fall through to br
                 case("br"):
-                    localPC = (int)value1;
+                    System.out.println("Branching with offset: " + ((int)value1 << 2) + " and current pc: " + localPC);
+                    localPC = localPC + ((int)value2 << 2);
                     break;
 
                 case("cbz"):
                     if(value1 == 0) {
-                        localPC = localPC + ((int)value1 << 2);
+                        System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
+                        localPC = localPC + ((int)value2 << 2);
                     }
                     break;
                 case("cbnz"):
                     if(value1 != 0) {
-                        localPC = localPC + ((int)value1 << 2);
+                        System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
+                        localPC = localPC + ((int)value2 << 2);
                     }
                     break;
 

@@ -183,10 +183,14 @@ public class ControlUnit {
     }
 
     private void bFlagger(String instBin) {
+        System.out.println("ControlUnit Bflagger has instbin: " + instBin);
         if(instBin.charAt(2) == '1') { //Conditional branching
+            System.out.println("Conditional Branch Detected");
             unit.flags.set(0, ASSERT);   //Reg2Loc
+            unit.flags.set(7, DEASSERT); //RegWrite
 
         } else { //Unconditional
+            System.out.println("Unconditional Branch Detected");
             unit.flags.set(0, DEASSERT); //Reg2Loc
             if(instBin.charAt(0) == '1') { //Linking
                 unit.flags.set(7, ASSERT); //RegWrite

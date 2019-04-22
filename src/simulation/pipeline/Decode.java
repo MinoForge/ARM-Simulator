@@ -114,8 +114,11 @@ public class Decode extends PipelineSegment {
         System.out.println("This is the first operand: " +
                 regFile.getRegister(nRegister));
 
-        idexRegister.append(regFile.getRegister(nRegister).getBinary()); //8-15
-
+        if(!flags.get(4)) { //Not a branch
+            idexRegister.append(regFile.getRegister(nRegister).getBinary()); //8-15
+        } else { //Branch
+            idexRegister.append(regFile.getRegister(mRegister).getBinary());
+        }
         //This is inaccurate and for immediates is irrelevant.
         System.out.println("This is the second operand: " +
                 regFile.getRegister(mRegister).getBinary());

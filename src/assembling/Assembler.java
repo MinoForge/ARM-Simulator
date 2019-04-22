@@ -55,7 +55,16 @@ public class Assembler implements ANTLRErrorListener {
             tempStr.append("\n");
         }
         this.fileString = tempStr.toString();
-        this.instructionArray = this.fileString.split("\n");
+        String[] tempInsts = this.fileString.split("\n");
+        ArrayList<String> realInsts = new ArrayList<>();
+        for(String s: tempInsts) {
+            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") || s.equals(""))) {
+                realInsts.add(s);
+                System.out.println(s);
+            }
+        }
+        this.instructionArray = realInsts.toArray(new String[0]);
+
         this.errorMsg = "";
         for(int i = 0; i < instructionArray.length; i++){
             instructionArray[i] = instructionArray[i].trim();
