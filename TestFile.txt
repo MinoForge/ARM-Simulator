@@ -1,12 +1,12 @@
 ENTRY
-ADD r2, r2, r0
-sub r2, r1, r7
-//orr r3, r1, r7
+       ADD r2, r2, r0
+label: sub r2, r1, r7
+orr r2, r1, r7
 //Add r2, r2, #13
 //Add r4, r31, #18
 //Add r2, r2, #4
 
-b #2
+cbz r31, label
 Add r5, r5, r5
 Add r5, r4, r4
 END

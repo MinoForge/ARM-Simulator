@@ -57,10 +57,16 @@ public class Assembler implements ANTLRErrorListener {
         this.fileString = tempStr.toString();
         this.instructionArray = this.fileString.split("\n");
         this.errorMsg = "";
+        for(int i = 0; i < instructionArray.length; i++){
+            instructionArray[i] = instructionArray[i].trim();
+        }
+        for(String s : instructionArray){
+            System.out.println(s);
+        }
 
         this.labelMap = new HashMap<>();
-
         makeLabels();
+        System.out.println("the hashmap: " + labelMap.toString());
 
         //Setting up for making binary instructions
 
@@ -85,10 +91,17 @@ public class Assembler implements ANTLRErrorListener {
 
     public void makeLabels(){
         for(int i = 0; i < instructionArray.length; i++){
-            if(instructionArray[i].matches(".:.")){
+            if(instructionArray[i].contains(":")){
+                System.out.println("I got here in the make labels if " +
+                        "statement");
                 String[] temp = instructionArray[i].split(":");
-                temp[1].replace(":","");
-                labelMap.put(temp[1], i);
+                System.out.println(temp[0] + " and " + temp[1]);
+                temp[0].replace(":","");
+                labelMap.put(temp[0], i);
+
+                instructionArray[i] = instructionArray[i].replace(temp[0]+
+                        ":" ,"").trim();
+                System.out.println(instructionArray[i]);
             }
         }
     }
@@ -178,7 +191,7 @@ public class Assembler implements ANTLRErrorListener {
                         " instruction list.");
                 //Do nothing touch
             } else {
-                curInstruction = instructionArray[i];
+                curInstruction = instructionArray[i].trim();
                 String[] tempArray = curInstruction.split(" ");
                 instructions.add(findBin(tempArray, i));
             }
@@ -197,7 +210,7 @@ public class Assembler implements ANTLRErrorListener {
         for (int j  = 0; j < instruction.length; j++){
             instruction[j] = instruction[j].replace(",", "");
         }
-        String temp = instruction[0].toLowerCase();
+        String temp = (instruction[0].toLowerCase()).trim();
 
         // This check is to determine how many arguments are in the instruction
         // if true then the instruction could be either an i or r type
@@ -217,6 +230,7 @@ public class Assembler implements ANTLRErrorListener {
         }
         char format = '\0';
         String check  = "";
+
         // Checks to see what format the instruction is
         if(instBin.length() > 8){
             check = instBin.substring(3,7);
@@ -312,6 +326,7 @@ public class Assembler implements ANTLRErrorListener {
                 String tmp ="";
                 int memLocation;
                 if(instruction[1].matches("[A-Za-z]+")){
+                    System.out.println(instruction[1]);
                     int location = labelMap.get(instruction[1]);
                     memLocation = (location - currentLine);
 
@@ -331,17 +346,17 @@ public class Assembler implements ANTLRErrorListener {
                 //TODO: Need label logic
                 // current logic is for an immediate given to the
                 int num;
-                if(instruction[2].matches("[A-Za_z]+")){
+                if(instruction[2].matches("[A-Za-z]+")){
                     num = labelMap.get(instruction[2]) - currentLine;
                 }else {
-                    num = Integer.parseInt(instruction[1].replace("#", ""));
+                    num = Integer.parseInt(instruction[2].replace("#", ""));
                 }
                 immediate = Integer.toBinaryString(num);
                 immediate = correctBits(immediate, 19,19);
 
                 instBin = instBin + immediate;
 
-                reg1 = Integer.toBinaryString(Integer.parseInt(instruction[2]
+                reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
                         .replaceAll("[a-zA-Z]", "")));
                 reg1 = correctBits(reg1, 5,5);
 
