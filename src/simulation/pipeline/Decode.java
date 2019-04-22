@@ -83,6 +83,14 @@ public class Decode extends PipelineSegment {
         } else {
             imm = instBin.substring(10, 22); //TODO Immediate not always 12 digits. See ldur.
         }
+        if(flags.get(4)) { //Branch
+            if(flags.get(0)) { //CBZ
+                imm = instBin.substring(8,27);
+            } else { //Uncond branch
+                imm = instBin.substring(6,32);
+            }
+        }
+        System.out.println("Substring of immediate: " + imm);
         temp = Integer.parseInt(imm, 2);
         immediate = ((long)temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
 

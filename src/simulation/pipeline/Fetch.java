@@ -72,7 +72,6 @@ public class Fetch extends PipelineSegment{
 
         inst = instructions[Controller.PC / 4];
         instBin = bins[Controller.PC / 4];
-        Controller.PC += 4;
     }
 
 
@@ -111,6 +110,7 @@ public class Fetch extends PipelineSegment{
 
             ifidRegister.zeroOut();
             write();
+            Controller.PC += 4;
 
         }
     }

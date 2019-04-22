@@ -55,6 +55,7 @@ public class Execute extends PipelineSegment {
             System.out.println("Immediate instruction");
             System.out.println(idexRegister.getBinary(24,32));
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(24,32), 2);
+            System.out.println(value2);
         }
         destReg = idexRegister.getBytes(32, 33)[0];
         System.out.println(value1);
