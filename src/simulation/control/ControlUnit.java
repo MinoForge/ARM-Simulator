@@ -147,16 +147,7 @@ public class ControlUnit {
         }
         else if(check.matches("101.")){ //TODO These seem wrong for branches
             format = 'b';
-            unit.flags.set(0,ASSERT);   //Reg2Loc
-            unit.flags.set(1,DEASSERT); //ALUOp1
-            unit.flags.set(2,DEASSERT); //ALUOp2
-            unit.flags.set(3,DEASSERT); //ALUSrc //TODO this should be deasserted unless immediate
-            unit.flags.set(4,ASSERT); //Branch
-            unit.flags.set(5,DEASSERT); //MemRead
-            unit.flags.set(6,DEASSERT); //MemWrite
-            //TODO if branch with link, assert this. Else, deasssert.
-            unit.flags.set(7,DEASSERT);   //RegWrite
-            unit.flags.set(8,DEASSERT); //Mem2Reg
+            unit.bFlagger(temp);
 
         }
         else if(check.matches(".101")){
@@ -189,6 +180,27 @@ public class ControlUnit {
         unit.values.set(STAGE_BINARY_LOADED,unit.flags);
 //        System.out.println(ControlUnit.getState(STAGE_BINARY_LOADED));
         unit.push(STAGE_BINARY_LOADED);
+    }
+
+    private void bFlagger(String instBin) {
+        if(instBin.charAt(2) == '1') { //Conditional branching
+            unit.flags.set(0, ASSERT);   //Reg2Loc
+
+        } else { //Unconditional
+            unit.flags.set(0, DEASSERT); //Reg2Loc
+            if(instBin.charAt(0) == '1') { //Linking
+                unit.flags.set(7, ASSERT); //RegWrite
+            } else { //Non-linking
+                unit.flags.set(7, DEASSERT); //RegWrite
+            }
+        }
+        unit.flags.set(1,DEASSERT); //ALUOp1
+        unit.flags.set(2,DEASSERT); //ALUOp2
+        unit.flags.set(3,ASSERT); //ALUSrc //TODO this should be deasserted unless immediate
+        unit.flags.set(4,ASSERT); //Branch
+        unit.flags.set(5,DEASSERT); //MemRead
+        unit.flags.set(6,DEASSERT); //MemWrite
+        unit.flags.set(8,DEASSERT); //Mem2Reg
     }
 
     private void dFlagger(){
