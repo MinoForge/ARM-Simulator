@@ -314,6 +314,7 @@ public class Assembler implements ANTLRErrorListener {
                 if(instruction[1].matches("[A-Za-z]+")){
                     int location = labelMap.get(instruction[1]);
                     memLocation = (location - currentLine);
+
                 } else {
                     tmp = instruction[1].replace("#", "");
                     memLocation = Integer.parseInt(tmp);
