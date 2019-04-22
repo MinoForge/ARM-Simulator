@@ -152,12 +152,12 @@ public class Execute extends PipelineSegment {
 
                 case("cbz"):
                     if(value1 == 0) {
-                        localPC = (int)value1;
+                        localPC = localPC + ((int)value1 << 2);
                     }
                     break;
                 case("cbnz"):
                     if(value1 != 0) {
-                        localPC = (int)value1;
+                        localPC = localPC + ((int)value1 << 2);
                     }
                     break;
 
