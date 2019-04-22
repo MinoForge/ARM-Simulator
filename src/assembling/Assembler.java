@@ -87,6 +87,7 @@ public class Assembler implements ANTLRErrorListener {
         this.opCodes.put("b",    "000101");
         this.opCodes.put("bl",   "100101");
         this.opCodes.put("mul",  "10011011000");
+
     }
 
     public void makeLabels(){
