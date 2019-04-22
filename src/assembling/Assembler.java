@@ -241,9 +241,9 @@ public class Assembler implements ANTLRErrorListener {
                 reg2 = Integer.toBinaryString(registerNumbers[1]);
                 reg3 = Integer.toBinaryString(registerNumbers[0]);
 
-                reg1 = correctBits(reg1,5);
-                reg2 = correctBits(reg2,5);
-                reg3 = correctBits(reg3,5);
+                reg1 = correctBits(reg1,5, 5);
+                reg2 = correctBits(reg2,5, 5);
+                reg3 = correctBits(reg3,5, 5);
 
                 // adding rm register binary
                 instBin = instBin + reg1;
@@ -276,14 +276,14 @@ public class Assembler implements ANTLRErrorListener {
                         .replaceAll("[a-zA-Z]", "")));
                 reg2 = Integer.toBinaryString(Integer.parseInt(instruction[2]
                         .replaceAll("[a-zA-Z]", "")));
-                reg1 = correctBits(reg1,5);
-                reg2 = correctBits(reg2,5);
+                reg1 = correctBits(reg1,5,5);
+                reg2 = correctBits(reg2,5,5);
 
                 //pulling the immediate value from the instruction
                 String immediate =  instruction[3].replace("#","");
                 String immediateBin = Integer.toBinaryString(Integer.parseInt
                         (immediate));
-                immediateBin = correctBits(immediateBin, 12);
+                immediateBin = correctBits(immediateBin, 12,12);
 
                 instBin = instBin + immediateBin + reg2 + reg1;
 
@@ -295,7 +295,7 @@ public class Assembler implements ANTLRErrorListener {
                 String tmp = instruction[1].replace("#", "");
                 int memLocation = Integer.parseInt(tmp);
                 String memBin = Integer.toBinaryString(memLocation);
-                memBin = correctBits(memBin, 26);
+                memBin = correctBits(memBin, 26,26);
                 //finished the instruction binary
                 instBin = instBin + memBin;
                 break;
@@ -307,13 +307,13 @@ public class Assembler implements ANTLRErrorListener {
                 int num = Integer.parseInt(instruction[1].replace
                         ("[a-zA-Z]", ""));
                 immediate = Integer.toBinaryString(num);
-                immediate = correctBits(immediate, 19);
+                immediate = correctBits(immediate, 19,19);
 
                 instBin = instBin + immediate;
 
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[2]
                         .replaceAll("[a-zA-Z]", "")));
-                reg1 = correctBits(reg1, 5);
+                reg1 = correctBits(reg1, 5,5);
 
                 instBin = instBin + reg1;
                 break;

@@ -27,6 +27,7 @@ public class Decode extends PipelineSegment {
     private int dRegister;
     private long immediate;
     private RegisterFile regFile;
+    private String imm;
 //    private String format;
     private ArrayList<Boolean> flags;
 
@@ -41,6 +42,7 @@ public class Decode extends PipelineSegment {
         this.dRegister    = 0;
         this.regFile    = regFile;
         this.immediate    = 0;
+        this.imm = "";
     }
 
     /**
@@ -113,8 +115,9 @@ public class Decode extends PipelineSegment {
         idexRegister.append(regFile.getRegister(mRegister).getBinary()); //16-23
 
         System.out.println("This is the immediate: " + correctBits(Long
-                        .toBinaryString(immediate), 64));
-        idexRegister.append(correctBits(Long.toBinaryString(immediate),64)); //24-31
+                        .toBinaryString(immediate), 64, imm.length()));
+        idexRegister.append(correctBits(Long.toBinaryString(immediate),64,imm
+                .length())); //24-31
 
 
         System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));

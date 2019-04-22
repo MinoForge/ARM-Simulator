@@ -86,7 +86,8 @@ public class Fetch extends PipelineSegment{
 //        System.out.println(instBin);
 //        System.out.println(ifidRegister);
 
-        ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),64));
+        ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),
+                64, 64));
         ifidRegister.append(instBin);
         System.out.println("Instruction written to IFID: " + ifidRegister.getBinary(8,12));
 //        System.out.println(ifidRegister);

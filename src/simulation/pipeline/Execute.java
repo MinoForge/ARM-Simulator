@@ -72,10 +72,10 @@ public class Execute extends PipelineSegment {
         // give the results of the executions to the ex/mem register.
 
         System.out.println("This is the local PC change : " + localPC);
-        exmemRegister.append(correctBits(Long.toBinaryString(localPC), 64));
+        exmemRegister.append(correctBits(Long.toBinaryString(localPC), 64, 64));
 
         System.out.println("This is the result: " + Long.toBinaryString(result));
-        exmemRegister.append(correctBits(Long.toBinaryString(result), 64));
+        exmemRegister.append(correctBits(Long.toBinaryString(result), 64, 64));
 
         System.out.println("This is the data from reg2:" +
                 idexRegister.getBinary(16,24));
@@ -85,7 +85,8 @@ public class Execute extends PipelineSegment {
 
         System.out.println("This is the dest reg binary:" + idexRegister
                 .getBinary(33,34).substring(3,8));
-        exmemRegister.append(correctBits(idexRegister.getBinary(33,34).substring(3,8), 8));
+        exmemRegister.append(correctBits(idexRegister.getBinary(33,34)
+                .substring(3,8), 8, 8));
 
         System.out.println(exmemRegister);
     }
