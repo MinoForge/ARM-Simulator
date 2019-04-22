@@ -32,6 +32,10 @@ public class Assembler implements ANTLRErrorListener {
     /** InstructionName -> Binary opCode */
     private HashMap<String,String> opCodes;
 
+    /** Label -> location */
+    private HashMap<String, Integer> labelMap;
+
+
     /**
      * Constructor.
      * @param fileName The file being assembled.
@@ -54,6 +58,9 @@ public class Assembler implements ANTLRErrorListener {
         this.instructionArray = this.fileString.split("\n");
         this.errorMsg = "";
 
+        this.labelMap = new HashMap<>();
+
+        makeLabels();
 
         //Setting up for making binary instructions
 
@@ -76,6 +83,15 @@ public class Assembler implements ANTLRErrorListener {
         this.opCodes.put("mul",  "10011011000");
     }
 
+    public void makeLabels(){
+        for(int i = 0; i < instructionArray.length; i++){
+            if(instructionArray[i].matches(".:.")){
+                String[] temp = instructionArray[i].split(":");
+                temp[1].replace(":","");
+                labelMap.put(temp[1], i);
+            }
+        }
+    }
 
     /**
      * Parses the given file.
@@ -164,7 +180,7 @@ public class Assembler implements ANTLRErrorListener {
             } else {
                 curInstruction = instructionArray[i];
                 String[] tempArray = curInstruction.split(" ");
-                instructions.add(findBin(tempArray));
+                instructions.add(findBin(tempArray, i));
             }
         }
         return instructions;
@@ -176,7 +192,7 @@ public class Assembler implements ANTLRErrorListener {
      * @param instruction the instruction being translated, split into tokens.
      * @return translated binary string
      */
-    public String findBin(String[] instruction){
+    public String findBin(String[] instruction, int currentLine){
         String instBin = "";
         for (int j  = 0; j < instruction.length; j++){
             instruction[j] = instruction[j].replace(",", "");
@@ -211,7 +227,7 @@ public class Assembler implements ANTLRErrorListener {
                 format = 'r';
             }
             // need to finish for r types
-            else if(check.matches("TODO")){
+            else if(check.matches("110.")){
                 format = 'd';
             }
         }else{
@@ -291,9 +307,18 @@ public class Assembler implements ANTLRErrorListener {
                 break;
 
             case('b'):
+                //TODO: label logic needed
                 // Not finished need label logic for now this is just immediates
-                String tmp = instruction[1].replace("#", "");
-                int memLocation = Integer.parseInt(tmp);
+                String tmp ="";
+                int memLocation;
+                if(instruction[1].matches("[A-Za-z]+")){
+                    int location = labelMap.get(instruction[1]);
+                    memLocation = (location - currentLine);
+                } else {
+                    tmp = instruction[1].replace("#", "");
+                    memLocation = Integer.parseInt(tmp);
+                }
+
                 String memBin = Integer.toBinaryString(memLocation);
                 memBin = correctBits(memBin, 26,26);
                 //finished the instruction binary
@@ -304,8 +329,12 @@ public class Assembler implements ANTLRErrorListener {
 
                 //TODO: Need label logic
                 // current logic is for an immediate given to the
-                int num = Integer.parseInt(instruction[1].replace
-                        ("[a-zA-Z]", ""));
+                int num;
+                if(instruction[2].matches("[A-Za_z]+")){
+                    num = labelMap.get(instruction[2]) - currentLine;
+                }else {
+                    num = Integer.parseInt(instruction[1].replace("#", ""));
+                }
                 immediate = Integer.toBinaryString(num);
                 immediate = correctBits(immediate, 19,19);
 
@@ -322,6 +351,24 @@ public class Assembler implements ANTLRErrorListener {
                 // TODO:
                 // much trickier to pull apart as the syntax for these
                 // instructions are much different from the others
+                for(int i = 2; i < instruction.length; i++){
+                    instruction[i] = instruction[i].replace("[","");
+                }
+                instruction[3] = instruction[3].replace("#","");
+
+                reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
+                        .replaceAll("[a-zA-Z]", "")));
+                reg2 = Integer.toBinaryString(Integer.parseInt(instruction[2]
+                        .replaceAll("[a-zA-Z]", "")));
+                reg1 = correctBits(reg1,5,5);
+                reg2 = correctBits(reg2,5,5);
+
+                num = Integer.parseInt(instruction[3]);
+                immediate = Integer.toBinaryString(num);
+                immediate = correctBits(immediate, 9, 9);
+
+                instBin = instBin + immediate + "00" + reg2 + reg1;
+
 
                 break;
         }

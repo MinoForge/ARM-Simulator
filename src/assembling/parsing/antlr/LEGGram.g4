@@ -86,8 +86,8 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  B label | imm
         |  BR reg //TODO add to assembler
         |  BLR reg //TODO add to assembler
-        |  CBZ reg SEPARATOR imm
-        |  CBNZ reg SEPARATOR imm
+        |  CBZ reg SEPARATOR (label | imm)
+        |  CBNZ reg SEPARATOR (label | imm)
         |  LDUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         |  STUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         )
