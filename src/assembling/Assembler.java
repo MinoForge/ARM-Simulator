@@ -173,7 +173,7 @@ public class Assembler implements ANTLRErrorListener {
         for(int i = 0; i < instructionArray.length; i++) {
 //            System.out.println(instructionArray[i]);
             if (instructionArray[i].equals("ENTRY") || instructionArray[i].equals("END") ||
-                    instructionArray[i].matches("/+.*")) {
+                    instructionArray[i].matches("/+.*") || instructionArray[i].equals("")) {
                 System.out.println("Matched: " + instructionArray[i] + "as special. Not adding to" +
                         " instruction list.");
                 //Do nothing touch
@@ -384,7 +384,7 @@ public class Assembler implements ANTLRErrorListener {
     public ArrayList<String> getInstructionList() {
         ArrayList<String> justInstructions = new ArrayList<>();
         for(String s : instructionArray){
-            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*"))) {
+            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") || s.equals(""))) {
                 justInstructions.add(s);
             }
         }
