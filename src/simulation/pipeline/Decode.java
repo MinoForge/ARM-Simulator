@@ -159,6 +159,7 @@ public class Decode extends PipelineSegment {
                 ControlUnit.haltPipe(0, 1);
             }
         }
+
     }
 
     /**
