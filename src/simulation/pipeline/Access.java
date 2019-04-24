@@ -22,10 +22,11 @@ public class Access extends PipelineSegment{
     private boolean   read;
     private boolean   branch;
     private String aluResult;
-    private String memAddress;
+    private String data;
     private String memData;
+    private Register memory;
 
-    public Access(Register exmem, Register memwb) {
+    public Access(Register exmem, Register memwb, Register memory) {
         this.exmemRegister = exmem;
         this.memwbRegister = memwb;
         this.fields = null;
@@ -33,8 +34,9 @@ public class Access extends PipelineSegment{
         this.write = false;
         this.branch = false;
         this.aluResult = "";
-        this.memAddress = "";
+        this.data = "";
         this.memData = "";
+        this.memory = memory;
 
     }
 
@@ -48,26 +50,26 @@ public class Access extends PipelineSegment{
         System.out.println("Starting ACCESS now");
 
         this.aluResult = exmemRegister.getBinary(8,16);
-        this.memAddress = exmemRegister.getBinary(16,24);
+        this.data = exmemRegister.getBinary(16,24);
 
 
     }
 
     /**
      * Method the checks the write and read flags inorder to tell access what we are doing with
-     * memory. On a write it takes the aluResult from the alu and puts it into memory memAddress specified
-     * by exmem register. On a read, we retrieve what is in memory at the specified memAddress and load
+     * memory. On a write it takes the aluResult from the alu and puts it into memory data specified
+     * by exmem register. On a read, we retrieve what is in memory at the specified data and load
      * it into the memwb register.
      */
     private void write() {
+        int address = Integer.parseInt(aluResult,2);
 
         if(write){
             System.out.println("Writing to Main Memory");
-            //Stack.writeBinaryAtIndex(temp,Integer.parseInt(memAddress,2));
+            memory.writeBinaryAtIndex(address, data);
         }else if(read){
             System.out.println("Reading from Main Memory");
-            // this.memData = Stack.getBinary(Integer.parseInt(memAddress),
-            // Integer.parseInt(memAddress) + 8);
+            memData = memory.getBinary(address, address + 8);
         } else {
             System.out.println("Bypassing Main Memory");
         }
@@ -85,7 +87,6 @@ public class Access extends PipelineSegment{
         System.out.println("Data from ALU into memwb   : " + aluResult);
         memwbRegister.append(exmemRegister.getBinary(24,25));
         System.out.println("Write-back register : " + exmemRegister.getBinary(24, 25));
-
     }
 
 

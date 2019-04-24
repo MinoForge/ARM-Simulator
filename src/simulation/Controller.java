@@ -49,7 +49,7 @@ public class Controller {
     private Writeback writeback;
 
     private RegisterFile regFile;
-    private Register memory;
+    public static Register memory;
 
 
 
@@ -75,9 +75,6 @@ public class Controller {
 
 
 //        this.data = assembler.getDataArray();
-
-
-
     }
 
     public void assemble() {
@@ -102,10 +99,11 @@ public class Controller {
         Register exmem = new Register(EXMEM_SIZE);
         Register memwb = new Register(MEMWB_SIZE);
 
-        fetcher = new Fetch(ifid, instructions.toArray(new String[0]), instBins.toArray(new String[0]));
+        fetcher = new Fetch(ifid, instructions.toArray(new String[0]),
+                instBins.toArray(new String[0]));
         decoder = new Decode(ifid, idex, regFile);
         execute = new Execute(idex, exmem);
-        access = new Access(exmem, memwb);
+        access = new Access(exmem, memwb, memory);
         writeback = new Writeback(memwb, regFile);
 
 

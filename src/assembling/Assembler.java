@@ -409,7 +409,8 @@ public class Assembler implements ANTLRErrorListener {
     public ArrayList<String> getInstructionList() {
         ArrayList<String> justInstructions = new ArrayList<>();
         for(String s : instructionArray){
-            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") || s.equals(""))) {
+            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") ||
+                    s.equals(""))) {
                 justInstructions.add(s);
             }
         }
