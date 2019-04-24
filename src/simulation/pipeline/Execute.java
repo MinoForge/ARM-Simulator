@@ -164,11 +164,8 @@ public class Execute extends PipelineSegment {
                     break;
 
                 case("ldur"):
-                    // TODO: 4/8/2019 CRY
-                    break;
-
                 case("stur"):
-                    // TODO: 4/8/2019 CRY
+                    result = value1 + value2;
                     break;
             }
             write();

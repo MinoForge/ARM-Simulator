@@ -78,10 +78,10 @@ public class Decode extends PipelineSegment {
 
         String imm = "";
         int temp;
-        if(flags.get(5) | flags.get(6)) { //D-type
+        if(flags.get(5) || flags.get(6)) { //D-type
             imm = instBin.substring(11, 20);
-        } else {
-            imm = instBin.substring(10, 22); //TODO Immediate not always 12 digits. See ldur.
+        } else { //I-type
+            imm = instBin.substring(10, 22);
         }
         if(flags.get(4)) { //Branch
             if(flags.get(0)) { //CBZ
@@ -95,8 +95,7 @@ public class Decode extends PipelineSegment {
         immediate = ((long)temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
 
 
-        //TODO finish for B type, needs labels
-        //Only if the opcode dictates
+
     }
 
 
@@ -135,11 +134,8 @@ public class Decode extends PipelineSegment {
         idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32)); //32-33
 
 
-        System.out.println("This is the contents  of idex: " + idexRegister
+        System.out.println("This is the contents of idex: " + idexRegister
                 .getBinary());
-
-
-        //TODO Integrate B format, still need labels
     }
 
 
