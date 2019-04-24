@@ -64,7 +64,7 @@ public class Controller {
         this.filePath = filePath;
 
         this.regFile = new RegisterFile();
-        regFile.lockRegister(31); //Zero Register
+
 
         if(littleEnd) {
             BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
@@ -83,7 +83,12 @@ public class Controller {
         this.instBins = assembler.makeBinaryList();
         init();
 //        System.out.println(instructions);
+        System.out.println("Calling setUpStack()");
+
+
         setUpStack(); //stack initialization
+        initRegisters();
+        readData(); //initialize data stuff
     }
 
     public void start() {
@@ -103,8 +108,14 @@ public class Controller {
 
 
 
-        readData(); //initialize data stuff
 
+
+    }
+
+    private void initRegisters() {
+        regFile.getRegister(31).zeroOut();
+        regFile.lockRegister(31); //Zero Register
+        regFile.getRegister(28).writeBinary(Integer.toBinaryString(memory.toString().length()/32));
     }
 
 
@@ -133,8 +144,28 @@ public class Controller {
     /** Unimplemented. */
     private void setUpStack() {
         this.memory = new Register(instructions.size() * 4 + MEMORY_BYTES);
+        System.out.println("Starting Stack setup");
+        for(int i = 0; i < instBins.size(); i++) {
+            System.out.println("Writing Instruction to " + (i*4));
+            System.out.flush();
+            memory.writeBinaryAtIndex(i*4, instBins.get(i));
+        }
+        printStack();
 //        this.memory = new Register(0x7ffffffffc); //should be 0x7ffffffffc, but too long for int
         // TODO: 4/23/2019 Don't use up all the memory
+    }
+
+    private void printStack() {
+        String str = memory.toString();
+        long length = str.length()/32;
+        System.out.println(length);
+        StringBuilder stackStr = new StringBuilder();
+        for(int i = 0; i < length; i++) {
+            stackStr.append(i*4 + " ");
+            stackStr.append(memory.getBinary(i*4, (i+1)*4));
+            stackStr.append('\n');
+        }
+        System.out.println(stackStr.toString());
     }
 
     /** A single cycle of the cpu. */
