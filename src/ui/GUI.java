@@ -114,7 +114,21 @@ public class GUI extends Application {
      */
     private SplitPane makeMid(String fileContents, RegisterFile regFile) {
         //Text Pane and resizing code.
-        TextArea fileText = new TextArea(fileContents);
+        String[] fileArray = fileContents.split("\n");
+        StringBuilder displayFile = new StringBuilder();
+        for(int i = 0; i < fileArray.length; i++) {
+            int j = i == 0 ? 1 : i;
+//            System.out.println(j);
+            System.out.println(8-(int)Math.log10(j));
+            displayFile.append(i);
+            String str = String.format("%" + (8-(int)Math.log10(j)) + "s", "");
+            displayFile.append(str);
+            displayFile.append(fileArray[i]);
+            displayFile.append("\n");
+        }
+
+        TextArea fileText = new TextArea(displayFile.toString());
+        fileText.setStyle("-fx-font-family: 'monospaced';");
         fileText.setEditable(false);
         ScrollPane filePane = new ScrollPane(fileText);
         filePane.setFitToWidth(true);

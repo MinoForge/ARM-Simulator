@@ -25,6 +25,9 @@ import java.util.Scanner;
  */
 public class Controller {
 
+    public static final int MEMORY_BYTES = 1024;
+    public static final int TEXT_BASE_ADDRESS_OFFSET = 0x400000;
+
     public static ByteOrder BYTE_ORDER;
     public static final int DEFAULT_REGISTER_NUM = 32;
     private static final int IFID_SIZE = 12;
@@ -82,7 +85,8 @@ public class Controller {
         this.instructions = assembler.getInstructionList();
         this.instBins = assembler.makeBinaryList();
         init();
-        System.out.println(instructions);
+//        System.out.println(instructions);
+        setUpStack(); //stack initialization
     }
 
     public void start() {
@@ -102,7 +106,7 @@ public class Controller {
 
 
         readData(); //initialize data stuff
-        setUpStack(); //stack initialization
+
     }
 
 
@@ -130,7 +134,9 @@ public class Controller {
 
     /** Unimplemented. */
     private void setUpStack() {
-
+        this.memory = new Register(instructions.size() * 4 + MEMORY_BYTES);
+//        this.memory = new Register(0x7ffffffffc); //should be 0x7ffffffffc, but too long for int
+        // TODO: 4/23/2019 Don't use up all the memory
     }
 
     /** A single cycle of the cpu. */
