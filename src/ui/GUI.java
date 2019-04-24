@@ -94,7 +94,7 @@ public class GUI extends Application {
         theStage.setScene(theScene);
         theStage.show();
 
-        test();
+//        test();
     }
 
     public void test() {
@@ -119,7 +119,6 @@ public class GUI extends Application {
         for(int i = 0; i < fileArray.length; i++) {
             int j = i == 0 ? 1 : i;
 //            System.out.println(j);
-            System.out.println(8-(int)Math.log10(j));
             displayFile.append(i);
             String str = String.format("%" + (8-(int)Math.log10(j)) + "s", "");
             displayFile.append(str);
