@@ -86,7 +86,7 @@ public class Controller {
         this.instBins = assembler.makeBinaryList();
         init();
 //        System.out.println(instructions);
-        System.out.println("Calling setUpStack()");
+//        System.out.println("Calling setUpStack()");
 
 
         setUpStack(); //stack initialization
@@ -117,7 +117,7 @@ public class Controller {
     private void initRegisters() {
         regFile.getRegister(31).zeroOut();
         regFile.lockRegister(31); //Zero Register
-        regFile.getRegister(28).writeBinary(Integer.toBinaryString(memory.toString().length()/32));
+        regFile.getRegister(28).writeBinary(PipelineSegment.correctBits(Integer.toBinaryString(memory.toString().length()/32), 64, 64));
     }
 
 
@@ -146,13 +146,13 @@ public class Controller {
     /** Unimplemented. */
     private void setUpStack() {
         this.memory = new Register(instructions.size() * 4 + MEMORY_BYTES);
-        System.out.println("Starting Stack setup");
+//        System.out.println("Starting Stack setup");
         for(int i = 0; i < instBins.size(); i++) {
-            System.out.println("Writing Instruction to " + (i*4));
-            System.out.flush();
-            memory.writeBinaryAtIndex(i*4, instBins.get(i));
+//            System.out.println("Writing Instruction to " + (i*4));
+//            System.out.flush();
+            memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(instBins.get(i), 64, 64));
         }
-        printStack();
+//        printStack();
 //        this.memory = new Register(0x7ffffffffc); //should be 0x7ffffffffc, but too long for int
         // TODO: 4/23/2019 Don't use up all the memory
     }
