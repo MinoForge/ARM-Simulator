@@ -29,6 +29,8 @@ public class Fetch extends PipelineSegment{
 
     private String inst;
 
+    private Register memory;
+
 
 
 
@@ -38,16 +40,17 @@ public class Fetch extends PipelineSegment{
      * @param ifid  The byte[][] representing the pipeline register
      * @param instructions The String array containing the instructions.
      */
-    public Fetch(Register ifid, String[] instructions, String[] bins) {
+    public Fetch(Register ifid, String[] instructions, String[] bins, Register memory) {
         this.instructions = instructions;
         this.ifidRegister = ifid;
         this.instBin = "";
         this.bins = bins;
         this.inst = "";
+        this.memory = memory;
     }
 
-    public Fetch(Register ifid) {
-        this(ifid, new String[0], new String[0]);
+    public Fetch(Register ifid, Register memory) {
+        this(ifid, new String[0], new String[0], memory);
     }
 
 
@@ -70,7 +73,9 @@ public class Fetch extends PipelineSegment{
 
         System.out.println("Fetching instruction at: " + Controller.PC / 4);
 
-        inst = instructions[Controller.PC / 4];
+        int address = Controller.PC / 4;
+//        inst = memory.getBinary(address, address + 4);
+        inst = instructions[Controller.PC / 4]; //TODO move hashmap stuff from execute to Control unit to remove instructions entirely
         instBin = bins[Controller.PC / 4];
     }
 

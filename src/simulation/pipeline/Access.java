@@ -63,13 +63,17 @@ public class Access extends PipelineSegment{
      */
     private void write() {
         int address = Integer.parseInt(aluResult,2);
+        System.out.println("This is the memory address: " + address);
+//        Controller.printMemory();
 
         if(write){
             System.out.println("Writing to Main Memory");
             memory.writeBinaryAtIndex(address, data);
+
         }else if(read){
-            System.out.println("Reading from Main Memory");
+
             memData = memory.getBinary(address, address + 8);
+            System.out.println("Reading from Main Memory: " + (memData));
         } else {
             System.out.println("Bypassing Main Memory");
         }

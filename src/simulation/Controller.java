@@ -49,7 +49,7 @@ public class Controller {
     private Writeback writeback;
 
     private RegisterFile regFile;
-    public static Register memory;
+    public Register memory;
 
 
 
@@ -89,10 +89,6 @@ public class Controller {
         setUpStack(); //stack initialization
         initRegisters();
         readData(); //initialize data stuff
-    }
-
-    public void start() {
-        halt = false;
 
         Register ifid = new Register(IFID_SIZE);
         Register idex = new Register(IDEX_SIZE);
@@ -100,11 +96,17 @@ public class Controller {
         Register memwb = new Register(MEMWB_SIZE);
 
         fetcher = new Fetch(ifid, instructions.toArray(new String[0]),
-                instBins.toArray(new String[0]));
+                instBins.toArray(new String[0]), memory);
         decoder = new Decode(ifid, idex, regFile);
         execute = new Execute(idex, exmem);
         access = new Access(exmem, memwb, memory);
         writeback = new Writeback(memwb, regFile);
+    }
+
+    public void start() {
+        halt = false;
+
+
 
 
 
@@ -148,14 +150,15 @@ public class Controller {
         for(int i = 0; i < instBins.size(); i++) {
 //            System.out.println("Writing Instruction to " + (i*4));
 //            System.out.flush();
-            memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(instBins.get(i), 64, 64));
+            System.out.println("Writing instruction :: " + instBins.get(i) + " :: to " + (i*4));
+            memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(instBins.get(i), 32, 32));
         }
-//        printStack();
+        printMemory();
 //        this.memory = new Register(0x7ffffffffc); //should be 0x7ffffffffc, but too long for int
         // TODO: 4/23/2019 Don't use up all the memory
     }
 
-    private void printStack() {
+    public void printMemory() {
         String str = memory.toString();
         long length = str.length()/32;
         System.out.println(length);
@@ -207,6 +210,7 @@ public class Controller {
             writeback.execute();
             ControlUnit.flushPipe(0,4);
             ControlUnit.setStageDataValid(0, true);
+            printMemory();
             return true;
         }
         return false;

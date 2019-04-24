@@ -48,10 +48,10 @@ public class PipelineTester {
         exmem = new Register(EXMEM_SIZE);
         memwb = new Register(MEMWB_SIZE);
 
-        fetch = new Fetch(ifid);
+//        fetch = new Fetch(ifid);
         decode = new Decode(ifid, idex, regFile);
         execute = new Execute(idex, exmem);
-        access = new Access(exmem, memwb);
+//        access = new Access(exmem, memwb);
         writeback = new Writeback(memwb, regFile);
     }
 

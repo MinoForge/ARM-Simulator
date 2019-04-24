@@ -244,7 +244,8 @@ public class Assembler implements ANTLRErrorListener {
         // Checks to see what format the instruction is
         if(instBin.length() > 8){
             check = instBin.substring(3,7);
-            if(check.matches("100.") || check.matches(".1.0")){
+            if(check.matches("100.")) {
+                //|| check.matches(".1.0"))????
                 format = 'i';
             }
             else if(check.matches(".101")){
