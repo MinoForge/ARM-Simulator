@@ -377,10 +377,10 @@ public class Assembler implements ANTLRErrorListener {
                 // TODO:
                 // much trickier to pull apart as the syntax for these
                 // instructions are much different from the others
-                for(int i = 2; i < instruction.length; i++){
-                    instruction[i] = instruction[i].replace("[","");
-                }
+                instruction[2] = instruction[2].replace("[","");
+                //instruction[3] = instruction[3].replaceAll("#\\]","");
                 instruction[3] = instruction[3].replace("#","");
+                instruction[3] = instruction[3].replace("]","");
 
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
                         .replaceAll("[a-zA-Z]", "")));
