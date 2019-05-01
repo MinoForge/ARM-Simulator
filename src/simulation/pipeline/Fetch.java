@@ -74,9 +74,9 @@ public class Fetch extends PipelineSegment{
         System.out.println("Fetching instruction at: " + Controller.PC / 4);
 
         int address = Controller.PC / 4;
-//        inst = memory.getBinary(address, address + 4);
-        inst = instructions[Controller.PC / 4]; //TODO move hashmap stuff from execute to Control unit to remove instructions entirely
-        instBin = bins[Controller.PC / 4];
+        instBin = memory.getBinary(Controller.PC, Controller.PC + 4);
+        inst = instructions[address]; //TODO move hashmap stuff from execute to Control unit to remove instructions entirely
+//        instBin = bins[Controller.PC / 4];
     }
 
 
