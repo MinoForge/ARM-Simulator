@@ -97,6 +97,7 @@ public class Execute extends PipelineSegment {
      */
     public void execute(){
         if(ControlUnit.getGoAhead(2)) {
+            System.out.println("Starting Execute");
             flags = ControlUnit.getControlFlags(2);
             read();
             exmemRegister.zeroOut();
@@ -169,6 +170,8 @@ public class Execute extends PipelineSegment {
                     break;
             }
             write();
+        } else {
+            ControlUnit.setStageDataValid(3, false);
         }
     }
 //

@@ -153,7 +153,7 @@ public class Controller {
             System.out.println("Writing instruction :: " + instBins.get(i) + " :: to " + (i*4));
             memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(instBins.get(i), 32, 32));
         }
-        printMemory();
+//        printMemory();
 //        this.memory = new Register(0x7ffffffffc); //should be 0x7ffffffffc, but too long for int
         // TODO: 4/23/2019 Don't use up all the memory
     }
@@ -210,7 +210,7 @@ public class Controller {
             writeback.execute();
             ControlUnit.flushPipe(0,4);
             ControlUnit.setStageDataValid(0, true);
-            printMemory();
+//            printMemory();
             return true;
         }
         return false;
@@ -241,7 +241,7 @@ public class Controller {
 
     /** Sets the halt boolean to a value. If true, the simulator should stop when checked. */
     public void setHalt(boolean val) {
-        this.halt = val;
+        Controller.halt = val;
     }
 
     /** Stops the simulator and flushes all pipeline values. */

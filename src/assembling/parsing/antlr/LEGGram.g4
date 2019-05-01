@@ -26,6 +26,7 @@ MADD	: [Mm][Aa][Dd][Dd][ ];
 LSL		: [Ll][Ss][Ll][ ];
 LSR		: [Ll][Ss][Rr][ ];
 UBFM	: [Uu][Bb][Ff][Mm][ ];
+SVC	: [Ss][Vv][Cc][ ];
 //End Instructions
 
 //Important Symbols
@@ -94,6 +95,10 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  CBNZ reg SEPARATOR (label | imm)
         |  LDUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         |  STUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
+        |  LSL reg SEPARATOR reg SEPARATOR reg
+        |  LSR reg SEPARATOR reg SEPARATOR reg
+        |  UBFM reg SEPARATOR reg SEPARATOR imm SEPARATOR imm
+        |  SVC imm
         )
         ;
 

@@ -183,7 +183,7 @@ public class ButtonStrip {
             button.setDisable(true);
             pauseRunButton.setDisable(true);
             stopRunButton.setDisable(true);
-            control.stop();
+            Controller.stop();
             System.out.println(Controller.PC);
         });
         button.setDisable(true);

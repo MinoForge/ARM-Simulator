@@ -157,6 +157,8 @@ public class Decode extends PipelineSegment {
             } else {
                 System.out.println("Stalling at Decode.");
                 ControlUnit.haltPipe(0, 1);
+                ControlUnit.setStageDataValid(2, false);
+
             }
         }
 

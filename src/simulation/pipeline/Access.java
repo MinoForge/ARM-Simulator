@@ -107,6 +107,8 @@ public class Access extends PipelineSegment{
             this.branch = fields.get(4);
             memwbRegister.zeroOut();
             write();
+        } else {
+            ControlUnit.setStageDataValid(4, false);
         }
     }
 

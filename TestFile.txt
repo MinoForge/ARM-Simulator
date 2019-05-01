@@ -5,4 +5,8 @@ ENTRY
 ADD r3, r2, r2
 ADD r1, r2, r3
 ADD r2, r4, r4
+
+//Start I-type
+SUB r2, r3, r5
+SUB r1, r3, r3
 END

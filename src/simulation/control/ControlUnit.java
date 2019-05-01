@@ -108,8 +108,10 @@ public class ControlUnit {
         if(0 < unit.stopTimer) { //stopTimer positive
             if(stageNum <= unit.haltedStage) { //Current stage is at or before the halted stage
                 if (unit.haltedStage == stageNum) { //Current Stage is the one halted
+                    System.out.println("Decrementing stopTimer");
                     unit.stopTimer--; //Decrement Timer
                 }
+                System.out.println("Pipeline not running.");
                 return false; //Do not run Pipeline Stage.
             }
 
