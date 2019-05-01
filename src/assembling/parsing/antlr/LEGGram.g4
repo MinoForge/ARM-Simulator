@@ -22,6 +22,10 @@ BL		: [Bb][Ll][ ];
 CBZ		: [Cc][Bb][Zz][ ];
 CBNZ	: [Cc][Bb][Nn][Zz][ ];
 MADD	: [Mm][Aa][Dd][Dd][ ];
+//Unimplemented
+LSL		: [Ll][Ss][Ll][ ];
+LSR		: [Ll][Ss][Rr][ ];
+UBFM	: [Uu][Bb][Ff][Mm][ ];
 //End Instructions
 
 //Important Symbols
