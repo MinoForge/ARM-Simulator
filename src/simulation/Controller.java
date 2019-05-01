@@ -57,7 +57,7 @@ public class Controller {
     public static int PC = 0;
 
     private String filePath;
-    private boolean halt;
+    private static boolean halt;
 
 
     public Controller(String filePath, boolean littleEnd) {
@@ -245,8 +245,8 @@ public class Controller {
     }
 
     /** Stops the simulator and flushes all pipeline values. */
-    public void stop() {
-        this.halt = true;
+    public static void stop() {
+        Controller.halt = true;
         Controller.PC = 0;
         ControlUnit.flushPipe(0,4);
         ControlUnit.setStageDataValid(0, true);

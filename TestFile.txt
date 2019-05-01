@@ -2,5 +2,7 @@ ENTRY
 //Start Pipeline Test
 
 //Start R-type
-
+ADD r3, r2, r2
+ADD r1, r2, r3
+ADD r2, r4, r4
 END
