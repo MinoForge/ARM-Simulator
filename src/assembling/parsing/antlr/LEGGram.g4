@@ -26,7 +26,7 @@ MADD	: [Mm][Aa][Dd][Dd][ ];
 LSL		: [Ll][Ss][Ll][ ];
 LSR		: [Ll][Ss][Rr][ ];
 UBFM	: [Uu][Bb][Ff][Mm][ ];
-SVC	: [Ss][Vv][Cc][ ];
+SVC	    : [Ss][Vv][Cc][ ];
 //End Instructions
 
 //Important Symbols
