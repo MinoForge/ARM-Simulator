@@ -29,6 +29,7 @@ UBFM	: [Uu][Bb][Ff][Mm][ ];
 SVC	    : [Ss][Vv][Cc][ ];
 //End Instructions
 
+
 //Important Symbols
 INT           : [0-9]+;
 SEPARATOR     : ', ';
@@ -62,7 +63,7 @@ prog    : ENTRY (label | inst | WS)+ END
         ;
 
 //Not implemented yet
-data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+));
+data    : (DATA WS DIRECTIVE LCWORD (STRING | INT+) );
 
 //Consumes registers and their number
 reg     : (REGISTER INT);

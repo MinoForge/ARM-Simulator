@@ -8,6 +8,7 @@ import assembling.parsing.antlr.LEGGramParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -57,30 +58,14 @@ public class Assembler implements ANTLRErrorListener {
         this.fileString = tempStr.toString();
         String[] tempInsts = this.fileString.split("\n");
         ArrayList<String> realInsts = new ArrayList<>();
-        for(String s: tempInsts) {
-            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") || s.equals(""))) {
-                realInsts.add(s);
-                System.out.println(s);
-            }
-        }
-        this.instructionArray = realInsts.toArray(new String[0]);
+        ArrayList<String> data      = new ArrayList<>();
+        realInstAdder(tempInsts, realInsts, data);
 
-        this.errorMsg = "";
-        for(int i = 0; i < instructionArray.length; i++){
-            instructionArray[i] = instructionArray[i].trim();
-        }
-        for(String s : instructionArray){
-            System.out.println(s);
-        }
 
-        this.labelMap = new HashMap<>();
-        makeLabels();
-        System.out.println("the hashmap: " + labelMap.toString());
 
         //Setting up for making binary instructions
 
         this.opCodes = new HashMap<>();
-        //TODO Might make Enumerations out of these
         this.opCodes.put("add",  "10001011000");
         this.opCodes.put("and",  "10001010000");
         this.opCodes.put("andi", "1001001000");
@@ -96,6 +81,39 @@ public class Assembler implements ANTLRErrorListener {
         this.opCodes.put("b",    "000101");
         this.opCodes.put("bl",   "100101");
         this.opCodes.put("mul",  "10011011000");
+        this.opCodes.put("lsl",  "10011010110");
+        this.opCodes.put("lsr",  "10011010110");
+        this.opCodes.put("svc",  "11010100000");
+
+    }
+
+    public void dataSection(String[] temp){
+        ArrayList<String> data = new ArrayList<>();
+        for(int i = 2; temp[i].equals(".text"); i++){
+            data.add(temp[i]);
+        }
+        for(String s : data){
+            String[] temp1 = s.split("\\s+");
+
+
+            switch(temp1[1]){
+                case(".byte"):
+
+
+                    break;
+                case(".ascii"):
+
+                    break;
+                case(".asciz"):
+
+                    break;
+            }
+
+            for(int j = 1; j < s.length(); j++){
+
+            }
+        }
+
 
     }
 
@@ -136,6 +154,38 @@ public class Assembler implements ANTLRErrorListener {
         return passesParse;
     }
 
+    public void realInstAdder(String[] tempInsts, ArrayList<String>
+            realInsts, ArrayList<String> data){
+        boolean isData = false;
+        for(String s: tempInsts) {
+            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") ||
+                    s.equals("") && !isData)) {
+                realInsts.add(s);
+                System.out.println(s);
+            }else if(s.equals(".data")){
+                isData = true;
+            }else if(s.equals(".text")){
+                isData = false;
+            }
+            if(isData && !(s.equals(".data"))){
+                data.add(s);
+            }
+
+        }
+        this.instructionArray = realInsts.toArray(new String[0]);
+
+        this.errorMsg = "";
+        for(int i = 0; i < instructionArray.length; i++){
+            instructionArray[i] = instructionArray[i].trim();
+        }
+        for(String s : instructionArray){
+            System.out.println(s);
+        }
+
+        this.labelMap = new HashMap<>();
+        makeLabels();
+        System.out.println("the hashmap: " + labelMap.toString());
+    }
     //Begin ErrorListener implementation.
 
     public void syntaxError(Recognizer<?, ?> recognizer,
@@ -255,6 +305,10 @@ public class Assembler implements ANTLRErrorListener {
             else if(check.matches("110.")){
                 format = 'd';
             }
+            // system calls
+            else if(check.matches("1010")){
+                format = 's';
+            }
         }else{
             if(instBin.length() < 8){
                 format = 'b';
@@ -291,9 +345,15 @@ public class Assembler implements ANTLRErrorListener {
 
                 // will need to check if a shamt is present but for now
                 // assuming there isn't
-                instBin = instBin + "000000";
-                //shamt = "000000";
+                if(temp.equals("LSL")){
+                    instBin = instBin + "001000";
+                }else if(temp.equals("LSR")){
+                    instBin = instBin + "001001";
+                }else {
+                    instBin = instBin + "000000";
+                }
 
+                //shamt = "000000";
 
                 // adding rn register binary
 
@@ -332,8 +392,6 @@ public class Assembler implements ANTLRErrorListener {
                 break;
 
             case('b'):
-                //TODO: label logic needed
-                // Not finished need label logic for now this is just immediates
                 String tmp ="";
                 int memLocation;
                 if(instruction[1].matches("[A-Za-z]+")){
@@ -353,9 +411,6 @@ public class Assembler implements ANTLRErrorListener {
                 break;
 
             case('c'):
-
-                //TODO: Need label logic
-                // current logic is for an immediate given to the
                 int num;
                 if(instruction[2].matches("[A-Za-z]+")){
                     num = labelMap.get(instruction[2]) - currentLine;
@@ -395,6 +450,17 @@ public class Assembler implements ANTLRErrorListener {
                 immediate = correctBits(immediate, 9, 9);
 
                 instBin = instBin + immediate + "00" + reg2 + reg1;
+
+
+                break;
+            case('s'):
+                instruction[1] = instruction[1].replace("#", "");
+                num = Integer.parseInt(instruction[1]);
+                immediate = Integer.toBinaryString(num);
+                immediate = correctBits(immediate, 16, 16);
+
+                instBin = instBin + immediate + "00001"; //Must be 00001 for
+                                                         //syscalls
 
 
                 break;

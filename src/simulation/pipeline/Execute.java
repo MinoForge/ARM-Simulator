@@ -168,6 +168,12 @@ public class Execute extends PipelineSegment {
                 case("stur"):
                     result = value1 + value2;
                     break;
+
+                case("lsl"):
+                    result = value1 << value2;
+                    break;
+                case("lsr"):
+                    result = value1 >> value2;
             }
             write();
         } else {

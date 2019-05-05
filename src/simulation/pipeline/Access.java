@@ -63,6 +63,10 @@ public class Access extends PipelineSegment{
      */
     private void write() {
         int address = Integer.parseInt(aluResult,2);
+        if(address < 0x400000){
+            System.err.println("Segmentation Fault");
+            Controller.stop();
+        }
         System.out.println("This is the memory address: " + address);
 //        Controller.printMemory();
 
