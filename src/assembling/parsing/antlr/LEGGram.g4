@@ -40,7 +40,7 @@ HASH          : '#';
 EQUALS        : '=';
 ENTRY         : 'ENTRY';
 END           : 'END';
-WORD          : [A-Za-z]+;
+WORD          : [A-Za-z\-]+;
 LCWORD        : [a-z]+;
 DIRECTIVE     : '.';
 DATA          : '.data';
@@ -50,7 +50,7 @@ RBRACK        : ']';
 //COMSLASH      : '/';
 //End Symbols
 
-COMMENT       : [\/][\/]+.*;
+COMSLASH       : [\\/][\\/]+;
 
 /* Rules */
 
@@ -58,7 +58,7 @@ COMMENT       : [\/][\/]+.*;
 filePath    : data? prog data?;
 
 //Consumes all instructions
-prog    : ENTRY (label | inst | COMMENT | WS)+ END
+prog    : ENTRY (label | inst | WS)+ END
         ;
 
 //Not implemented yet
@@ -76,7 +76,7 @@ memcall : (EQUALS WORD);
 //Consumes a word ending colon.
 label   : (WORD COLON);
 
-//comment : ([COMSLASH]+ .*);
+comment : (COMSLASH .*?);
 
 //Consumes all instructions. More added as more implemented.
 inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)

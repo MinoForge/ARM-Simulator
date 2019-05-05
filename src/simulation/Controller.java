@@ -10,8 +10,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -23,7 +26,7 @@ import java.util.Scanner;
  * @version November 8, 2018
  *
  */
-public class Controller {
+public class Controller implements Runnable {
 
     public static final int MEMORY_BYTES = 1024;
     public static final int TEXT_BASE_ADDRESS_OFFSET = 0x400000;
@@ -57,11 +60,23 @@ public class Controller {
     public static int PC = 0;
 
     private String filePath;
-    private static boolean halt;
+    private static AtomicBoolean halt;
+
+    private Semaphore run;
+    private Semaphore doCycle;
+    private Semaphore doInstruction;
+    private Semaphore doProgram;
 
 
-    public Controller(String filePath, boolean littleEnd) {
+    public Controller(String filePath, boolean littleEnd, Assembler assembler,
+                      Semaphore run, Semaphore doCycle, Semaphore doInstruction,
+                      Semaphore doProgram) {
         this.filePath = filePath;
+        this.assembler = assembler;
+        this.run = run;
+        this.doCycle = doCycle;
+        this.doInstruction = doInstruction;
+        this.doProgram = doProgram;
 
         this.regFile = new RegisterFile();
 
@@ -72,13 +87,55 @@ public class Controller {
             BYTE_ORDER = ByteOrder.BIG_ENDIAN;
         }
 
+        halt = new AtomicBoolean(false);
 
+    }
 
-//        this.data = assembler.getDataArray();
+    public void run() {
+        while(!halt.get()) {
+            System.out.println("Halt is set to before: " + halt);
+            try {
+                run.acquire(2);
+                System.out.println("Hey");
+                if(doCycle.tryAcquire()) {
+                    if(!cycle()) {
+                        halt.set(true);
+                    }
+                    doCycle.release();
+                }
+                if(doProgram.tryAcquire()) {
+
+                    if(!cycle()) {
+                        halt.set(true);
+                    }
+                    doProgram.release();
+                    run.release();
+                }
+                if(doInstruction.tryAcquire()) {
+                    System.out.println("Hello");
+                    if(!doInstruction()) {
+                        halt.set(true);
+                    }
+                    doInstruction.release();
+                }
+
+            } catch(InterruptedException ie) {
+                System.out.println(Arrays.toString(ie.getStackTrace()));
+            } finally {
+                run.release();
+//                try {
+//                    Thread.sleep(100);
+//                } catch(InterruptedException ie){}
+            }
+            System.out.println("Halt is set to after: " + halt);
+            System.out.flush();
+
+        }
+        System.out.println("Out of runloop.");
     }
 
     public void assemble() {
-        this.assembler = new Assembler(filePath);
+//        this.assembler = new Assembler(filePath);
         this.instructions = assembler.getInstructionList();
         this.instBins = assembler.makeBinaryList();
         init();
@@ -104,14 +161,7 @@ public class Controller {
     }
 
     public void start() {
-        halt = false;
-
-
-
-
-
-
-
+        Controller.halt.set(false);
     }
 
     private void initRegisters() {
@@ -154,8 +204,6 @@ public class Controller {
             memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(instBins.get(i), 32, 32));
         }
 //        printMemory();
-//        this.memory = new Register(0x7ffffffffc); //should be 0x7ffffffffc, but too long for int
-        // TODO: 4/23/2019 Don't use up all the memory
     }
 
     public void printMemory() {
@@ -189,7 +237,7 @@ public class Controller {
     /** Cycles to the end of the instructions */
     public void cycleToEnd() {
         int size = instructions.size() * 4;
-        while(Controller.PC < size && !halt) {
+        while(Controller.PC < size && !halt.get()) {
             writeback.execute();
             access.execute();
             execute.execute();
@@ -241,20 +289,20 @@ public class Controller {
 
     /** Sets the halt boolean to a value. If true, the simulator should stop when checked. */
     public void setHalt(boolean val) {
-        Controller.halt = val;
+        Controller.halt.set(val);
     }
 
-    /** Stops the simulator and flushes all pipeline values. */
+    /** Stops the simulator in place */
     public static void stop() {
-        Controller.halt = true;
-        Controller.PC = 0;
-        ControlUnit.flushPipe(0,4);
-        ControlUnit.setStageDataValid(0, true);
+//        Controller.halt.set(true);
     }
 
     /** Resets the registers to their default values. Currently sets to testValues, rather than 0.*/
-    public void resetReg() {
+    public void reset() {
         regFile.reset();
+        Controller.PC = 0;
+        ControlUnit.flushPipe(0,4);
+        ControlUnit.setStageDataValid(0, true);
         setTestRegs();
     }
 
@@ -266,6 +314,7 @@ public class Controller {
                     PipelineSegment.correctBits(Long.toBinaryString((31-i)), 64, 64));
         }
     }
+
 
 
 

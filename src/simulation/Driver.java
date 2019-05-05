@@ -1,5 +1,6 @@
 package simulation;
 
+import assembling.Assembler;
 import ui.GUI;
 
 import java.io.File;
@@ -63,10 +64,11 @@ public class Driver {
 //            usage();
 //            System.exit(1);
 //        }
-        Controller control = new Controller(arg, true);
-        control.assemble();
-        control.setTestRegs();
-        control.start();
+//        Assembler assembler = new Assembler(arg);
+//        Controller control = new Controller(arg, true, assembler);
+//        control.assemble();
+//        control.setTestRegs();
+//        control.start();
 
 //        GUI gui = new GUI();
 //        GUI.main(new String[0]);
@@ -80,7 +82,7 @@ public class Driver {
 
 
 
-        control.cycleToEnd();
+//        control.cycleToEnd();
     }
 
     public static void usage() {

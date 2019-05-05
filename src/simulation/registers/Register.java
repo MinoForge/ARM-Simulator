@@ -347,7 +347,7 @@ public class Register {
 
     //GENERAL TESTING
     public static void main(String... args) {
-        Controller control = new Controller("file", true);
+//        Controller control = new Controller("file", true);
         Register reg = new Register(4);
         reg.testFunctions();
 //        String test = "110010000000001100100111";

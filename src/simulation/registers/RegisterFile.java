@@ -2,6 +2,9 @@ package simulation.registers;
 
 import simulation.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A class to hold and keep track of CPU register states.
  *
@@ -11,7 +14,7 @@ import simulation.Controller;
 public class RegisterFile {
 
     /** An array of registers, and arrays of how they are being used. */
-    private Register[] registers;
+    private List<Register> registers;
     private boolean[] beingRead;
     private boolean[] beingWritten;
 
@@ -28,11 +31,11 @@ public class RegisterFile {
      * @param numBytes The number of bytes which each register will hold.
      */
     public RegisterFile(int numRegisters, int numBytes) {
-        this.registers = new Register[numRegisters];
+        this.registers = new ArrayList<Register>();
         this.beingRead = new boolean[numRegisters];
         this.beingWritten = new boolean[numRegisters];
         for(int i = 0; i < numRegisters; i++) {
-            this.registers[i] = new Register(numBytes);
+            this.registers.add(i, new Register(numBytes));
             this.beingRead[i] = false;
             this.beingWritten[i] = false;
         }
@@ -42,7 +45,7 @@ public class RegisterFile {
      * Getter for the Registers.
      * @return an array of all registers in this file.
      */
-    public Register[] getRegisters() {
+    public List<Register> getRegisters() {
         return registers;
     }
 
@@ -52,7 +55,7 @@ public class RegisterFile {
      * @return the register being requested.
      */
     public Register getRegister(int index) {
-        return registers[index];
+        return registers.get(index);
     }
 
     /**
@@ -67,7 +70,7 @@ public class RegisterFile {
             return null;
         }
         beingRead[index] = true;
-        return registers[index];
+        return registers.get(index);
     }
 
 
@@ -93,7 +96,7 @@ public class RegisterFile {
 //        }
 
         beingWritten[index] = true;
-        return registers[index];
+        return registers.get(index);
     }
 
     /**
@@ -110,7 +113,7 @@ public class RegisterFile {
      * @param index The index of the register being locked.
      */
     public void lockRegister(int index) {
-        Register.lock(registers[index]);
+        Register.lock(registers.get(index));
     }
 
     /**

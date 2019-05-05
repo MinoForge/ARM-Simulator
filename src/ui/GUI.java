@@ -1,10 +1,13 @@
 package ui;
 
+import assembling.Assembler;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,6 +22,7 @@ import simulation.registers.RegisterFile;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 
 /**
@@ -40,6 +44,7 @@ public class GUI extends Application {
     private String file;
 
     private Controller control;
+    private Assembler assembler;
 
     /** The width of the window. */
     private static final int WIDTH = 1200;
@@ -52,6 +57,11 @@ public class GUI extends Application {
     private TextArea simErr;
 
     private TabPane outPane;
+
+    private Semaphore go;
+    private Semaphore cycleCPU;
+    private Semaphore cycleToEnd;
+    private Semaphore cycleInstruction;
 
 
     /** Main. */
@@ -71,8 +81,24 @@ public class GUI extends Application {
         file = "TestFile.txt";
 //
 //        Process proc = Runtime.getRuntime().exec
+        this.go = new Semaphore(0);
+        this.cycleCPU = new Semaphore(0);
+        this.cycleInstruction = new Semaphore(0);
+        this.cycleToEnd = new Semaphore(0);
 
-        control = new Controller(file, true);
+
+
+
+        assembler = new Assembler(file);
+        control = new Controller(file, true, assembler,
+                go, cycleCPU, cycleInstruction, cycleToEnd);
+
+
+
+
+        assembler.parseInput();
+
+
 
 
         //Make sections of GUI.
@@ -155,8 +181,9 @@ public class GUI extends Application {
      */
     private TableView<Register> makeRegTable(RegisterFile regFile) {
 
-        ObservableList<Register> obsRegList = FXCollections.observableArrayList(regFile.getRegisters());
+        ObservableList<Register> obsRegList = FXCollections.observableList(regFile.getRegisters(), (Register r) -> new Observable[]{r.regNumProperty(), r.binValProperty(), r.decValProperty(), r.hexValProperty()});
         TableView<Register> regTable = new TableView<>(obsRegList);
+
 
         TableColumn<Register, String> colOne = new TableColumn<>("Reg #");
         colOne.setCellValueFactory(new PropertyValueFactory<>("regNum"));
@@ -264,4 +291,20 @@ public class GUI extends Application {
         Platform.runLater(() -> out.appendText(str));
     }
 
+
+    public Semaphore getGo() {
+        return go;
+    }
+
+    public Semaphore getCycleCPU() {
+        return cycleCPU;
+    }
+
+    public Semaphore getCycleToEnd() {
+        return cycleToEnd;
+    }
+
+    public Semaphore getCycleInstruction() {
+        return cycleInstruction;
+    }
 }

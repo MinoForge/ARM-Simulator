@@ -51,7 +51,7 @@ public class ButtonStrip {
         runInstructionButton = makeInstructButton();
         runCycleButton = makeStepButton();
         cyclesPerSecButton = makeCyclesPerSecButton();
-        resetRegButton = makeResetRegButton();
+        resetRegButton = makeResetButton();
 
         buttons = initButtons();
 
@@ -140,6 +140,14 @@ public class ButtonStrip {
             runCycleButton.setDisable(false);
             runInstructionButton.setDisable(false);
             gui.getOutPane().getSelectionModel().select(1);
+            gui.getGo().drainPermits();
+            gui.getCycleCPU().drainPermits();
+            gui.getCycleInstruction().drainPermits();
+            gui.getCycleToEnd().drainPermits();
+            gui.getGo().release();
+            Thread thread = new Thread(control);
+            thread.setDaemon(true);
+            thread.start();
         });
         return button;
     }
@@ -148,17 +156,27 @@ public class ButtonStrip {
     private Button makeStepButton() {
         Button button = new Button("Cycle CPU");
         button.setOnMouseReleased(event -> {
+            control.start();
             if(firstRun) {
-                control.start();
-                control.resetReg();
+                control.reset();
                 firstRun = false;
             }
-            if(!control.cycle()) {
-                System.out.println("Reached end of instructions.");
-                button.setDisable(true);
-                runProgramButton.setDisable(true);
-                runInstructionButton.setDisable(true);
-            }
+            gui.getCycleCPU().release();
+            gui.getGo().release();
+//            try {
+//                Thread.sleep(10);
+////                System.out.println("Reacquired Go to GUI thread");
+////                System.out.flush();
+////                gui.getGo().acquire();
+//            } catch(InterruptedException ie) {
+//                //Shouldn't be an issue
+//            }
+//            if(!control.cycle()) {
+//                System.out.println("Reached end of instructions.");
+//                button.setDisable(true);
+//                runProgramButton.setDisable(true);
+//                runInstructionButton.setDisable(true);
+//            }
         });
         button.setDisable(true);
         return button;
@@ -173,18 +191,27 @@ public class ButtonStrip {
             pauseRunButton.setDisable(false);
             runInstructionButton.setDisable(true);
             runCycleButton.setDisable(true);
+            control.start();
             if(firstRun) {
-                control.start();
-                control.resetReg();
+                control.reset();
                 firstRun = false;
             }
-            control.cycleToEnd();
-            System.out.println("Reached end of instructions.");
-            button.setDisable(true);
-            pauseRunButton.setDisable(true);
-            stopRunButton.setDisable(true);
-            Controller.stop();
-            System.out.println(Controller.PC);
+            gui.getCycleToEnd().release();
+            gui.getGo().release();
+//            try {
+//                Thread.sleep(100);
+//                gui.getGo().acquire();
+//            } catch(InterruptedException ie) {
+//                //Shouldn't be an issue
+//            }
+
+//            control.cycleToEnd();
+//            System.out.println("Reached end of instructions.");
+//            button.setDisable(true);
+//            pauseRunButton.setDisable(true);
+//            stopRunButton.setDisable(true);
+//            Controller.stop();
+//            System.out.println(Controller.PC);
         });
         button.setDisable(true);
         return button;
@@ -194,18 +221,26 @@ public class ButtonStrip {
     private Button makeInstructButton() {
         Button button = new Button("Step Forward");
         button.setOnMouseReleased(event -> {
+            control.start();
             if(firstRun) {
-                control.start();
-                control.resetReg();
+                control.reset();
                 firstRun = false;
             }
-            if(!control.doInstruction()) {
-                System.out.println("Reached end of instructions.");
-                button.setDisable(true);
-                runProgramButton.setDisable(true);
-                runCycleButton.setDisable(true);
-                control.stop();
-            }
+            gui.getCycleInstruction().release();
+            gui.getGo().release();
+//            if(!control.doInstruction()) {
+//                System.out.println("Reached end of instructions.");
+//                button.setDisable(true);
+//                runProgramButton.setDisable(true);
+//                runCycleButton.setDisable(true);
+//                control.stop();
+//            }
+//            try {
+//                Thread.sleep(100);
+//                gui.getGo().acquire();
+//            } catch(InterruptedException ie) {
+//                //Shouldn't be an issue
+//            }
         });
         button.setDisable(true);
         return button;
@@ -215,7 +250,13 @@ public class ButtonStrip {
     private Button makeStopButton() {
         Button button = new Button("Stop Run");
         button.setOnMouseReleased(event -> {
-            control.stop();
+            try {
+                gui.getGo().acquire(2);
+                gui.getGo().release();
+            } catch(InterruptedException ie) {
+                //
+            }
+            Controller.stop();
             button.setDisable(true);
             runProgramButton.setDisable(false);
             assembleButton.setDisable(false);
@@ -233,9 +274,9 @@ public class ButtonStrip {
     }
 
     /** The button to reset the registers to their initial values. */
-    private Button makeResetRegButton() {
-        Button button = new Button("Reset Registers");
-        button.setOnMouseReleased(event -> control.resetReg());
+    private Button makeResetButton() {
+        Button button = new Button("Reset Simulator");
+        button.setOnMouseReleased(event -> control.reset());
         return button;
     }
 

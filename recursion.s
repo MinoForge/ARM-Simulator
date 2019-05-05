@@ -7,10 +7,10 @@
 
 .data
 
-	enterOp: .asciiz "Enter operation: 0 or 1, 2 to End:"
-	enterTwo: .asciiz "Enter any two positive integers"
-	answer: .asciiz "The answer is "
-	newLine: .asciiz "\n"
+	enterOp: .asciz "Enter operation: 0 or 1, 2 to End:"
+	enterTwo: .asciz "Enter any two positive integers"
+	answer: .asciz "The answer is "
+	newLine: .asciz "\n"
 	
 .text
 ########
@@ -36,9 +36,9 @@ main:
 	add r7, r31, #63 
     syscall
 
-	add $r0, $r7, r31	#Stores the user input in $s0
+	add r0, r7, r31	#Stores the user input in $s0
 	
-	beq $r0, #2, exit	#If user input is 2: Exit program
+	beq r0, #2, exit	#If user input is 2: Exit program
 
 	#If user input is greater than 2 or less than 0: Repeat request for input
 	slti $s7, r7, #2

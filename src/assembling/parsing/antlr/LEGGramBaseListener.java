@@ -1,6 +1,7 @@
-package assembling.parsing.antlr;
+// Generated from LEGGram.g4 by ANTLR 4.7.1
 
-// Generated from LEGGram.g4 by antlr 4.7.1
+    package assembling.parsing.antlr;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -17,13 +18,13 @@ public class LEGGramBaseListener implements LEGGramListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFile(LEGGramParser.FileContext ctx) { }
+	@Override public void enterFilePath(LEGGramParser.FilePathContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFile(LEGGramParser.FileContext ctx) { }
+	@Override public void exitFilePath(LEGGramParser.FilePathContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -96,6 +97,18 @@ public class LEGGramBaseListener implements LEGGramListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLabel(LEGGramParser.LabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterComment(LEGGramParser.CommentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitComment(LEGGramParser.CommentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

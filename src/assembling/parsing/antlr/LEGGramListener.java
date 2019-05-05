@@ -1,6 +1,7 @@
-package assembling.parsing.antlr;
+// Generated from LEGGram.g4 by ANTLR 4.7.1
 
-// Generated from LEGGram.g4 by antlr 4.7.1
+    package assembling.parsing.antlr;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -9,15 +10,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface LEGGramListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link LEGGramParser#file}.
+	 * Enter a parse tree produced by {@link LEGGramParser#filePath}.
 	 * @param ctx the parse tree
 	 */
-	void enterFile(LEGGramParser.FileContext ctx);
+	void enterFilePath(LEGGramParser.FilePathContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link LEGGramParser#file}.
+	 * Exit a parse tree produced by {@link LEGGramParser#filePath}.
 	 * @param ctx the parse tree
 	 */
-	void exitFile(LEGGramParser.FileContext ctx);
+	void exitFilePath(LEGGramParser.FilePathContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link LEGGramParser#prog}.
 	 * @param ctx the parse tree
@@ -78,6 +79,16 @@ public interface LEGGramListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLabel(LEGGramParser.LabelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LEGGramParser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void enterComment(LEGGramParser.CommentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LEGGramParser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void exitComment(LEGGramParser.CommentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link LEGGramParser#inst}.
 	 * @param ctx the parse tree
