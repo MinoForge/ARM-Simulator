@@ -67,22 +67,22 @@ public class Access extends PipelineSegment{
     private void write() {
         int address = (int)Long.parseUnsignedLong(aluResult,2);
         if(read | write) {
-            if (address < 0) {
-                System.err.println("Segmentation Fault: Branching into kernel memory: " +
+            if (address < Controller.NUM_INSTRUCTIONS*4) {
+                System.err.println("Segmentation Fault: Accessing text section or lower: " +
                         (address + Controller.TEXT_BASE_ADDRESS_OFFSET));
             }
             if(address % 8 != 0) {
-                System.err.println("Segmentation Fault: " + (read ? "read" : "write") +
+                System.err.println("Bus Error: " + (read ? "read" : "write") +
                         " not doubleword-aligned: " + (address + Controller.TEXT_BASE_ADDRESS_OFFSET));
             }
 
         } else if(branch) {
-            if(address >= Controller.NUM_INSTRUCTIONS*4) {
+            if(address >= Controller.NUM_INSTRUCTIONS*4 || address < 0) {
                 System.err.println("Segmentation Fault: Branching out of bounds: " +
                         (address + Controller.TEXT_BASE_ADDRESS_OFFSET));
             }
             if(address % 4 != 0) {
-                System.err.println("Segmentation Fault: Branch not word-aligned: " +
+                System.err.println("Bus Error: Branch not word-aligned: " +
                         (address + Controller.TEXT_BASE_ADDRESS_OFFSET));
             }
         }
