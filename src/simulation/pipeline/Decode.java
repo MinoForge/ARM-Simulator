@@ -31,6 +31,8 @@ public class Decode extends PipelineSegment {
 //    private String format;
     private ArrayList<Boolean> flags;
 
+    private boolean syscall;
+
     private static final byte RETURN_ADDRESS = 30;
 
     public Decode(Register ifid, Register idex, RegisterFile regFile) {
@@ -66,7 +68,7 @@ public class Decode extends PipelineSegment {
         //However, that begs the question: What happens if we're branching without linking?
         //Because this avenue would set the RA to 0 always.
         if(flags.get(4) && flags.get(7)) { //Branch with Link must write to ReturnAddress reg.
-            regD = "" + RETURN_ADDRESS;
+            regD = "" + Integer.toBinaryString(RETURN_ADDRESS);
         } else { //Anything else writes or does not write to regD as determined by flags[7]
             regD = instBin.substring(27, 32);
         }
@@ -75,7 +77,7 @@ public class Decode extends PipelineSegment {
         mRegister = Integer.parseInt(regM, 2);
         dRegister = Integer.parseInt(regD, 2);
         System.out.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
-
+        System.out.flush();
         String imm = "";
         int temp;
         if(flags.get(5) || flags.get(6)) { //D-type
@@ -169,17 +171,28 @@ public class Decode extends PipelineSegment {
      * @return true if they are available, false otherwise.
      */
     private boolean registersAvailable() {
-        if(regFile.getRegisterForRead(nRegister) == null) {
-            return false;
-        }
+        if(!syscall) {
+            if (regFile.getRegisterForRead(nRegister) == null) {
+                return false;
+            }
 
-        if(flags.get(0) == DEASSERT && regFile.getRegisterForRead(mRegister) == null) {
-            return false;
-        }
+            if (flags.get(0) == DEASSERT && regFile.getRegisterForRead(mRegister) == null) {
+                return false;
+            }
 
-        if(regFile.getRegisterForWrite(dRegister) == null) { //TODO if RegisterFile.getRegisterForWrite() is fleshed out, move print there.
-            System.out.println("Register " + mRegister + " is currently locked.");
-            return false;
+            if (regFile.getRegisterForWrite(dRegister) == null) { //TODO if RegisterFile.getRegisterForWrite() is fleshed out, move print there.
+                System.out.println("Register " + mRegister + " is currently locked.");
+                return false;
+            }
+        } else { //syscall
+            for(int i = 0; i < 6; i++) {
+                if(regFile.getRegisterForRead(i) == null) {
+                    return false; //If any of the argument registers are being written to, stall
+                }
+            }
+            if(regFile.getRegisterForRead(8) == null) {
+                return false; //If the syscall number register is being written to, stall
+            }
         }
         return true;
     }

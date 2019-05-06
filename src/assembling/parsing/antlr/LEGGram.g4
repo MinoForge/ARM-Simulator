@@ -88,8 +88,8 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  MUL reg SEPARATOR reg SEPARATOR reg
         |  MADD reg SEPARATOR reg SEPARATOR reg SEPARATOR reg
         |  DIV reg SEPARATOR reg SEPARATOR reg
-        |  BL label | imm
-        |  B label | imm
+        |  BL WORD | imm
+        |  B WORD | imm
         |  BR reg //TODO add to assembler
         |  BLR reg //TODO add to assembler
         |  CBZ reg SEPARATOR (label | imm)
