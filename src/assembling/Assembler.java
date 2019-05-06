@@ -170,7 +170,7 @@ public class Assembler implements ANTLRErrorListener {
             }
 
         } //TODO why does this frontload zeroes?
-        while(binary.length() > 0 && binary.length() < 4) {
+        while(binary.length() > 0 && binary.length() < 4*8) {
             binary = binary + "00000000";
         }
         if(binary.length() != 0) {

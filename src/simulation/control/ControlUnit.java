@@ -283,7 +283,7 @@ public class ControlUnit {
             return false;
         }
 
-        for(int i = stageToStart; i <= stageToEnd; i++) {
+        for(int i = stageToStart == 0 ? 1 : stageToStart; i <= stageToEnd; i++) {
             unit.validData[i] = DEASSERT;
         }
         return true;

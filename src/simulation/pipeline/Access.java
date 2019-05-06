@@ -25,6 +25,7 @@ public class Access extends PipelineSegment{
     private String data;
     private String memData;
     private Register memory;
+    private long localPC;
 
     public Access(Register exmem, Register memwb, Register memory) {
         this.exmemRegister = exmem;
@@ -49,8 +50,10 @@ public class Access extends PipelineSegment{
     private void read(){
         System.out.println("Starting ACCESS now");
 
+        this.localPC = exmemRegister.getLong(0);
         this.aluResult = exmemRegister.getBinary(8,16);
         this.data = exmemRegister.getBinary(16,24);
+
 
 
     }
@@ -83,10 +86,16 @@ public class Access extends PipelineSegment{
         }
 
         if(branch) { //If we are branching.
-            System.out.println("PC is being altered to: " + (int)Long.parseUnsignedLong(exmemRegister
-                    .getBinary(0,8), 2));
-            Controller.PC = (int)Long.parseUnsignedLong(exmemRegister
-                    .getBinary(0,8), 2);
+
+            if(localPC == Controller.PC - 12) { //Not actually branching OR forever loop
+                System.out.println("Not branching.");
+            } else {
+                System.out.println("PC is being altered to: " + localPC);
+                ControlUnit.flushPipe(0, 2);
+                Controller.PC = (int)localPC;
+            }
+
+
         }
 
         memwbRegister.append(correctBits(memData, 64, 64));

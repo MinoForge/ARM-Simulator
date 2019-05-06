@@ -255,7 +255,6 @@ public class GUI extends Application {
         };
         System.setOut(new PrintStream(out, true));
 //        InputStream
-//        simOut.
 
         ScrollPane sysScroll = new ScrollPane(simOut);
         sysScroll.setFitToWidth(true);

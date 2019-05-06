@@ -1,9 +1,9 @@
 ENTRY
 .text
-B hello
-ADD r0, r0, #5
-ADD r3, r2, r2
-ADD r1, r2, r3
+CBZ r0, hello
+SUB r1, r1, #5
+SUB r2, r2, #2
+SUB r3, r3, #3
 
 ADD r2, r4, r4
 SUB r2, r3, r5

@@ -26,6 +26,7 @@
 main: 
 	#Asks user for input of 0, 1, or 2
     add r7, r31, #64
+
 	la $a0, enterOp
 	syscall 
     
