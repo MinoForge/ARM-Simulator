@@ -1,10 +1,13 @@
 package simulation.pipeline;
 
+import org.omg.CORBA.INTERNAL;
 import simulation.Controller;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
+import simulation.registers.RegisterFile;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import static simulation.control.ControlUnit.ASSERT;
 
@@ -30,14 +33,17 @@ public class Execute extends PipelineSegment {
     private byte destReg;
     private long result;
     private ArrayList<Boolean> flags;
+    private RegisterFile regFile;
+
 
     /**
      * Constructor to make an Executor Class. Must have the IDEX pipeline
      * register implementation and the EXMEM register implementation.
      */
-    public Execute(Register idex, Register exmem) {
+    public Execute(Register idex, Register exmem, RegisterFile regFile) {
         this.exmemRegister = exmem;
         this.idexRegister = idex;
+        this.regFile = regFile;
     }
 
 
@@ -174,12 +180,33 @@ public class Execute extends PipelineSegment {
                     break;
                 case("lsr"):
                     result = value1 >> value2;
+                    break;
+                case("svc"):
+                    syscall();
+                    break;
+
             }
             write();
         } else {
             ControlUnit.setStageDataValid(3, false);
         }
     }
-//
-//
+
+    public void syscall(){
+        Register type = regFile.getRegister(8);
+        int num = Integer.parseInt(type.getBinary());
+        switch(num){
+
+            case(64): //printing / write
+                type = regFile.getRegister(1);
+                int address  = Integer.parseInt(type.getBinary());
+                break;
+
+            case(63): // read from keyboard
+
+                break;
+        }
+
+
+    }
 }

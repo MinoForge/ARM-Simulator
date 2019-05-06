@@ -50,7 +50,7 @@ public class PipelineTester {
 
 //        fetch = new Fetch(ifid);
         decode = new Decode(ifid, idex, regFile);
-        execute = new Execute(idex, exmem);
+//        execute = new Execute(idex, exmem);
 //        access = new Access(exmem, memwb);
         writeback = new Writeback(memwb, regFile);
     }

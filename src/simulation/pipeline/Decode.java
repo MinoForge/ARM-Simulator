@@ -45,6 +45,7 @@ public class Decode extends PipelineSegment {
         this.regFile    = regFile;
         this.immediate    = 0;
         this.imm = "";
+        this.syscall = false;
     }
 
     /**
@@ -56,48 +57,53 @@ public class Decode extends PipelineSegment {
         System.out.flush();
         instBin = ifidRegister.getBinary(8,12);
         String regN, regM, regD;
-
-        regN = instBin.substring(22,27);
-        if(flags.get(0)) {
-            regM = instBin.substring(27, 32);
-        } else {
-            regM = instBin.substring(11, 16);
+        if(instBin.substring(0,11).equals("11010100000")){
+            syscall = true;
+        }else {
+            syscall = false;
         }
-
-        //TODO technically, if this is a branch, this could be set to 30.
-        //However, that begs the question: What happens if we're branching without linking?
-        //Because this avenue would set the RA to 0 always.
-        if(flags.get(4) && flags.get(7)) { //Branch with Link must write to ReturnAddress reg.
-            regD = "" + Integer.toBinaryString(RETURN_ADDRESS);
-        } else { //Anything else writes or does not write to regD as determined by flags[7]
-            regD = instBin.substring(27, 32);
-        }
-
-        nRegister = Integer.parseInt(regN, 2);
-        mRegister = Integer.parseInt(regM, 2);
-        dRegister = Integer.parseInt(regD, 2);
-        System.out.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
-        System.out.flush();
-        String imm = "";
-        int temp;
-        if(flags.get(5) || flags.get(6)) { //D-type
-            imm = instBin.substring(11, 20);
-        } else { //I-type
-            imm = instBin.substring(10, 22);
-        }
-        if(flags.get(4)) { //Branch
-            if(flags.get(0)) { //CBZ
-                imm = instBin.substring(8,27);
-            } else { //Uncond branch
-                imm = instBin.substring(6,32);
+        if(!syscall) {
+            regN = instBin.substring(22, 27);
+            if (flags.get(0)) {
+                regM = instBin.substring(27, 32);
+            } else {
+                regM = instBin.substring(11, 16);
             }
+
+            //TODO technically, if this is a branch, this could be set to 30.
+            //However, that begs the question: What happens if we're branching without linking?
+            //Because this avenue would set the RA to 0 always.
+            if (flags.get(4) && flags.get(7)) { //Branch with Link must write to ReturnAddress reg.
+                regD = "" + Integer.toBinaryString(RETURN_ADDRESS);
+            } else { //Anything else writes or does not write to regD as determined by flags[7]
+                regD = instBin.substring(27, 32);
+            }
+
+            nRegister = Integer.parseInt(regN, 2);
+            mRegister = Integer.parseInt(regM, 2);
+            dRegister = Integer.parseInt(regD, 2);
+            System.out.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
+            System.out.flush();
+            String imm = "";
+            int temp;
+            if (flags.get(5) || flags.get(6)) { //D-type
+                imm = instBin.substring(11, 20);
+            } else { //I-type
+                imm = instBin.substring(10, 22);
+            }
+            if (flags.get(4)) { //Branch
+                if (flags.get(0)) { //CBZ
+                    imm = instBin.substring(8, 27);
+                } else { //Uncond branch
+                    imm = instBin.substring(6, 32);
+                }
+            }
+            System.out.println("Substring of immediate: " + imm);
+            temp = Integer.parseInt(imm, 2);
+            immediate = ((long) temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
+
+
         }
-        System.out.println("Substring of immediate: " + imm);
-        temp = Integer.parseInt(imm, 2);
-        immediate = ((long)temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
-
-
-
     }
 
 

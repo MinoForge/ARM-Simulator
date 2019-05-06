@@ -1,4 +1,5 @@
 ENTRY
+.text
 B hello
 ADD r0, r0, #5
 ADD r3, r2, r2
@@ -7,4 +8,8 @@ ADD r1, r2, r3
 ADD r2, r4, r4
 SUB r2, r3, r5
 hello: SUB r1, r3, r3
+
+.data
+lab: .byte A5 b3 b6 c2 21
+ratty: .ascii "Hey there"
 END

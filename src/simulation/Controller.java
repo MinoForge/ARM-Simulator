@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,7 +41,7 @@ public class Controller implements Runnable {
 
     private String[] data;
     private ArrayList<String> instructions;
-    private ArrayList<String> instBins;
+    private ArrayList<String> progBins;
 
     private Assembler assembler;
     private Fetch fetcher;
@@ -137,7 +136,7 @@ public class Controller implements Runnable {
     public void assemble() {
 //        this.assembler = new Assembler(filePath);
         this.instructions = assembler.getInstructionList();
-        this.instBins = assembler.makeBinaryList();
+        this.progBins = assembler.makeBinaryList();
         init();
 //        System.out.println(instructions);
 //        System.out.println("Calling setUpStack()");
@@ -153,9 +152,9 @@ public class Controller implements Runnable {
         Register memwb = new Register(MEMWB_SIZE);
 
         fetcher = new Fetch(ifid, instructions.toArray(new String[0]),
-                instBins.toArray(new String[0]), memory);
+                progBins.toArray(new String[0]), memory);
         decoder = new Decode(ifid, idex, regFile);
-        execute = new Execute(idex, exmem);
+        execute = new Execute(idex, exmem, regFile);
         access = new Access(exmem, memwb, memory);
         writeback = new Writeback(memwb, regFile);
     }
@@ -178,7 +177,7 @@ public class Controller implements Runnable {
         int extra = 4;
         while(extra-- > 0) {
             instructions.add("add r31, r31, r31");
-            instBins.add("10001011000111110000001111111111");//TODO change to nop
+            progBins.add("10001011000111110000001111111111");//TODO change to nop
         }
 
         System.out.println(instructions.toString());
@@ -197,13 +196,13 @@ public class Controller implements Runnable {
     private void setUpStack() {
         this.memory = new Register(instructions.size() * 4 + MEMORY_BYTES);
 //        System.out.println("Starting Stack setup");
-        for(int i = 0; i < instBins.size(); i++) {
+        for(int i = 0; i < progBins.size(); i++) {
 //            System.out.println("Writing Instruction to " + (i*4));
 //            System.out.flush();
-            System.out.println("Writing instruction :: " + instBins.get(i) + " :: to " + (i*4));
-            memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(instBins.get(i), 32, 32));
+            System.out.println("Writing instruction :: " + progBins.get(i) + " :: to " + (i*4));
+            memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(progBins.get(i), 32, 32));
         }
-//        printMemory();
+        printMemory();
     }
 
     public void printMemory() {

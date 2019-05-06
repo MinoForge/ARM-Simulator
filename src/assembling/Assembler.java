@@ -8,11 +8,7 @@ import assembling.parsing.antlr.LEGGramParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 import static simulation.pipeline.PipelineSegment.correctBits;
 
@@ -35,6 +31,11 @@ public class Assembler implements ANTLRErrorListener {
 
     /** Label -> location */
     private HashMap<String, Integer> labelMap;
+
+    private ArrayList<String> dataLabels;
+    private ArrayList<String> dataBins;
+    private int[] lineAddresses;
+
 
 
     /**
@@ -59,7 +60,21 @@ public class Assembler implements ANTLRErrorListener {
         String[] tempInsts = this.fileString.split("\n");
         ArrayList<String> realInsts = new ArrayList<>();
         ArrayList<String> data      = new ArrayList<>();
-        realInstAdder(tempInsts, realInsts, data);
+        realInstAdder(tempInsts, realInsts, data); //alters realInsts and data
+        System.out.println("realInsts from Assembler:\n" + realInsts.toString());
+        System.out.println("data lines from Assembler:\n" + data.toString());
+        lineAddresses = dataSection(data); //data array modified here
+        for(int i = 0; i < lineAddresses.length; i++) {
+            //Turn relative addresses (into data) into absolute memory addresses
+            lineAddresses[i] = lineAddresses[i] + realInsts.size() * 4;
+            System.out.println(lineAddresses[i]);
+        }
+
+
+        this.labelMap = new HashMap<>();
+        makeLabels();
+        System.out.println("the hashmap: " + labelMap.toString());
+
 
 
 
@@ -87,34 +102,80 @@ public class Assembler implements ANTLRErrorListener {
 
     }
 
-    public void dataSection(String[] temp){
-        ArrayList<String> data = new ArrayList<>();
-        for(int i = 2; temp[i].equals(".text"); i++){
-            data.add(temp[i]);
-        }
-        for(String s : data){
-            String[] temp1 = s.split("\\s+");
+    public int[] dataSection(ArrayList<String> temp){
+        this.dataLabels = new ArrayList<>();
+//        this.dataBins = new ArrayList<>();
+        ArrayList<String> data = new ArrayList<>(temp);
+//        for(int i = 2; temp.get(i).equals(".text"); i++){
+//            data.add(temp.get(i));
+//        }
+        ArrayList<String> wordAlignedData = new ArrayList<>();
+        int wordMod = 0;
+        int totalDataBytes = 0;
+        String binary = "";
+        int[] addressIntoData = new int[data.size()];
+        for(int i = 0; i < data.size(); i++){
+            System.out.println("Start of line: " + totalDataBytes);
+            String line = data.get(i);
+            dataLabels.add(line.substring(0, line.indexOf(" ")));
+            String contents = line.substring(line.indexOf(" ") +1);
+            String type = contents.substring(0, contents.indexOf(" "));
+            contents = contents.substring(contents.indexOf(" ") + 1);
+            int lineIndex = 0;
 
+            System.out.println("Type: " + type);
+            System.out.println("Contents: " + contents);
+            if(type.matches("\\.byte")) {
+                System.out.println("Matched Byte");
+                String[] temp1 = contents.split(" ");
+                addressIntoData[i] = totalDataBytes;
+                while(lineIndex < temp1.length) {
 
-            switch(temp1[1]){
-                case(".byte"):
+                    if(temp1[lineIndex].matches
+                            ("[A-Fa-f0-9][A-Fa-f0-9]?")){
+                        binary = binary + correctBits(Integer.toBinaryString(Integer
+                                .parseInt(temp1[lineIndex], 16)),8,8);
+                        totalDataBytes++;
+                        wordMod++;
+                        lineIndex++;
+                        if(wordMod == 4) {
+                            wordAlignedData.add(binary);
+                            wordMod = 0;
+                            binary = "";
+                        }
+                    }
 
-
-                    break;
-                case(".ascii"):
-
-                    break;
-                case(".asciz"):
-
-                    break;
+                }
+            } else if(type.matches("\\.asci.")) {
+                contents = contents.substring(1, contents.length());
+                char[] temp2 = contents.toCharArray();
+                addressIntoData[i] = totalDataBytes;
+                while(lineIndex < temp2.length) {
+                    binary = binary + correctBits(Integer.toBinaryString(
+                            (int)(temp2[lineIndex])),8,8);
+                    totalDataBytes++;
+                    wordMod++;
+                    lineIndex++;
+                    if(wordMod == 4) {
+                        wordAlignedData.add(binary);
+                        wordMod = 0;
+                        binary = "";
+                    }
+                }
+                if(type.equals(".asciz")) {
+                    binary = binary + "00000000";
+                }
             }
 
-            for(int j = 1; j < s.length(); j++){
-
-            }
         }
-
-
+        while(binary.length() > 0 && binary.length() < 4) {
+            binary = binary + "00000000";
+        }
+        if(binary.length() != 0) {
+            wordAlignedData.add(binary);
+        }
+        this.dataBins = wordAlignedData;
+        return addressIntoData;
     }
 
     public void makeLabels(){
@@ -132,6 +193,10 @@ public class Assembler implements ANTLRErrorListener {
                 System.out.println(instructionArray[i]);
             }
         }
+        for(int i = 0; i < dataLabels.size(); i++) {
+            labelMap.put(dataLabels.get(i), lineAddresses[i]);
+        }
+        System.out.println("Labelmap after data added: " + labelMap);
     }
 
     /**
@@ -158,8 +223,9 @@ public class Assembler implements ANTLRErrorListener {
             realInsts, ArrayList<String> data){
         boolean isData = false;
         for(String s: tempInsts) {
-            if (!(s.equals("ENTRY") || s.equals("END") || s.matches("/+.*") ||
-                    s.equals("") && !isData)) {
+            if (!(s.equals("ENTRY") || s.equals("END") ||
+                    s.equals("") || s.equals(".text") || s.equals(".data")) &&
+                    !isData) {
                 realInsts.add(s);
                 System.out.println(s);
             }else if(s.equals(".data")){
@@ -167,7 +233,8 @@ public class Assembler implements ANTLRErrorListener {
             }else if(s.equals(".text")){
                 isData = false;
             }
-            if(isData && !(s.equals(".data"))){
+            if(isData && !(s.equals(".data") || s.equals(".text") ||
+                    s.equals("END") || s.equals(""))){
                 data.add(s);
             }
 
@@ -182,9 +249,7 @@ public class Assembler implements ANTLRErrorListener {
             System.out.println(s);
         }
 
-        this.labelMap = new HashMap<>();
-        makeLabels();
-        System.out.println("the hashmap: " + labelMap.toString());
+
     }
     //Begin ErrorListener implementation.
 
@@ -255,6 +320,9 @@ public class Assembler implements ANTLRErrorListener {
                 String[] tempArray = curInstruction.split(" ");
                 instructions.add(findBin(tempArray, i));
             }
+        }
+        for(int i = 0; i < dataBins.size(); i++) {
+            instructions.add(dataBins.get(i));
         }
         return instructions;
     }
