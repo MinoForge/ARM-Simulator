@@ -57,6 +57,7 @@ public class Controller implements Runnable {
 
     //private  instructor;
     public static int PC = 0;
+    public static int NUM_INSTRUCTIONS;
 
     private String filePath;
     private static AtomicBoolean halt;
@@ -136,6 +137,7 @@ public class Controller implements Runnable {
     public void assemble() {
 //        this.assembler = new Assembler(filePath);
         this.instructions = assembler.getInstructionList();
+        Controller.NUM_INSTRUCTIONS = instructions.size();
         this.progBins = assembler.makeBinaryList();
         init();
 //        System.out.println(instructions);
@@ -211,7 +213,7 @@ public class Controller implements Runnable {
         System.out.println(length);
         StringBuilder stackStr = new StringBuilder();
         for(int i = 0; i < length; i++) {
-            stackStr.append(i*4 + " ");
+            stackStr.append(Controller.TEXT_BASE_ADDRESS_OFFSET + i*4 + " ");
             stackStr.append(memory.getBinary(i*4, (i+1)*4));
             stackStr.append('\n');
         }
@@ -252,9 +254,13 @@ public class Controller implements Runnable {
         if(Controller.PC < size - 4) {
             fetcher.execute();
             decoder.execute();
+            Controller.PC += 4;
             execute.execute();
+            Controller.PC += 4;
             access.execute();
+            Controller.PC += 4;
             writeback.execute();
+            Controller.PC -= 12;
             ControlUnit.flushPipe(0,4);
             ControlUnit.setStageDataValid(0, true);
 //            printMemory();

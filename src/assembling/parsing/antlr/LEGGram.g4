@@ -45,6 +45,7 @@ WORD          : [A-Za-z\-]+;
 LCWORD        : [a-z]+;
 DIRECTIVE     : '.';
 DATA          : '.data';
+TEXT          : '.text';
 STRING        : '".*"';
 LBRACK        : '[';
 RBRACK        : ']';
@@ -59,7 +60,7 @@ COMSLASH       : [\\/][\\/]+;
 filePath    : data? prog data?;
 
 //Consumes all instructions
-prog    : ENTRY (label | inst | WS)+ END
+prog    : ENTRY WS+ TEXT (label | inst | WS)+ END
         ;
 
 //Not implemented yet
@@ -92,8 +93,8 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  B WORD | imm
         |  BR reg //TODO add to assembler
         |  BLR reg //TODO add to assembler
-        |  CBZ reg SEPARATOR (label | imm)
-        |  CBNZ reg SEPARATOR (label | imm)
+        |  CBZ reg SEPARATOR (WORD | imm)
+        |  CBNZ reg SEPARATOR (WORD | imm)
         |  LDUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         |  STUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         |  LSL reg SEPARATOR reg SEPARATOR reg

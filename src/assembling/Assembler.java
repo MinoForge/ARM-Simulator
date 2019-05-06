@@ -212,7 +212,7 @@ public class Assembler implements ANTLRErrorListener {
         parser.removeErrorListeners();
         parser.addErrorListener(this);
 
-        parser.prog();
+        parser.filePath();
 
         System.err.println(this.errorMsg);
         if(!this.errorMsg.equals("")) {
