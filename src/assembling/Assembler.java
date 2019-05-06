@@ -147,12 +147,14 @@ public class Assembler implements ANTLRErrorListener {
 
                 }
             } else if(type.matches("\\.asci.")) {
-                contents = contents.substring(1, contents.length());
+                contents = contents.substring(1, contents.length()-1);
                 char[] temp2 = contents.toCharArray();
                 addressIntoData[i] = totalDataBytes;
                 while(lineIndex < temp2.length) {
+                    System.out.println(temp2[lineIndex]);
                     binary = binary + correctBits(Integer.toBinaryString(
-                            (int)(temp2[lineIndex])),8,8);
+                            (int)(temp2[lineIndex])),8,32);
+                    System.out.println(binary);
                     totalDataBytes++;
                     wordMod++;
                     lineIndex++;
@@ -167,7 +169,7 @@ public class Assembler implements ANTLRErrorListener {
                 }
             }
 
-        }
+        } //TODO why does this frontload zeroes?
         while(binary.length() > 0 && binary.length() < 4) {
             binary = binary + "00000000";
         }
