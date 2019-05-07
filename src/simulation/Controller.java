@@ -29,7 +29,7 @@ public class Controller implements Runnable {
 
     public static final int MEMORY_BYTES = 1024;
     public static final int TEXT_BASE_ADDRESS_OFFSET = 0x400000;
-    public static final int CPS = 2;
+    public static final int CPS = 4;
 
     public static ByteOrder BYTE_ORDER;
     public static final int DEFAULT_REGISTER_NUM = 32;
@@ -142,7 +142,6 @@ public class Controller implements Runnable {
         this.instructions = assembler.getInstructionList();
         Controller.NUM_INSTRUCTIONS = instructions.size();
         this.progBins = assembler.makeBinaryList();
-        init();
 //        System.out.println(instructions);
 //        System.out.println("Calling setUpStack()");
 
@@ -171,26 +170,9 @@ public class Controller implements Runnable {
     private void initRegisters() {
         regFile.getRegister(31).zeroOut();
         regFile.lockRegister(31); //Zero Register
-        regFile.getRegister(28).writeBinary(PipelineSegment.correctBits(Integer.toBinaryString(memory.toString().length()/32), 64, 64));
+        regFile.getRegister(28).writeBinary(Integer.toBinaryString(MEMORY_BYTES));
     }
 
-
-    /**
-     * Initializes the simulator, registers, stack, etc.
-     */
-    private void init() {
-        int extra = 4;
-        while(extra-- > 0) {
-            instructions.add("add r31, r31, r31");
-            progBins.add("10001011000111110000001111111111");//TODO change to nop
-        }
-
-        System.out.println(instructions.toString());
-
-
-
-        //this.instructor = new Instructor();
-    }
 
     /** Unimplemented */
     private void readData() {
@@ -211,13 +193,15 @@ public class Controller implements Runnable {
     }
 
     public void printMemory() {
-        String str = memory.toString();
-        long length = str.length()/32;
+        long length = MEMORY_BYTES * 8 / 64;
+
         System.out.println(length);
         StringBuilder stackStr = new StringBuilder();
-        for(int i = (int)length-1; i >= 0; i--) {
-            stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*4));
+        for(int i = (int)length-1; i >= 0; i -= 2) {
+            stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*8));
             stackStr.append(memory.getBinary(i*4, (i+1)*4));
+            stackStr.append(" ");
+            stackStr.append(memory.getBinary((i+1)*4, (i+2)*4));
             stackStr.append('\n');
         }
         System.out.println(stackStr.toString());
@@ -226,18 +210,31 @@ public class Controller implements Runnable {
     /** A single cycle of the cpu. */
     public boolean cycle() {
         int size = instructions.size() * 4;
-        if(Controller.PC < size) {
+        if(Controller.PC < size + 16) {
             writeback.execute();
             access.execute();
             execute.execute();
             decoder.execute();
-            fetcher.execute();
+            if(Controller.PC < size) {
+                fetcher.execute();
+            } else {
+                Controller.PC += 4;
+            }
+            if(Controller.PC >= size) {
+                for (int i = 0; i < 5 && (Controller.PC - size) - i*4 >= 0 ; i++) {
+                    ControlUnit.setStageDataValid(i, false);
+//                    System.err.println("Setting stage " + (i) + "off at end of instructions.");
+//                    System.err.flush();
+                }
+            }
             return true;
         }
+
         return false;
 
     }
 
+    /**Re-unimplemented */
     /** Cycles to the end of the instructions */
     public void cycleToEnd() {
         int size = instructions.size() * 4;
@@ -254,7 +251,7 @@ public class Controller implements Runnable {
     /** Runs a single instruction from Fetch to Writeback. */
     public boolean doInstruction() {
         int size = instructions.size() * 4;
-        if(Controller.PC < size - 4) {
+        if(Controller.PC < size) {
             fetcher.execute();
             decoder.execute();
             Controller.PC += 4;
@@ -265,7 +262,7 @@ public class Controller implements Runnable {
             writeback.execute();
             Controller.PC -= 12;
             ControlUnit.flushPipe(0,4);
-            ControlUnit.setStageDataValid(0, true);
+//            ControlUnit.setStageDataValid(0, true);
 //            printMemory();
             return true;
         }
@@ -311,7 +308,8 @@ public class Controller implements Runnable {
         Controller.PC = 0;
         ControlUnit.flushPipe(0,4);
         ControlUnit.setStageDataValid(0, true);
-        setTestRegs();
+//        setTestRegs();
+        regFile.getRegister(28).writeBinary(Integer.toBinaryString(MEMORY_BYTES));
     }
 
 

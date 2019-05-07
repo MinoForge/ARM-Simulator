@@ -1,6 +1,6 @@
 ENTRY
 .text
-CBZ r0, hello
+CBNZ r0, hello
 SUB r1, r1, #5
 SUB r2, r2, #2
 SUB r3, r3, #3

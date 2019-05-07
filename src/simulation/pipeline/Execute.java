@@ -2,6 +2,7 @@ package simulation.pipeline;
 
 import org.omg.CORBA.INTERNAL;
 import simulation.Controller;
+import simulation.Interface;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
@@ -195,6 +196,7 @@ public class Execute extends PipelineSegment {
     public void syscall(){
         Register type = regFile.getRegister(8);
         int num = Integer.parseInt(type.getBinary());
+
         switch(num){
 
             case(64): //printing / write
@@ -203,7 +205,16 @@ public class Execute extends PipelineSegment {
                 break;
 
             case(63): // read from keyboard
+                try {
+                    int startLength = Interface.getAreas()[1].getLength();
+                    Interface.getAreas()[1].wait();
+                    String input = Interface.getAreas()[1].getText().substring(startLength);
 
+
+                } catch(InterruptedException ie) {
+                    System.err.println("WARNING: Execute interrupted while waiting on System " +
+                            "input. Continuing as if syscall finished.");
+                }
                 break;
         }
 

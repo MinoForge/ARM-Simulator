@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import simulation.Controller;
+import simulation.Interface;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
@@ -87,18 +88,11 @@ public class GUI extends Application {
         this.cycleToEnd = new Semaphore(0);
 
 
-
-
         assembler = new Assembler(file);
         control = new Controller(file, true, assembler,
                 go, cycleCPU, cycleInstruction, cycleToEnd);
 
-
-
-
         assembler.parseInput();
-
-
 
 
         //Make sections of GUI.
@@ -120,16 +114,6 @@ public class GUI extends Application {
         theStage.setScene(theScene);
         theStage.show();
 
-//        test();
-    }
-
-    public void test() {
-        control.setTestRegs();
-//        control.cycleToEnd();
-//        Scanner scanIn = new Scanner(System.in);
-//        while(!scanIn.nextLine().equals("q")) {
-//            control.cycle();
-//        }
     }
 
 
@@ -181,7 +165,9 @@ public class GUI extends Application {
      */
     private TableView<Register> makeRegTable(RegisterFile regFile) {
 
-        ObservableList<Register> obsRegList = FXCollections.observableList(regFile.getRegisters(), (Register r) -> new Observable[]{r.regNumProperty(), r.binValProperty(), r.decValProperty(), r.hexValProperty()});
+        ObservableList<Register> obsRegList = FXCollections.observableList(regFile.getRegisters(),
+                (Register r) -> new Observable[]{r.regNumProperty(), r.binValProperty(),
+                        r.decValProperty(), r.hexValProperty()});
         TableView<Register> regTable = new TableView<>(obsRegList);
 
 
@@ -223,20 +209,19 @@ public class GUI extends Application {
      */
     private TabPane makeBot() {
 
-        this.simErr = new TextArea("Welcome to ARM & Simulator!\nError messages will show here");
+        TextArea[] areas = Interface.getAreas();
+        PrintStream[] streams = Interface.getStreams();
+
+        this.simErr = areas[2];
         simErr.setMinWidth(WIDTH);
         simErr.setEditable(false);
-        OutputStream err = new OutputStream() {
-            public void write(int b) throws IOException {
-                appendText(simErr, String.valueOf((char) b));
-            }
-        };
 
         //Intellij is weird. Uncomment for hilarity with previous line of code.
 //        OutputStream er = (int b) -> {
 //            appendText(simErr, String.valueOf((char) b));
 //        };
-        System.setErr(new PrintStream(err, true));
+        System.setErr(streams[2]);
+        System.err.println("Welcome to ARM & Simulator!\nError messages will show here");
 
         ScrollPane simScroll = new ScrollPane(simErr);
         simScroll.setFitToWidth(true);
@@ -245,15 +230,11 @@ public class GUI extends Application {
 
         Tab tabOne = new Tab("Simulator Messages", simScroll);
 
-        this.simOut = new TextArea("Simulator I/O\n");
+        this.simOut = areas[1];
         simOut.setEditable(true);
         simOut.setMinWidth(WIDTH);
-        OutputStream out = new OutputStream() {
-            public void write(int b) throws IOException {
-                appendText(simOut, String.valueOf((char) b));
-            }
-        };
-        System.setOut(new PrintStream(out, true));
+        System.setOut(streams[1]);
+        System.out.println("Simulator I/O\n");
 //        InputStream
 
         ScrollPane sysScroll = new ScrollPane(simOut);
@@ -287,9 +268,7 @@ public class GUI extends Application {
         return outPane;
     }
 
-    private void appendText(TextArea out, String str) {
-        Platform.runLater(() -> out.appendText(str));
-    }
+
 
 
     public Semaphore getGo() {

@@ -78,7 +78,7 @@ memcall : (EQUALS WORD);
 //Consumes a word ending colon.
 label   : (WORD COLON);
 
-comment : (COMSLASH .*?);
+comment : (COMSLASH .*);
 
 //Consumes all instructions. More added as more implemented.
 inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
