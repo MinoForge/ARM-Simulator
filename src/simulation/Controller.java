@@ -29,6 +29,7 @@ public class Controller implements Runnable {
 
     public static final int MEMORY_BYTES = 1024;
     public static final int TEXT_BASE_ADDRESS_OFFSET = 0x400000;
+    public static final int CPS = 2;
 
     public static ByteOrder BYTE_ORDER;
     public static final int DEFAULT_REGISTER_NUM = 32;
@@ -94,7 +95,9 @@ public class Controller implements Runnable {
     public void run() {
         while(!halt.get()) {
             System.out.println("Halt is set to before: " + halt);
+
             try {
+                Thread.sleep(1000/CPS); //Sleep for a time period.
                 run.acquire(2);
                 System.out.println("Hey");
                 if(doCycle.tryAcquire()) {
@@ -196,7 +199,7 @@ public class Controller implements Runnable {
 
     /** Unimplemented. */
     private void setUpStack() {
-        this.memory = new Register(instructions.size() * 4 + MEMORY_BYTES);
+        this.memory = new Register(MEMORY_BYTES);
 //        System.out.println("Starting Stack setup");
         for(int i = 0; i < progBins.size(); i++) {
 //            System.out.println("Writing Instruction to " + (i*4));
@@ -212,8 +215,8 @@ public class Controller implements Runnable {
         long length = str.length()/32;
         System.out.println(length);
         StringBuilder stackStr = new StringBuilder();
-        for(int i = 0; i < length; i++) {
-            stackStr.append(Controller.TEXT_BASE_ADDRESS_OFFSET + i*4 + " ");
+        for(int i = (int)length-1; i >= 0; i--) {
+            stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*4));
             stackStr.append(memory.getBinary(i*4, (i+1)*4));
             stackStr.append('\n');
         }
