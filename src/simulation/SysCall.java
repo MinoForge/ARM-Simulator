@@ -5,6 +5,7 @@ import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.Semaphore;
 
 /**
  *Created by Caleb on 5/7/2019.
@@ -17,12 +18,14 @@ public class SysCall {
     private int address;
     private RegisterFile regFile;
     private Register memory;
+    private Semaphore run;
 
-    public SysCall(RegisterFile regFile, Register memory){
+    public SysCall(RegisterFile regFile, Register memory, Semaphore run){
         this.type = 0;
         this.address = 0;
         this.regFile = regFile;
         this.memory = memory;
+        this.run = run;
     }
 
     /**
@@ -36,6 +39,11 @@ public class SysCall {
 //        System.out.println("Address of print " + address);
         int offset = Integer.parseInt(regFile.getRegister(1).getBinary(),2);
         switch (type) {
+
+            case 1: //1 is OUR value for printing integer to screen
+                System.out.print(address);
+                System.out.flush();
+                break;
 
             case 64: //64 is the value for printing to screen
                 if(offset == 0) {
@@ -76,6 +84,17 @@ public class SysCall {
                 regFile.getRegister(0).writeBinaryAtIndex(0, input);
 
                 break;
+
+            case 93: //System exit number
+                try {
+                    run.acquire(1);
+                } catch(InterruptedException ie) {
+                    //Catching Controller
+                }
+
+        }
+        for(int i = 0; i < 9; i++) {
+            regFile.freeRegister(i);
         }
 
 

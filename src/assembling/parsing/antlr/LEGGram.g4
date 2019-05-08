@@ -14,7 +14,7 @@ AND     : [Aa][Nn][Dd][ ];
 ORR      : [Oo][Rr][Rr][ ];
 //Begin new instructions
 MUL		: [Mm][Uu][Ll][ ];
-DIV		: [Dd][Ii][Vv][ ];
+UDIV	: [Uu][Dd][Ii][Vv][ ];
 LDUR	: [Ll][Dd][Uu][Rr][ ];
 STUR	: [Ss][Tt][Uu][Rr][ ];
 B		: [Bb][ ];
@@ -28,6 +28,8 @@ LSR		: [Ll][Ss][Rr][ ];
 UBFM	: [Uu][Bb][Ff][Mm][ ];
 SVC	    : [Ss][Vv][Cc][ ];
 LDR     : [Ll][Dd][Rr][ ];
+BR      : [Bb][Rr][ ];
+BLR     : [Bb][Ll][Rr][ ];
 //End Instructions
 
 
@@ -42,7 +44,7 @@ HASH          : '#';
 EQUALS        : '=';
 ENTRY         : 'ENTRY';
 END           : 'END';
-WORD          : [A-Za-z\-]+;
+WORD          : [A-Za-z\-_]+;
 LCWORD        : [a-z]+;
 DIRECTIVE     : '.';
 DATA          : '.data';
@@ -79,7 +81,7 @@ memcall : (EQUALS WORD);
 //Consumes a word ending colon.
 label   : (WORD COLON);
 
-comment : (COMSLASH .*);
+comment : (COMSLASH .*?);
 
 //Consumes all instructions. More added as more implemented.
 inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
@@ -89,7 +91,7 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  ORR reg SEPARATOR reg SEPARATOR reg
         |  MUL reg SEPARATOR reg SEPARATOR reg
         |  MADD reg SEPARATOR reg SEPARATOR reg SEPARATOR reg
-        |  DIV reg SEPARATOR reg SEPARATOR reg
+        |  UDIV reg SEPARATOR reg SEPARATOR reg
         |  BL WORD | imm
         |  B WORD | imm
         |  BR reg //TODO add to assembler
@@ -100,7 +102,7 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  STUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         |  LSL reg SEPARATOR reg SEPARATOR reg
         |  LSR reg SEPARATOR reg SEPARATOR reg
-        |  LDR reg SEPARATOR label
+        |  LDR reg SEPARATOR WORD
         |  UBFM reg SEPARATOR reg SEPARATOR imm SEPARATOR imm
         |  SVC imm
         )

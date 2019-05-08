@@ -109,33 +109,33 @@ public class Execute extends PipelineSegment {
             exmemRegister.zeroOut();
             System.err.println(command);
 
-            switch (command){
-                case("add"):
+            switch (command) {
+                case ("add"):
                     result = value1 + value2;
                     break;
 
-                case("sub"):
+                case ("sub"):
                     result = value1 - value2;
                     break;
 
-                case("mov"):
+                case ("mov"):
                     value2 = 0L; //Set the second value to 0 to be sure, then fall to orr
-                case("orr"):
+                case ("orr"):
                     result = value1 | value2;
                     break;
 
-                case("and"):
+                case ("and"):
                     result = value1 & value2;
                     break;
 
-                case("mul"):
+                case ("mul"):
                     value3 = 0L; //Set the added value to 0 to be sure, then fall to madd
-                case("madd"):
+                case ("madd"):
                     result = value1 * value2 + value3;
                     break;
 
-                case("div"):
-                    if(value2 == 0) { //Div by zero, but no errors? By manual.
+                case ("udiv"):
+                    if (value2 == 0) { //Div by zero, but no errors? By manual.
                         result = 0;
                     } else {
                         result = value1 / value2;
@@ -143,53 +143,57 @@ public class Execute extends PipelineSegment {
                     break;
 
 
-                case("bl"): //Set register for return, then fall through to b
+                case ("bl"): //Set register for return, then fall through to b
                     result = localPC + 4;
-                case("b"):
-                    System.err.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
-                    localPC = localPC + ((int)value2 << 2);
+                case ("b"):
+                    System.err.println("Branching with offset: " + ((int) value2 << 2) + " and current pc: " + localPC);
+                    localPC = localPC + ((int) value2 << 2);
                     break;
 
-                case("blr"):
+                case ("blr"):
                     result = localPC + 4; //Set register for return, then fall through to br
-                case("br"):
-                    System.err.println("Branching with offset: " + ((int)value1 << 2) + " and current pc: " + localPC);
-                    localPC = localPC + ((int)value2 << 2);
+                case ("br"):
+                    System.err.println("Branching with offset: " + ((int) value1 << 2) + " and current pc: " + localPC);
+                    localPC = localPC + ((int) value2 << 2);
                     break;
 
-                case("cbz"):
-                    if(value1 == 0) {
-                        System.err.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
-                        localPC = localPC + ((int)value2 << 2);
+                case ("cbz"):
+                    if (value1 == 0) {
+                        System.err.println("Branching with offset: " + ((int) value2 << 2) + " and current pc: " + localPC);
+                        localPC = localPC + ((int) value2 << 2);
                     }
                     break;
-                case("cbnz"):
-                    if(value1 != 0) {
-                        System.err.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
-                        localPC = localPC + ((int)value2 << 2);
+                case ("cbnz"):
+                    if (value1 != 0) {
+                        System.err.println("Branching with offset: " + ((int) value2 << 2) + " and current pc: " + localPC);
+                        localPC = localPC + ((int) value2 << 2);
                     }
                     break;
 
-                case("ldur"):
-                case("stur"):
+                case ("ldur"):
+                case ("stur"):
                     result = value1 + value2;
                     break;
 
-                case("lsl"):
+                case ("lsl"):
                     result = value1 << value2;
                     break;
-                case("lsr"):
+                case ("lsr"):
                     result = value1 >> value2;
                     break;
-                case("svc"):
+                case ("svc"):
+
+                    ControlUnit.setStageDataValid(3, false);
                     syscall();
                     break;
-                case("ldr"):
+                case ("ldr"):
                     result = value2;
                     break;
 
             }
-            write();
+            if (!command.equals("svc")) {
+                write();
+            }
         } else {
             ControlUnit.setStageDataValid(3, false);
         }
@@ -200,9 +204,9 @@ public class Execute extends PipelineSegment {
         int num = Integer.parseInt(type.getBinary(), 2);
 //        System.out.print(">>> ");
 //        System.err.println("this is the type: " + num);
+
         sysHandler.setType(num);
         sysHandler.handle();
-        ControlUnit.setStageDataValid(3, false);
 
 
     }

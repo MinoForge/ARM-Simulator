@@ -120,9 +120,14 @@ public class ButtonStrip {
     private Button makePauseButton() {
         Button button = new Button("Pause Run");
         button.setOnMouseReleased(event -> {
-            control.setHalt(true);
+            try {
+                gui.getGo().acquire(2);
+                gui.getGo().release();
+            } catch(InterruptedException ie) {
+                //
+            }
             button.setDisable(true);
-            runProgramButton.setDisable(false);
+//            runProgramButton.setDisable(false);
             stepBackButton.setDisable(false);
         });
         button.setDisable(true);
@@ -134,7 +139,6 @@ public class ButtonStrip {
         Button button = new Button("Assemble!");
         button.setOnMouseReleased(event -> {
             firstRun = true;
-            control.setHalt(false);
             control.assemble();
             runProgramButton.setDisable(false);
             runCycleButton.setDisable(false);
@@ -156,7 +160,6 @@ public class ButtonStrip {
     private Button makeStepButton() {
         Button button = new Button("Cycle CPU");
         button.setOnMouseReleased(event -> {
-            control.start();
             if(firstRun) {
                 control.reset();
                 firstRun = false;
@@ -191,7 +194,6 @@ public class ButtonStrip {
             pauseRunButton.setDisable(false);
             runInstructionButton.setDisable(true);
             runCycleButton.setDisable(true);
-            control.start();
             if(firstRun) {
                 control.reset();
                 firstRun = false;
@@ -221,7 +223,6 @@ public class ButtonStrip {
     private Button makeInstructButton() {
         Button button = new Button("Step Forward");
         button.setOnMouseReleased(event -> {
-            control.start();
             if(firstRun) {
                 control.reset();
                 firstRun = false;
@@ -256,7 +257,6 @@ public class ButtonStrip {
             } catch(InterruptedException ie) {
                 //
             }
-            Controller.stop();
             button.setDisable(true);
             runProgramButton.setDisable(false);
             assembleButton.setDisable(false);

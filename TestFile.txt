@@ -1,16 +1,225 @@
 ENTRY
 .text
-add r8, r31, #64
-ldr r0, ratty
+
+main: add r8, r31, #64
+ldr r0, enterOp
 svc #0
 
-add r4, r31, r0
 
 add r8, r31, #63
 svc #0
+add r23, r0, r31
+add r8, r31, #64
+ldr r0, newLine
+svc #0
+
+sub r23, r23, #2
+cbz r23, exit
 
 
+
+add r9, r31, #2
+
+sub r10, r9, r23
+lsr r10, r10, r8
+cbnz r10, main
+
+lsr r10, r23, r8
+cbnz r10, main
+
+
+
+add r8, r31, #64
+ldr r0, enterTwo
+svc #0
+ldr r0, newLine
+svc #0
+ldr r0, a
+svc #0
+add r8, r31, #63
+svc #0
+add r19, r0, r31
+add r8, r31, #64
+ldr r0, newLine
+svc #0
+
+
+
+add r8, r31, #64
+ldr r0, b
+svc #0
+add r8, r31, #63
+svc #0
+add r20, r0, r31
+add r8, r31, #64
+ldr r0, newLine
+svc #0
+
+
+
+
+cbnz r23, call_two
+bl start_mystery_one
+b main
+
+
+call_two: bl start_mystery_two
+b main
+
+
+
+start_mystery_one: add r28, r28, #-40
+stur r19, [r28, #0]
+stur r20, [r28, #8]
+stur r9, [r28, #16]
+stur r10, [r28, #24]
+stur r30, [r28, #32]
+
+
+add r9, r31, #1
+add r2, r31, #63
+
+
+sub r1, r19, r20
+lsr r1, r1, r2
+cbnz r1, myst_one_opt_two
+
+bl mystery_one
+b end_myst
+
+
+myst_one_opt_two: add r10, r19, r31
+add r19, r20, r31
+add r20, r10, r31
+
+bl mystery_one
+b end_myst
+
+
+mystery_one: add r28, r28, #-40
+stur r19, [r28, #0]
+stur r20, [r28, #8]
+stur r9, [r28, #16]
+stur r10, [r28, #24]
+stur r30, [r28, #32]
+
+
+
+
+
+
+udiv r11, r9, r20
+mul r12, r11, r20
+sub r10, r9, r12
+cbnz r10, end_if_check_false
+
+
+udiv r11, r9, r19
+mul r12, r11, r20
+sub r10, r9, r12
+cbnz r10, end_if_check_false
+
+
+add r8, r9, r31
+
+
+return_one: ldur r19, [r28, #0]
+ldur r20, [r28, #8]
+ldur r9, [r28, #16]
+ldur r10, [r28, #24]
+ldur r30, [r28, #32]
+add r28, r28, #40
+br r30
+
+
+end_if_check_false: add r9, r9, #1
+bl mystery_one
+b return_one
+
+
+end_myst: add r10, r8, r31
+
+
+add r8, r31, #64
+ldr r0, answer
+svc #0
+add r8, r31, #1
+add r0, r10, r31
+svc #0
+add r8, r31, #64
+ldr r0, newLine
+svc #0
+
+
+end: ldur r19, [r28, #0]
+ldur r20, [r28, #8]
+ldur r9, [r28, #16]
+ldur r10, [r28, #24]
+ldur r30, [r28, #32]
+add r28, r28, #40
+br r30
+
+
+
+start_mystery_two: add r28, r28, #-40
+stur r19, [r28, #0]
+stur r20, [r28, #8]
+stur r9, [r28, #16]
+stur r10, [r28, #24]
+stur r30, [r28, #32]
+
+
+bl mystery_two
+b end_myst
+
+
+
+mystery_two: add r28, r28, #-24
+stur r19, [r28, #0]
+stur r20, [r28, #8]
+stur r30, [r28, #16]
+
+add r2, r31, #63
+
+
+
+sub r11, r19, r20
+cbz r11, myst_two_return
+
+
+
+sub r10, r20, r19
+lsr r10, r10, r2
+
+cbnz r10, if_false
+sub r19, r19, r20
+bl mystery_two
+
+
+return_two: ldur r19, [r28, #0]
+ldur r20, [r28, #8]
+ldur r30, [r28, #16]
+add r28, r28, #24
+br r30
+
+
+if_false: sub r20, r20, r19
+bl mystery_two
+b return_two
+
+
+myst_two_return: add r8, r19, r31
+b return_two
+
+
+exit: add r8, r31, #93
+svc #0
 END
+
 .data
-ratty: .asciz "BEEP BOOP>>> "
-lab: .byte A5 b3 b6 c2 21
+enterOp: .asciz "Enter operation: 0 or 1, 2 to End>>>    "
+enterTwo: .asciz "Enter any two positive integers>>>"
+answer: .asciz "The answer is "
+newLine: .asciz " \n"
+a: .asciz "a >>> "
+b: .asciz "b >>> "

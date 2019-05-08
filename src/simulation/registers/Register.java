@@ -196,6 +196,7 @@ public class Register {
             return -1;
         }
         if(binary.length() % DEFAULT_BYTE_SIZE != 0) { //Will not fit byte-array
+            System.err.println(binary.length() + "::" + regCounter);
             System.err.println("Byte array doesn't align");
             return -1; //TODO Make this an exception instead?
         }

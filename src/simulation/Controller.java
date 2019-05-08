@@ -27,9 +27,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Controller implements Runnable {
 
-    public static final int MEMORY_BYTES = 1024;
+    public static final int MEMORY_BYTES = 2048;
     public static final int TEXT_BASE_ADDRESS_OFFSET = 0x400000;
-    public static final int CPS = 4;
+    public static final int CPS = 8;
 
     public static ByteOrder BYTE_ORDER;
     public static final int DEFAULT_REGISTER_NUM = 32;
@@ -98,19 +98,20 @@ public class Controller implements Runnable {
             System.err.println("Halt is set to before: " + halt);
 
             try {
+                Thread.yield();
                 Thread.sleep(1000/CPS); //Sleep for a time period.
                 run.acquire(2);
                 System.err.println("Hey");
                 if(doCycle.tryAcquire()) {
                     if(!cycle()) {
-                        halt.set(true);
+                        run.acquire();
                     }
                     doCycle.release();
                 }
                 if(doProgram.tryAcquire()) {
 
                     if(!cycle()) {
-                        halt.set(true);
+                        run.acquire();
                     }
                     doProgram.release();
                     run.release();
@@ -118,7 +119,7 @@ public class Controller implements Runnable {
                 if(doInstruction.tryAcquire()) {
                     System.err.println("Hello");
                     if(!doInstruction()) {
-                        halt.set(true);
+                        run.acquire();
                     }
                     doInstruction.release();
                 }
@@ -149,7 +150,7 @@ public class Controller implements Runnable {
 
         setUpStack(); //stack initialization
         initRegisters();
-        this.sysHandler = new SysCall(regFile, memory);
+        this.sysHandler = new SysCall(regFile, memory, run);
 
         readData(); //initialize data stuff
 
@@ -164,10 +165,6 @@ public class Controller implements Runnable {
         execute = new Execute(idex, exmem, regFile, sysHandler);
         access = new Access(exmem, memwb, memory);
         writeback = new Writeback(memwb, regFile);
-    }
-
-    public void start() {
-        Controller.halt.set(false);
     }
 
     private void initRegisters() {
@@ -201,11 +198,11 @@ public class Controller implements Runnable {
 
         System.err.println(length);
         StringBuilder stackStr = new StringBuilder();
-        for(int i = (int)length-2; i >= 0; i -= 2) {
+        for(int i = (int)length-1; i >= 0; i -= 1) {
             stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*8));
-            stackStr.append(memory.getBinary(i*4, (i+1)*4));
-            stackStr.append(" ");
-            stackStr.append(memory.getBinary((i+1)*4, (i+2)*4));
+            stackStr.append(memory.getBinary(i*8, (i+1)*8));
+//            stackStr.append(" ");
+//            stackStr.append(memory.getBinary((i+1)*4, (i+2)*4));
             stackStr.append('\n');
         }
         System.err.println(stackStr.toString());
@@ -245,7 +242,7 @@ public class Controller implements Runnable {
     /** Cycles to the end of the instructions */
     public void cycleToEnd() {
         int size = instructions.size() * 4;
-        while(Controller.PC < size && !halt.get()) {
+        while(Controller.PC < size) {
             writeback.execute();
             access.execute();
             execute.execute();
@@ -300,13 +297,13 @@ public class Controller implements Runnable {
     }
 
     /** Sets the halt boolean to a value. If true, the simulator should stop when checked. */
-    public void setHalt(boolean val) {
-        Controller.halt.set(val);
-    }
+//    public void setHalt(boolean val) {
+//        Controller.halt.set(val);
+//    }
 
     /** Stops the simulator in place */
     public static void stop() {
-//        Controller.halt.set(true);
+        Controller.halt.set(true);
     }
 
     /** Resets the registers to their default values. Currently sets to testValues, rather than 0.*/
@@ -316,7 +313,8 @@ public class Controller implements Runnable {
         ControlUnit.flushPipe(0,4);
         ControlUnit.setStageDataValid(0, true);
 //        setTestRegs();
-        regFile.getRegister(28).writeBinary(Integer.toBinaryString(MEMORY_BYTES));
+        System.err.println(regFile.getRegister(28).getRegNum() + "!!");
+        regFile.getRegister(28).writeBinaryAtIndex(0, PipelineSegment.correctBits(Integer.toBinaryString(MEMORY_BYTES), 64, 64));
     }
 
 

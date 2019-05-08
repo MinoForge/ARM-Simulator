@@ -185,16 +185,25 @@ public class Decode extends PipelineSegment {
         if(!syscall) {
             if (regFile.getRegisterForRead(nRegister) == null) {
                 return false;
-            }
+            } else
+
+            if (regFile.getRegisterForRead(mRegister) == null) {
+                return false;
+            } else
 
             if (flags.get(0) == DEASSERT && regFile.getRegisterForRead(mRegister) == null) {
                 return false;
-            }
+            } else
 
             if (regFile.getRegisterForWrite(dRegister) == null) { //TODO if RegisterFile.getRegisterForWrite() is fleshed out, move print there.
                 System.err.println("Register " + mRegister + " is currently locked.");
                 return false;
             }
+            if(flags.get(4)) {
+                regFile.freeRegister(nRegister);
+                regFile.freeRegister(mRegister);
+            }
+
         } else { //syscall
             for(int i = 0; i < 6; i++) {
                 if(regFile.getRegisterForRead(i) == null) {

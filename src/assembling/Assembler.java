@@ -100,6 +100,9 @@ public class Assembler implements ANTLRErrorListener {
         this.opCodes.put("lsr",  "10011010110");
         this.opCodes.put("svc",  "11010100000");
         this.opCodes.put("ldr",  "01011000");
+        this.opCodes.put("udiv", "10011010110");
+        this.opCodes.put("br",   "1101011");
+        this.opCodes.put("blr",  "1101011");
 
     }
 
@@ -116,7 +119,7 @@ public class Assembler implements ANTLRErrorListener {
         String binary = "";
         int[] addressIntoData = new int[data.size()];
         for(int i = 0; i < data.size(); i++){
-            System.err.println("Start of line: " + totalDataBytes);
+            System.err.printf("Start of line: %x", (totalDataBytes + 0x400000 + 4*instructionArray.length));
             String line = data.get(i);
             dataLabels.add(line.substring(0, line.indexOf(" ")));
             String contents = line.substring(line.indexOf(" ") +1);
@@ -171,6 +174,13 @@ public class Assembler implements ANTLRErrorListener {
                     lineIndex++;
                     binary = binary + "00000000";
                     System.err.println("Final binary after adding null " + binary);
+                    if(wordMod == 4) {
+                        wordAlignedData.add(binary);
+                        wordMod = 0;
+                        binary = "";
+                    }
+                    System.err.println(wordAlignedData.toString());
+
                 }
             }
 
@@ -353,7 +363,7 @@ public class Assembler implements ANTLRErrorListener {
             instBin = instBin + opCodes.get(temp);
         }else{
             // check to see if the last argument is an immediate
-            if(instruction[3].matches("[#][0-9]+")) {
+            if(instruction[3].matches("[#][\\-]?[0-9]+")) {
                 // in the hash map the i types are mapped to their r type
                 // equivalents but with i added to the end, so the
                 // immediate add is mapped to "addi"
@@ -484,26 +494,40 @@ public class Assembler implements ANTLRErrorListener {
 
             case('b'):
                 String tmp ="";
-                int memLocation;
-                if(instruction[1].matches("[A-Za-z]+")){
+                int memLocation = 0;
+                if(instruction[1].matches("[A-Za-z\\-_]+")){
                     System.err.println(instruction[1]);
                     int location = labelMap.get(instruction[1]);
                     memLocation = (location - currentLine);
 
-                } else {
+                } else if(instruction[1].matches("[#][\\-]?[0-9]+")) {
                     tmp = instruction[1].replace("#", "");
                     memLocation = Integer.parseInt(tmp);
+                } else {
+                    tmp = instruction[1].replaceAll("[A-Za-z]", "");
+                    if(instruction[0].equals("bl")) {
+                        instBin += "0000";
+                    } else {
+                        instBin += "0001";
+                    }
+
+                    reg1 = correctBits(Integer.toBinaryString(31), 5, 5);
+                    reg2 = correctBits(Integer.toBinaryString(Integer.parseInt(tmp)), 5, 5);
+                    reg3 = correctBits(Integer.toBinaryString(0), 5, 5);
+                    instBin += reg1 + "000000" + reg2 + reg3;
                 }
 
-                String memBin = Integer.toBinaryString(memLocation);
-                memBin = correctBits(memBin, 26,26);
-                //finished the instruction binary
-                instBin = instBin + memBin;
+                if(!instruction[0].matches("b[l]?r")) {
+                    String memBin = Integer.toBinaryString(memLocation);
+                    memBin = correctBits(memBin, 26, 26);
+                    //finished the instruction binary
+                    instBin = instBin + memBin;
+                }
                 break;
 
             case('c'):
                 int num;
-                if(instruction[2].matches("[A-Za-z]+")){
+                if(instruction[2].matches("[A-Za-z\\-_]+")){
                     num = labelMap.get(instruction[2]) - currentLine;
                 }else {
                     num = Integer.parseInt(instruction[2].replace("#", ""));
@@ -514,7 +538,7 @@ public class Assembler implements ANTLRErrorListener {
                 instBin = instBin + immediate;
 
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
-                        .replaceAll("[a-zA-Z]", "")));
+                        .replaceAll("[a-zA-Z\\-_]", "")));
                 reg1 = correctBits(reg1, 5,5);
 
                 instBin = instBin + reg1;
@@ -530,9 +554,9 @@ public class Assembler implements ANTLRErrorListener {
                 instruction[3] = instruction[3].replace("]","");
 
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
-                        .replaceAll("[a-zA-Z]", "")));
+                        .replaceAll("[a-zA-Z\\-_]", "")));
                 reg2 = Integer.toBinaryString(Integer.parseInt(instruction[2]
-                        .replaceAll("[a-zA-Z]", "")));
+                        .replaceAll("[a-zA-Z\\-_]", "")));
                 reg1 = correctBits(reg1,5,5);
                 reg2 = correctBits(reg2,5,5);
 
