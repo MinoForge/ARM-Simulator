@@ -54,6 +54,7 @@ public class Controller implements Runnable {
     private RegisterFile regFile;
     public  Register memory;
     private SysCall sysHandler;
+    private int cycleCounter;
 
 
 
@@ -221,7 +222,9 @@ public class Controller implements Runnable {
             if(Controller.PC < size) {
                 fetcher.execute();
             } else {
-                Controller.PC += 4;
+                if(ControlUnit.getGoAhead(0)) {
+                    Controller.PC += 4;
+                }
             }
             if(Controller.PC >= size) {
                 for (int i = 0; i < 5 && (Controller.PC - size) - i*4 >= 0 ; i++) {
@@ -230,6 +233,7 @@ public class Controller implements Runnable {
 //                    System.err.flush();
                 }
             }
+            System.err.println("On cycle: " + cycleCounter++);
             return true;
         }
 
