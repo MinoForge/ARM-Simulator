@@ -195,9 +195,11 @@ public class Execute extends PipelineSegment {
 
     public void syscall(){
         Register type = regFile.getRegister(8);
-        int num = Integer.parseInt(type.getBinary());
+        int num = Integer.parseInt(type.getBinary(), 2);
+        System.out.print(">>> ");
 
-        switch(num){
+
+        switch(num) {
 
             case(64): //printing / write
                 type = regFile.getRegister(1);
@@ -205,16 +207,18 @@ public class Execute extends PipelineSegment {
                 break;
 
             case(63): // read from keyboard
+                System.out.flush();
+
+                Interface.setBeforeInputLength(Interface.getAreas()[1].getLength());
+                Interface.getInput().release();
                 try {
-                    int startLength = Interface.getAreas()[1].getLength();
-                    Interface.getAreas()[1].wait();
-                    String input = Interface.getAreas()[1].getText().substring(startLength);
-
-
+                    Interface.getInput().acquire(3);
                 } catch(InterruptedException ie) {
-                    System.err.println("WARNING: Execute interrupted while waiting on System " +
-                            "input. Continuing as if syscall finished.");
+                    //
                 }
+                Interface.getInput().release(4);
+                String input = Interface.getNewInput();
+
                 break;
         }
 
