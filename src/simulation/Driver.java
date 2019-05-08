@@ -37,7 +37,7 @@ public class Driver {
             this.file = new File(fileName);
             fileIn = new Scanner(file);
         } catch(FileNotFoundException fnfe) {
-            System.out.println("File not Found.");
+            System.err.println("File not Found.");
             usage();
             System.exit(2);
         }
@@ -60,7 +60,7 @@ public class Driver {
         if (args.length == 1) //{
             arg = args[0];
 //        } else {
-//            System.out.println("Wrong number of arguments.");
+//            System.err.println("Wrong number of arguments.");
 //            usage();
 //            System.exit(1);
 //        }
@@ -75,7 +75,7 @@ public class Driver {
 //        try {
 //            Process proc = Runtime.getRuntime().exec("java GUI");
 //        } catch (IOException ioe) {
-//            System.out.println(ioe.getStackTrace());
+//            System.err.println(ioe.getStackTrace());
 //        }
 
 

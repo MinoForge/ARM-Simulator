@@ -145,7 +145,7 @@ public class Register {
         BigInteger val = new BigInteger(newVal, 2);
         decVal.set(val.longValue());
         hexVal.set(val.toString(16));
-//        System.out.println(bin + " :: " + dec + " :: " + hex);
+//        System.err.println(bin + " :: " + dec + " :: " + hex);
     }
 
 
@@ -184,28 +184,28 @@ public class Register {
      * the index after the final byte written.
      */
     public int writeBinaryAtIndex(int startByteIndex, String binary) {
-//        System.out.println(startByteIndex);
-//        System.out.println(binary);
+//        System.err.println(startByteIndex);
+//        System.err.println(binary);
 
         if(locked) {
-            System.out.println("Locked");
+            System.err.println("Locked");
             return -1;
         }
         if(startByteIndex < 0)  { //index
-            System.out.println("Negative Index not allowed");
+            System.err.println("Negative Index not allowed");
             return -1;
         }
         if(binary.length() % DEFAULT_BYTE_SIZE != 0) { //Will not fit byte-array
-            System.out.println("Byte array doesn't align");
+            System.err.println("Byte array doesn't align");
             return -1; //TODO Make this an exception instead?
         }
         if(!binary.matches("[01]+")) { //Contains non-binary elements
-            System.out.println("Contains non-binary elements.");
+            System.err.println("Contains non-binary elements.");
             return -1;
         }
         int bytesCnt = binary.length() / DEFAULT_BYTE_SIZE; //Number of bytes to write
         if(bytesCnt > length - startByteIndex) { //Will overflow register
-            System.out.println("Overflowing register.");
+            System.err.println("Overflowing register.");
             return -1;
         }
 
@@ -320,7 +320,7 @@ public class Register {
      * @return The binary string of the register.
      */
     public String getBinary() {
-//        System.out.println(this.length);
+//        System.err.println(this.length);
         return getBinary(0, this.length);
     }
 
@@ -360,32 +360,32 @@ public class Register {
         Register reg = new Register(4);
         reg.testFunctions();
 //        String test = "110010000000001100100111";
-//        System.out.println(test.length());
+//        System.err.println(test.length());
 //        reg.append(test);
-//        System.out.println(reg.getBinary(1, 3));
-//        System.out.println(reg.getBinary());
-//        System.out.println(reg.index);
+//        System.err.println(reg.getBinary(1, 3));
+//        System.err.println(reg.getBinary());
+//        System.err.println(reg.index);
 //        String str = test.substring(8,24);
-//        System.out.println(str.length());
-//        System.out.println(str);
+//        System.err.println(str.length());
+//        System.err.println(str);
 //        reg.append(str);
-//        System.out.println(reg.getBinary());
-////        System.out.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
-//        System.out.println(reg.writeBinaryAtIndex(3, "0011001111001100"));
-//        System.out.println(reg.getBinary());
+//        System.err.println(reg.getBinary());
+////        System.err.println(Integer.toBinaryString((reg & 0xFF) + 0x100).substring(1));
+//        System.err.println(reg.writeBinaryAtIndex(3, "0011001111001100"));
+//        System.err.println(reg.getBinary());
 
     }
 
     private int testFunctions() {
         // INIT TEST
         String test = "11110000110000110000001100000000";
-        System.out.println(test);
-        System.out.println(test.length());
+        System.err.println(test);
+        System.err.println(test.length());
         append(test);
         //END INIT
 
-        System.out.println(Integer.parseUnsignedInt(test, 2));
-        System.out.println(getInt(0));
+        System.err.println(Integer.parseUnsignedInt(test, 2));
+        System.err.println(getInt(0));
         return 0;
     }
 

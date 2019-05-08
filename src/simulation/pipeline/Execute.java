@@ -47,7 +47,7 @@ public class Execute extends PipelineSegment {
 
 
     private void read(){
-        System.out.println("Starting EXECUTE now:");
+        System.err.println("Starting EXECUTE now:");
         String temp = ControlUnit.getInstruction(2);
         this.command = temp.substring(0,temp.indexOf(' ')).toLowerCase();
 //        localPC = (int)(long)(idexRegister.getLong(0));
@@ -55,17 +55,17 @@ public class Execute extends PipelineSegment {
         value1 = Long.parseUnsignedLong(idexRegister.getBinary(8,16),2);
         //TODO replace calls with getLong()
         if(!flags.get(3) && !flags.get(4)) { //ALUSrc deasserted
-            System.out.println("Register instruction");
+            System.err.println("Register instruction");
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(16, 24), 2);
         }else{              //ALUSrc asserted
-            System.out.println("Immediate instruction");
-            System.out.println(idexRegister.getBinary(24,32));
+            System.err.println("Immediate instruction");
+            System.err.println(idexRegister.getBinary(24,32));
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(24,32), 2);
-            System.out.println(value2);
+            System.err.println(value2);
         }
         destReg = idexRegister.getBytes(32, 33)[0];
-        System.out.println(value1);
-        System.out.println(value2);
+        System.err.println(value1);
+        System.err.println(value2);
         // TODO a lot
         //TODO read in value3? Not sure how far back that needs to go.
         //It will have to run all the operations that come thorough, any
@@ -78,24 +78,24 @@ public class Execute extends PipelineSegment {
         // TODO Add above to the ex/mem register
         // give the results of the executions to the ex/mem register.
 
-        System.out.println("This is the local PC change : " + localPC);
+        System.err.println("This is the local PC change : " + localPC);
         exmemRegister.append(correctBits(Long.toBinaryString(localPC), 64, 64));
 
-        System.out.println("This is the result: " + Long.toBinaryString(result));
+        System.err.println("This is the result: " + Long.toBinaryString(result));
         exmemRegister.append(correctBits(Long.toBinaryString(result), 64, 64));
 
-        System.out.println("This is the data from reg2:" +
+        System.err.println("This is the data from reg2:" +
                 idexRegister.getBinary(16,24));
         exmemRegister.append(idexRegister.getBinary(16,24));
 
 
 
-        System.out.println("This is the dest reg binary:" + idexRegister
+        System.err.println("This is the dest reg binary:" + idexRegister
                 .getBinary(33,34).substring(3,8));
         exmemRegister.append(correctBits(idexRegister.getBinary(33,34)
                 .substring(3,8), 8, 8));
 
-        System.out.println(exmemRegister);
+        System.err.println(exmemRegister);
     }
 
     /**
@@ -103,11 +103,11 @@ public class Execute extends PipelineSegment {
      */
     public void execute(){
         if(ControlUnit.getGoAhead(2)) {
-            System.out.println("Starting Execute");
+            System.err.println("Starting Execute");
             flags = ControlUnit.getControlFlags(2);
             read();
             exmemRegister.zeroOut();
-            System.out.println(command);
+            System.err.println(command);
 
             switch (command){
                 case("add"):
@@ -146,26 +146,26 @@ public class Execute extends PipelineSegment {
                 case("bl"): //Set register for return, then fall through to b
                     result = localPC + 4;
                 case("b"):
-                    System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
+                    System.err.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
                     localPC = localPC + ((int)value2 << 2);
                     break;
 
                 case("blr"):
                     result = localPC + 4; //Set register for return, then fall through to br
                 case("br"):
-                    System.out.println("Branching with offset: " + ((int)value1 << 2) + " and current pc: " + localPC);
+                    System.err.println("Branching with offset: " + ((int)value1 << 2) + " and current pc: " + localPC);
                     localPC = localPC + ((int)value2 << 2);
                     break;
 
                 case("cbz"):
                     if(value1 == 0) {
-                        System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
+                        System.err.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
                         localPC = localPC + ((int)value2 << 2);
                     }
                     break;
                 case("cbnz"):
                     if(value1 != 0) {
-                        System.out.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
+                        System.err.println("Branching with offset: " + ((int)value2 << 2) + " and current pc: " + localPC);
                         localPC = localPC + ((int)value2 << 2);
                     }
                     break;
@@ -198,8 +198,8 @@ public class Execute extends PipelineSegment {
     public void syscall(){
         Register type = regFile.getRegister(8);
         int num = Integer.parseInt(type.getBinary(), 2);
-        System.out.print(">>> ");
-//        System.out.println("this is the type: " + num);
+//        System.out.print(">>> ");
+//        System.err.println("this is the type: " + num);
         sysHandler.setType(num);
         sysHandler.handle();
         ControlUnit.setStageDataValid(3, false);

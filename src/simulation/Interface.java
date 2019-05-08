@@ -46,10 +46,9 @@ public class Interface implements Runnable {
             try { //COMMENT THIS AND EXECUTE PLOX
                 input.acquire(2);
                 System.out.flush();
-                areas[1].appendText("\n");
-                currentInput = areas[1].getText().substring(beforeInputLength);
-                currentInput = currentInput.substring(currentInput.indexOf(">>>") + 3);
-                currentInput = currentInput.substring(0, currentInput.indexOf("\n")).trim();
+                currentInput = areas[1].getText().substring(beforeInputLength).trim();
+//                currentInput = currentInput.substring(currentInput.indexOf(">>>") + 3);
+//                currentInput = currentInput.substring(0, currentInput.indexOf("\n")).trim();
                 input.release(3);
                 input.acquire(4);
 

@@ -48,7 +48,7 @@ public class Assembler implements ANTLRErrorListener {
             this.file = new File(fileName);
             fileIn = new Scanner(file);
         } catch(FileNotFoundException fnfe) {
-            System.out.println("File not Found.");
+            System.err.println("File not Found.");
             System.exit(2);
         }
         StringBuilder tempStr = new StringBuilder();
@@ -61,19 +61,19 @@ public class Assembler implements ANTLRErrorListener {
         ArrayList<String> realInsts = new ArrayList<>();
         ArrayList<String> data      = new ArrayList<>();
         realInstAdder(tempInsts, realInsts, data); //alters realInsts and data
-        System.out.println("realInsts from Assembler:\n" + realInsts.toString());
-        System.out.println("data lines from Assembler:\n" + data.toString());
+        System.err.println("realInsts from Assembler:\n" + realInsts.toString());
+        System.err.println("data lines from Assembler:\n" + data.toString());
         lineAddresses = dataSection(data); //data array modified here
         for(int i = 0; i < lineAddresses.length; i++) {
             //Turn relative addresses (into data) into absolute memory addresses
             lineAddresses[i] = lineAddresses[i] + realInsts.size() * 4;
-            System.out.println(lineAddresses[i]);
+            System.err.println(lineAddresses[i]);
         }
 
 
         this.labelMap = new HashMap<>();
         makeLabels();
-        System.out.println("the hashmap: " + labelMap.toString());
+        System.err.println("the hashmap: " + labelMap.toString());
 
 
 
@@ -116,7 +116,7 @@ public class Assembler implements ANTLRErrorListener {
         String binary = "";
         int[] addressIntoData = new int[data.size()];
         for(int i = 0; i < data.size(); i++){
-            System.out.println("Start of line: " + totalDataBytes);
+            System.err.println("Start of line: " + totalDataBytes);
             String line = data.get(i);
             dataLabels.add(line.substring(0, line.indexOf(" ")));
             String contents = line.substring(line.indexOf(" ") +1);
@@ -124,10 +124,10 @@ public class Assembler implements ANTLRErrorListener {
             contents = contents.substring(contents.indexOf(" ") + 1);
             int lineIndex = 0;
 
-            System.out.println("Type: " + type);
-            System.out.println("Contents: " + contents);
+            System.err.println("Type: " + type);
+            System.err.println("Contents: " + contents);
             if(type.matches("\\.byte")) {
-                System.out.println("Matched Byte");
+                System.err.println("Matched Byte");
                 String[] temp1 = contents.split(" ");
                 addressIntoData[i] = totalDataBytes;
                 while(lineIndex < temp1.length) {
@@ -152,10 +152,10 @@ public class Assembler implements ANTLRErrorListener {
                 char[] temp2 = contents.toCharArray();
                 addressIntoData[i] = totalDataBytes;
                 while(lineIndex < temp2.length) {
-                    System.out.println(temp2[lineIndex]);
+                    System.err.println(temp2[lineIndex]);
                     binary = binary + correctBits(Integer.toBinaryString(
                             (int)(temp2[lineIndex])),8,32);
-                    System.out.println(binary);
+                    System.err.println(binary);
                     totalDataBytes++;
                     wordMod++;
                     lineIndex++;
@@ -170,7 +170,7 @@ public class Assembler implements ANTLRErrorListener {
                     wordMod++;
                     lineIndex++;
                     binary = binary + "00000000";
-                    System.out.println("Final binary after adding null " + binary);
+                    System.err.println("Final binary after adding null " + binary);
                 }
             }
 
@@ -188,22 +188,22 @@ public class Assembler implements ANTLRErrorListener {
     public void makeLabels(){
         for(int i = 0; i < instructionArray.length; i++){
             if(instructionArray[i].contains(":")){
-                System.out.println("I got here in the make labels if " +
+                System.err.println("I got here in the make labels if " +
                         "statement");
                 String[] temp = instructionArray[i].split(":");
-                System.out.println(temp[0] + " and " + temp[1]);
+                System.err.println(temp[0] + " and " + temp[1]);
                 temp[0].replace(":","");
                 labelMap.put(temp[0], i);
 
                 instructionArray[i] = instructionArray[i].replace(temp[0]+
                         ":" ,"").trim();
-                System.out.println(instructionArray[i]);
+                System.err.println(instructionArray[i]);
             }
         }
         for(int i = 0; i < dataLabels.size(); i++) {
             labelMap.put(dataLabels.get(i), lineAddresses[i]);
         }
-        System.out.println("Labelmap after data added: " + labelMap);
+        System.err.println("Labelmap after data added: " + labelMap);
     }
 
     /**
@@ -234,7 +234,7 @@ public class Assembler implements ANTLRErrorListener {
                     s.equals("") || s.equals(".text") || s.equals(".data")) &&
                     !isData) {
                 realInsts.add(s);
-                System.out.println(s);
+                System.err.println(s);
             }else if(s.equals(".data")){
                 isData = true;
             }else if(s.equals(".text")){
@@ -253,7 +253,7 @@ public class Assembler implements ANTLRErrorListener {
             instructionArray[i] = instructionArray[i].trim();
         }
         for(String s : instructionArray){
-            System.out.println(s);
+            System.err.println(s);
         }
 
 
@@ -279,17 +279,17 @@ public class Assembler implements ANTLRErrorListener {
 
 
     public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
-        System.out.println("reportAmbiguity not handled.");
+        System.err.println("reportAmbiguity not handled.");
     }
 
     @Override
     public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
-        System.out.println("reportAttemptingFullContext not handled.");
+        System.err.println("reportAttemptingFullContext not handled.");
     }
 
     @Override
     public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
-        System.out.println("reportContextSensitivity not handled.");
+        System.err.println("reportContextSensitivity not handled.");
     }
 
     //End ErrorListener implementation.
@@ -316,10 +316,10 @@ public class Assembler implements ANTLRErrorListener {
 
         String curInstruction;
         for(int i = 0; i < instructionArray.length; i++) {
-//            System.out.println(instructionArray[i]);
+//            System.err.println(instructionArray[i]);
             if (instructionArray[i].equals("ENTRY") || instructionArray[i].equals("END") ||
                     instructionArray[i].matches("/+.*") || instructionArray[i].equals("")) {
-                System.out.println("Matched: " + instructionArray[i] + "as special. Not adding to" +
+                System.err.println("Matched: " + instructionArray[i] + "as special. Not adding to" +
                         " instruction list.");
                 //Do nothing touch
             } else {
@@ -486,7 +486,7 @@ public class Assembler implements ANTLRErrorListener {
                 String tmp ="";
                 int memLocation;
                 if(instruction[1].matches("[A-Za-z]+")){
-                    System.out.println(instruction[1]);
+                    System.err.println(instruction[1]);
                     int location = labelMap.get(instruction[1]);
                     memLocation = (location - currentLine);
 
@@ -559,11 +559,11 @@ public class Assembler implements ANTLRErrorListener {
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]));
                 reg1 = correctBits(reg1, 5, 5);
                 num = labelMap.get(instruction[2]);
-                System.out.println("the number from label map: " + num);
+                System.err.println("the number from label map: " + num);
                 immediate = Integer.toBinaryString(num);
-                System.out.println("the bin of the num: " + immediate);
+                System.err.println("the bin of the num: " + immediate);
                 immediate = correctBits(immediate, 19, 32);
-                System.out.println();
+                System.err.println();
                 instBin = instBin + immediate + reg1;
         }
 

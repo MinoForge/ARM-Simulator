@@ -44,17 +44,17 @@ public class Writeback extends PipelineSegment{
      * from the memwb register.
      */
     private void read(){
-        System.out.println("STARTING write NOW");
+        System.err.println("STARTING write NOW");
 
 
         memData = memwbRegister.getBinary(0,8);
-        System.out.println("This is the data from main mem: " + memData);
+        System.err.println("This is the data from main mem: " + memData);
 
         aluResult = memwbRegister.getBinary(8,16);
-        System.out.println("This is the data direct from Execute: " + aluResult);
+        System.err.println("This is the data direct from Execute: " + aluResult);
 
         rdField = memwbRegister.getBinary(16,17);
-        System.out.println("This is the address of the write-back register: " + rdField);
+        System.err.println("This is the address of the write-back register: " + rdField);
     }
 
     /**
@@ -70,18 +70,18 @@ public class Writeback extends PipelineSegment{
             //the destination register, else write the alu result.
             int regToWrite = Integer.parseInt(rdField,2);
             if(memToReg){
-                System.out.println("Writing from memory");
+                System.err.println("Writing from memory");
 
                 regFile.getRegister(regToWrite).writeBinary(memData);
 
             }else{
-                System.out.println("Writing from ALU output");
+                System.err.println("Writing from ALU output");
                 regFile.getRegister(regToWrite).writeBinary(aluResult);
             }
             regFile.freeRegister(regToWrite);
-            System.out.println("Result being written to reg" + Integer.parseInt(rdField,2) + ": " + regFile.getRegister(regToWrite));
+            System.err.println("Result being written to reg" + Integer.parseInt(rdField,2) + ": " + regFile.getRegister(regToWrite));
         } else {
-            System.out.println("No write back.");
+            System.err.println("No write back.");
         }
     }
 
@@ -92,7 +92,7 @@ public class Writeback extends PipelineSegment{
     public void execute(){
         if(ControlUnit.getGoAhead(4)){
             read();
-//            System.out.println(ControlUnit.getState(4));
+//            System.err.println(ControlUnit.getState(4));
             fields = ControlUnit.getControlFlags(4);
 
             regWrite = fields.get(7);

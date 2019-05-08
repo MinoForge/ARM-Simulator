@@ -1,10 +1,16 @@
 ENTRY
 .text
+add r8, r31, #64
+ldr r0, ratty
+svc #0
+
+add r4, r31, r0
+
 add r8, r31, #63
 svc #0
 
 
 END
 .data
-ratty: .asciz "BEEP BOOP"
+ratty: .asciz "BEEP BOOP>>> "
 lab: .byte A5 b3 b6 c2 21

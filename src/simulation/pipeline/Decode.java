@@ -53,8 +53,8 @@ public class Decode extends PipelineSegment {
      * will sign extend an immediate value depending on the instruction.
      */
     private void read(){
-        System.out.println("Starting DECODE now!");
-        System.out.flush();
+        System.err.println("Starting DECODE now!");
+        System.err.flush();
         instBin = ifidRegister.getBinary(8,12);
         String regN, regM, regD;
         if(instBin.substring(0,11).equals("11010100000")){
@@ -82,15 +82,15 @@ public class Decode extends PipelineSegment {
             nRegister = Integer.parseInt(regN, 2);
             mRegister = Integer.parseInt(regM, 2);
             dRegister = Integer.parseInt(regD, 2);
-            System.out.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
-            System.out.flush();
+            System.err.println("N:M:D == " + nRegister + ":" + mRegister + ":" + dRegister);
+            System.err.flush();
             String imm = "";
             int temp;
             if (flags.get(5) || flags.get(6)) { //D-type
                 imm = instBin.substring(11, 20);
             } else { //I-type
                 if (ControlUnit.getInstruction(1).contains("ldr")) {
-                    System.out.println("ldr is happening");
+                    System.err.println("ldr is happening");
                     imm = instBin.substring(8, 27);
                 } else {
                     imm = instBin.substring(10, 22);
@@ -103,7 +103,7 @@ public class Decode extends PipelineSegment {
                     imm = instBin.substring(6, 32);
                 }
             }
-            System.out.println("Substring of immediate: " + imm);
+            System.err.println("Substring of immediate: " + imm);
             temp = Integer.parseInt(imm, 2);
             immediate = ((long) temp << (64 - imm.length()) >> (64 - imm.length())); //sign extend the immediate value
 
@@ -120,10 +120,10 @@ public class Decode extends PipelineSegment {
      * also writes the PC to the idex register.
      */
     private void write(){
-        System.out.println("This is the local PC in Decode: " + ifidRegister.getBinary(0,8));
+        System.err.println("This is the local PC in Decode: " + ifidRegister.getBinary(0,8));
         idexRegister.append(ifidRegister.getBinary(0,8));  //0-7 //TODO maybe actually read this in into a variable in read()?
 
-        System.out.println("This is the first operand: " +
+        System.err.println("This is the first operand: " +
                 regFile.getRegister(nRegister));
 
         if(!flags.get(4)) { //Not a branch
@@ -132,22 +132,22 @@ public class Decode extends PipelineSegment {
             idexRegister.append(regFile.getRegister(mRegister).getBinary());
         }
         //This is inaccurate and for immediates is irrelevant.
-        System.out.println("This is the second operand: " +
+        System.err.println("This is the second operand: " +
                 regFile.getRegister(mRegister).getBinary());
 
         idexRegister.append(regFile.getRegister(mRegister).getBinary()); //16-23
 
-        System.out.println("This is the immediate: " + correctBits(Long
+        System.err.println("This is the immediate: " + correctBits(Long
                         .toBinaryString(immediate), 64, imm.length()));
         idexRegister.append(correctBits(Long.toBinaryString(immediate),64,imm
                 .length())); //24-31
 
 
-        System.out.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
+        System.err.println("This is the opcode + dest register bin: " + instBin.substring(0,11) + ":" + instBin.substring(27,32));
         idexRegister.append(instBin.substring(0,11) + instBin.substring(27,32)); //32-33
 
 
-        System.out.println("This is the contents of idex: " + idexRegister
+        System.err.println("This is the contents of idex: " + idexRegister
                 .getBinary());
     }
 
@@ -160,7 +160,7 @@ public class Decode extends PipelineSegment {
         if(ControlUnit.getGoAhead(1)) {
             ControlUnit.newInstructionBin(ifidRegister.getInt(8));
 
-            System.out.println(ControlUnit.getState(1));
+            System.err.println(ControlUnit.getState(1));
 
             flags = ControlUnit.getControlFlags(1);
             read();
@@ -168,7 +168,7 @@ public class Decode extends PipelineSegment {
             if(registersAvailable()) {
                 write();
             } else {
-                System.out.println("Stalling at Decode.");
+                System.err.println("Stalling at Decode.");
                 ControlUnit.haltPipe(0, 1);
                 ControlUnit.setStageDataValid(2, false);
 
@@ -192,7 +192,7 @@ public class Decode extends PipelineSegment {
             }
 
             if (regFile.getRegisterForWrite(dRegister) == null) { //TODO if RegisterFile.getRegisterForWrite() is fleshed out, move print there.
-                System.out.println("Register " + mRegister + " is currently locked.");
+                System.err.println("Register " + mRegister + " is currently locked.");
                 return false;
             }
         } else { //syscall

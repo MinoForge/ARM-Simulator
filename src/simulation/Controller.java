@@ -94,12 +94,12 @@ public class Controller implements Runnable {
 
     public void run() {
         while(!halt.get()) {
-            System.out.println("Halt is set to before: " + halt);
+            System.err.println("Halt is set to before: " + halt);
 
             try {
                 Thread.sleep(1000/CPS); //Sleep for a time period.
                 run.acquire(2);
-                System.out.println("Hey");
+                System.err.println("Hey");
                 if(doCycle.tryAcquire()) {
                     if(!cycle()) {
                         halt.set(true);
@@ -115,7 +115,7 @@ public class Controller implements Runnable {
                     run.release();
                 }
                 if(doInstruction.tryAcquire()) {
-                    System.out.println("Hello");
+                    System.err.println("Hello");
                     if(!doInstruction()) {
                         halt.set(true);
                     }
@@ -123,18 +123,18 @@ public class Controller implements Runnable {
                 }
 
             } catch(InterruptedException ie) {
-                System.out.println(Arrays.toString(ie.getStackTrace()));
+                System.err.println(Arrays.toString(ie.getStackTrace()));
             } finally {
                 run.release();
 //                try {
 //                    Thread.sleep(100);
 //                } catch(InterruptedException ie){}
             }
-            System.out.println("Halt is set to after: " + halt);
-            System.out.flush();
+            System.err.println("Halt is set to after: " + halt);
+            System.err.flush();
 
         }
-        System.out.println("Out of runloop.");
+        System.err.println("Out of runloop.");
     }
 
     public void assemble() {
@@ -142,8 +142,8 @@ public class Controller implements Runnable {
         this.instructions = assembler.getInstructionList();
         Controller.NUM_INSTRUCTIONS = instructions.size();
         this.progBins = assembler.makeBinaryList();
-//        System.out.println(instructions);
-//        System.out.println("Calling setUpStack()");
+//        System.err.println(instructions);
+//        System.err.println("Calling setUpStack()");
 
 
         setUpStack(); //stack initialization
@@ -184,11 +184,11 @@ public class Controller implements Runnable {
     /** Unimplemented. */
     private void setUpStack() {
         this.memory = new Register(MEMORY_BYTES);
-//        System.out.println("Starting Stack setup");
+//        System.err.println("Starting Stack setup");
         for(int i = 0; i < progBins.size(); i++) {
-//            System.out.println("Writing Instruction to " + (i*4));
-//            System.out.flush();
-            System.out.println("Writing instruction :: " + progBins.get(i) + " :: to " + (i*4));
+//            System.err.println("Writing Instruction to " + (i*4));
+//            System.err.flush();
+            System.err.println("Writing instruction :: " + progBins.get(i) + " :: to " + (i*4));
             memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(progBins.get(i), 32, 32));
         }
 
@@ -198,7 +198,7 @@ public class Controller implements Runnable {
     public void printMemory() {
         long length = MEMORY_BYTES * 8 / 64;
 
-        System.out.println(length);
+        System.err.println(length);
         StringBuilder stackStr = new StringBuilder();
         for(int i = (int)length-2; i >= 0; i -= 2) {
             stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*8));
@@ -207,7 +207,7 @@ public class Controller implements Runnable {
             stackStr.append(memory.getBinary((i+1)*4, (i+2)*4));
             stackStr.append('\n');
         }
-        System.out.println(stackStr.toString());
+        System.err.println(stackStr.toString());
     }
 
     /** A single cycle of the cpu. */

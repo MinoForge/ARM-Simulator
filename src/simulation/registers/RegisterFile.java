@@ -66,7 +66,7 @@ public class RegisterFile {
      */
     public Register getRegisterForRead(int index) {
         if(beingWritten[index]) { //Blocks Read-after-Write hazard
-            System.out.println("Register " + index + " is currently locked for writing.");
+            System.err.println("Register " + index + " is currently locked for writing.");
             return null;
         }
         beingRead[index] = true;

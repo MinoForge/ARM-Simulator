@@ -56,7 +56,7 @@ public class SysCall {
                     str.append(c);
                 }
 
-                System.out.println(str.toString());
+                System.out.print(str.toString());
                 System.out.flush();
                 break;
 

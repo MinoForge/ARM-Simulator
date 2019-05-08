@@ -85,28 +85,28 @@ public abstract class PipelineSegment {
         byte shorter = (byte)Integer.MAX_VALUE;
         String pos = Integer.toBinaryString(num);
         String neg = Integer.toBinaryString(-num);
-        System.out.println("Positive value: " + pos);
-        System.out.println("Negative value: " + neg);
+        System.err.println("Positive value: " + pos);
+        System.err.println("Negative value: " + neg);
         String corrected;
         String result = "";
 
         //Test 1: Extend Pos
         corrected = correctBits(pos, 32, 64);
-        System.out.println(corrected);
+        System.err.println(corrected);
         result += corrected.equals("0000000000000000000000000000000000000000000000000000000000000101") ? "Test passed.\n" : "Test failed.\n";
         //Test 2: Shrink Pos
         corrected = correctBits(pos, 32, 8);
-        System.out.println(corrected);
+        System.err.println(corrected);
         result += corrected.equals("00000101") ? "Test passed.\n" : "Test failed.\n";
         //Test 3: Extend Neg
         corrected = correctBits(neg, 32, 64);
-        System.out.println(corrected);
+        System.err.println(corrected);
         result += corrected.equals(Long.toBinaryString(-longer)) ? "Test passed.\n" : "Test failed.\n";
         //Test 4: Shrink Neg
         corrected = correctBits(neg, 32, 8);
-        System.out.println(corrected);
+        System.err.println(corrected);
         result += corrected.equals(Byte.toString((byte)-shorter)) ? "Test passed.\n" : "Test failed.\n";
-        System.out.println(result);
+        System.err.println(result);
 
     }
 }

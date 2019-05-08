@@ -48,7 +48,7 @@ public class Access extends PipelineSegment{
      * from the exmem register.
      */
     private void read(){
-        System.out.println("Starting ACCESS now");
+        System.err.println("Starting ACCESS now");
 
         this.localPC = exmemRegister.getLong(0);
         this.aluResult = exmemRegister.getBinary(8,16);
@@ -86,27 +86,27 @@ public class Access extends PipelineSegment{
                         (address + Controller.TEXT_BASE_ADDRESS_OFFSET));
             }
         }
-        System.out.println("This is the memory address: " + address);
+        System.err.println("This is the memory address: " + address);
 //        Controller.printMemory();
 
         if(write){
-            System.out.println("Writing to Main Memory");
+            System.err.println("Writing to Main Memory");
             memory.writeBinaryAtIndex(address, data);
 
         }else if(read){
 
             memData = memory.getBinary(address, address + 8);
-            System.out.println("Reading from Main Memory: " + (memData));
+            System.err.println("Reading from Main Memory: " + (memData));
         } else {
-            System.out.println("Bypassing Main Memory");
+            System.err.println("Bypassing Main Memory");
         }
 
         if(branch) { //If we are branching.
 
             if(localPC == Controller.PC - 12) { //Not actually branching OR forever loop
-                System.out.println("Not branching.");
+                System.err.println("Not branching.");
             } else {
-                System.out.println("PC is being altered to: " + localPC);
+                System.err.println("PC is being altered to: " + localPC);
                 ControlUnit.flushPipe(0, 2);
                 Controller.PC = (int)localPC;
             }
@@ -115,11 +115,11 @@ public class Access extends PipelineSegment{
         }
 
         memwbRegister.append(correctBits(memData, 64, 64));
-        System.out.println("Data from Memory into memwb: " + correctBits(memData, 64, 64));
+        System.err.println("Data from Memory into memwb: " + correctBits(memData, 64, 64));
         memwbRegister.append(aluResult);
-        System.out.println("Data from ALU into memwb   : " + aluResult);
+        System.err.println("Data from ALU into memwb   : " + aluResult);
         memwbRegister.append(exmemRegister.getBinary(24,25));
-        System.out.println("Write-back register : " + exmemRegister.getBinary(24, 25));
+        System.err.println("Write-back register : " + exmemRegister.getBinary(24, 25));
     }
 
 
@@ -129,7 +129,7 @@ public class Access extends PipelineSegment{
     public void execute(){
         if(ControlUnit.getGoAhead(3)) {
             read();
-//            System.out.println(ControlUnit.getState(3));
+//            System.err.println(ControlUnit.getState(3));
             this.fields = ControlUnit.getControlFlags(3);
             this.write = fields.get(6);
             this.read = fields.get(5);

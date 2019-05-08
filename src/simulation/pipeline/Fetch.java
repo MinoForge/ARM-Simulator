@@ -68,10 +68,10 @@ public class Fetch extends PipelineSegment{
      * and updates PC.
      */
     private void read() {
-        System.out.println("\nStarting " +
+        System.err.println("\nStarting " +
                 "Fetch\n----------------------------------------------------------\n");
 
-        System.out.println("Fetching instruction at: " + Controller.PC / 4);
+        System.err.println("Fetching instruction at: " + Controller.PC / 4);
 
         int address = Controller.PC / 4;
         instBin = memory.getBinary(Controller.PC, Controller.PC + 4);
@@ -85,17 +85,17 @@ public class Fetch extends PipelineSegment{
      * Writes the PC and the instruction fetched to the IFID register in bytes.
      */
     private void write(){
-//        System.out.println(Controller.PC);
-//        System.out.println("This is the binary string: " + instBin);
-//        System.out.println(instBin);
-//        System.out.println(ifidRegister);
+//        System.err.println(Controller.PC);
+//        System.err.println("This is the binary string: " + instBin);
+//        System.err.println(instBin);
+//        System.err.println(ifidRegister);
 
         ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),
                 64, 64));
         ifidRegister.append(instBin);
-        System.out.println("Instruction written to IFID: " + ifidRegister.getBinary(8,12));
-//        System.out.println(ifidRegister);
-//        System.out.println(instBin);
+        System.err.println("Instruction written to IFID: " + ifidRegister.getBinary(8,12));
+//        System.err.println(ifidRegister);
+//        System.err.println(instBin);
 
 
 

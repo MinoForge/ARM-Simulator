@@ -74,7 +74,7 @@ public class PipelineTester {
 //        if(assemble.parseInput()){
 ////            bin = assemble.makeBinaryList();
 ////            for (String s : bin) {
-////                System.out.println(s);
+////                System.err.println(s);
 ////            }
             PipelineTester test = new PipelineTester();
 ////        test.instructions = new String[] {test1, test2, test3, test4, test5};

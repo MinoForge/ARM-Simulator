@@ -108,10 +108,10 @@ public class ControlUnit {
         if(0 < unit.stopTimer) { //stopTimer positive
             if(stageNum <= unit.haltedStage) { //Current stage is at or before the halted stage
                 if (unit.haltedStage == stageNum) { //Current Stage is the one halted
-                    System.out.println("Decrementing stopTimer");
+                    System.err.println("Decrementing stopTimer");
                     unit.stopTimer--; //Decrement Timer
                 }
-                System.out.println("Pipeline not running.");
+                System.err.println("Pipeline not running.");
                 return false; //Do not run Pipeline Stage.
             }
 
@@ -130,13 +130,13 @@ public class ControlUnit {
         String temp = PipelineSegment.correctBits(Integer.toBinaryString
                 (instBin), 32, 32);
         char format = '\0';
-//        System.out.println("instBin : " + instBin);
-        System.out.println("instBin in ControlUnit:       " + temp);
+//        System.err.println("instBin : " + instBin);
+        System.err.println("instBin in ControlUnit:       " + temp);
         String check = temp.substring(3,7);
-        System.out.println("Check is: " + check);
+        System.err.println("Check is: " + check);
         //matches i types and "ldr" instruction because it is a special i
         //type case
-        System.out.println("ControlUnit processing: " + getInstruction(1));
+        System.err.println("ControlUnit processing: " + getInstruction(1));
         if(check.matches("100.")|| getInstruction(1).contains("ldr")){
             format = 'i';
 
@@ -177,25 +177,25 @@ public class ControlUnit {
             unit.flags.set(4,DEASSERT); //Branch
             unit.dFlagger();
         }
-        System.out.println(format);
-//        System.out.println("Detected as " + format + " type");
+        System.err.println(format);
+//        System.err.println("Detected as " + format + " type");
 //        for(int i = 0; i < unit.flags.size(); i++) {
-//            System.out.println(FLAG_NAMES[i] + ":" + unit.flags.get(i));
+//            System.err.println(FLAG_NAMES[i] + ":" + unit.flags.get(i));
 //        }
         unit.values.set(STAGE_BINARY_LOADED,unit.flags);
-//        System.out.println(ControlUnit.getState(STAGE_BINARY_LOADED));
+//        System.err.println(ControlUnit.getState(STAGE_BINARY_LOADED));
         unit.push(STAGE_BINARY_LOADED);
     }
 
     private void bFlagger(String instBin) {
-        System.out.println("ControlUnit Bflagger has instbin: " + instBin);
+        System.err.println("ControlUnit Bflagger has instbin: " + instBin);
         if(instBin.charAt(2) == '1') { //Conditional branching
-            System.out.println("Conditional Branch Detected");
+            System.err.println("Conditional Branch Detected");
             unit.flags.set(0, ASSERT);   //Reg2Loc
             unit.flags.set(7, DEASSERT); //RegWrite
 
         } else { //Unconditional
-            System.out.println("Unconditional Branch Detected");
+            System.err.println("Unconditional Branch Detected");
             unit.flags.set(0, DEASSERT); //Reg2Loc
             if(instBin.charAt(0) == '1') { //Linking
                 unit.flags.set(7, ASSERT); //RegWrite
@@ -354,8 +354,8 @@ public class ControlUnit {
         ctrl.values.set(0, arr);
         ctrl.push(0);
         arr.set(0, false);
-        System.out.println(ControlUnit.getState(0));
-        System.out.println(ControlUnit.getState(1));
+        System.err.println(ControlUnit.getState(0));
+        System.err.println(ControlUnit.getState(1));
 
     }
 
