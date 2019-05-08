@@ -89,7 +89,12 @@ public class Decode extends PipelineSegment {
             if (flags.get(5) || flags.get(6)) { //D-type
                 imm = instBin.substring(11, 20);
             } else { //I-type
-                imm = instBin.substring(10, 22);
+                if (ControlUnit.getInstruction(1).contains("ldr")) {
+                    System.out.println("ldr is happening");
+                    imm = instBin.substring(8, 27);
+                } else {
+                    imm = instBin.substring(10, 22);
+                }
             }
             if (flags.get(4)) { //Branch
                 if (flags.get(0)) { //CBZ

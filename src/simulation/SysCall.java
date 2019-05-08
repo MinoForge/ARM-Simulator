@@ -30,11 +30,12 @@ public class SysCall {
         byte[] temp;
         StringBuilder str = new StringBuilder();
         this.address = Integer.parseInt(regFile.getRegister(0).getBinary(),2);
+        System.out.println("Address of print " + address);
         int offset = Integer.parseInt(regFile.getRegister(1).getBinary(),2);
         switch (type) {
 
             case 64: //64 is the value for printing to screen
-                temp = memory.getBytes(address, offset);
+                temp = memory.getBytes(address, address + offset);
                 for (byte b : temp) {
                     str.append(((char) b));
                 }

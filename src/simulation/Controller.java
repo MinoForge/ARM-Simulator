@@ -81,7 +81,6 @@ public class Controller implements Runnable {
         this.doProgram = doProgram;
 
         this.regFile = new RegisterFile();
-        this.sysHandler = new SysCall(regFile, memory);
 
         if(littleEnd) {
             BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
@@ -149,6 +148,8 @@ public class Controller implements Runnable {
 
         setUpStack(); //stack initialization
         initRegisters();
+        this.sysHandler = new SysCall(regFile, memory);
+
         readData(); //initialize data stuff
 
         Register ifid = new Register(IFID_SIZE);
@@ -190,6 +191,7 @@ public class Controller implements Runnable {
             System.out.println("Writing instruction :: " + progBins.get(i) + " :: to " + (i*4));
             memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(progBins.get(i), 32, 32));
         }
+
         printMemory();
     }
 

@@ -136,7 +136,8 @@ public class ControlUnit {
         System.out.println("Check is: " + check);
         //matches i types and "ldr" instruction because it is a special i
         //type case
-        if(check.matches("100.")|| temp.matches("01011000")){
+        System.out.println("ControlUnit processing: " + getInstruction(1));
+        if(check.matches("100.")|| getInstruction(1).contains("ldr")){
             format = 'i';
 
             unit.flags.set(0,ASSERT);   //Reg2Loc

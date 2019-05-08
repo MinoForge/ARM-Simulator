@@ -238,7 +238,7 @@ public class Assembler implements ANTLRErrorListener {
             }
             if(isData && !(s.equals(".data") || s.equals(".text") ||
                     s.equals("END") || s.equals(""))){
-                data.add(s);
+                data.add(s.replace(":",""));
             }
 
         }
@@ -384,7 +384,7 @@ public class Assembler implements ANTLRErrorListener {
             if(instBin.length() < 8){
                 format = 'b';
             }else{
-                if(instBin.equals("01011000")){
+                if(instBin.matches("01011000")){
                     format = 'l';
                 }else{
                     format = 'c';
@@ -394,6 +394,7 @@ public class Assembler implements ANTLRErrorListener {
 
         String reg1,reg2,reg3;
         switch(format){
+
             case('r'):
                 //grabbing inst command
                 // Adding the correct opcode to the instBin string
@@ -401,12 +402,13 @@ public class Assembler implements ANTLRErrorListener {
                 //TODO remove the magic num
                 int[] registerNumbers = new int[3];
 
+
+
                 for(int i = 0; i < instruction.length - 1; i++){
                     instruction[i+1] = instruction[i+1].replaceAll("[a-zA-Z]", "");
 
                     registerNumbers[i] = Integer.parseInt(instruction[i + 1]);
                 }
-
                 reg1 = Integer.toBinaryString(registerNumbers[2]);
                 reg2 = Integer.toBinaryString(registerNumbers[1]);
                 reg3 = Integer.toBinaryString(registerNumbers[0]);
@@ -441,7 +443,7 @@ public class Assembler implements ANTLRErrorListener {
 
                 break;
             //Currently unfinished for i type
-
+//            case('l'):
             case('i'):
                 //grabbing  inst command
                 //temp = instruction[0].toLowerCase();
@@ -449,6 +451,15 @@ public class Assembler implements ANTLRErrorListener {
                 // instBin = instBin + opCodes.get(temp);
 
                 //pulling the registers from the instruction
+//                if(format == 'l'){
+//                    instruction[1] = instruction[1].replace("[A-Za-z]", "");
+//                    reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]));
+//                    reg1 = correctBits(reg1, 5, 5);
+//
+//                    int num2 = labelMap.get(instruction[2]);
+//
+//                }
+
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
                         .replaceAll("[a-zA-Z]", "")));
                 reg2 = Integer.toBinaryString(Integer.parseInt(instruction[2]
@@ -540,13 +551,15 @@ public class Assembler implements ANTLRErrorListener {
                 break;
 
             case('l'):
-                instruction[1] = instruction[1].replace("[A-Za-z]", "");
+                instruction[1] = instruction[1].replaceAll("[A-Za-z]", "");
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]));
                 reg1 = correctBits(reg1, 5, 5);
-
-                num = labelMap.get(instruction);
+                num = labelMap.get(instruction[2]);
+                System.out.println("the number from label map: " + num);
                 immediate = Integer.toBinaryString(num);
-                immediate = correctBits(immediate, 19, 19);
+                System.out.println("the bin of the num: " + immediate);
+                immediate = correctBits(immediate, 19, 32);
+                System.out.println();
                 instBin = instBin + immediate + reg1;
         }
 
