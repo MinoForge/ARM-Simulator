@@ -1,4 +1,4 @@
-package simulation.pipeline;
+package simulation;
 
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
@@ -43,7 +43,19 @@ public class SysCall {
                 break;
 
             case 63: // value for reading input from the keyboard.
+                System.out.flush();
 
+                Interface.setBeforeInputLength(Interface.getAreas()[1].getLength());
+                Interface.getInput().release();
+                try {
+                    Interface.getInput().acquire(3);
+                } catch(InterruptedException ie) {
+                    //
+                }
+                Interface.getInput().release(4);
+                String input = Interface.getNewInput();
+
+                break;
         }
 
 

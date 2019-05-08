@@ -27,6 +27,7 @@ LSL		: [Ll][Ss][Ll][ ];
 LSR		: [Ll][Ss][Rr][ ];
 UBFM	: [Uu][Bb][Ff][Mm][ ];
 SVC	    : [Ss][Vv][Cc][ ];
+LDR     : [Ll][Dd][Rr][ ];
 //End Instructions
 
 
@@ -99,6 +100,7 @@ inst    : (ADD reg SEPARATOR reg SEPARATOR (reg | imm)
         |  STUR reg SEPARATOR LBRACK reg SEPARATOR imm RBRACK
         |  LSL reg SEPARATOR reg SEPARATOR reg
         |  LSR reg SEPARATOR reg SEPARATOR reg
+        |  LDR reg SEPARATOR label
         |  UBFM reg SEPARATOR reg SEPARATOR imm SEPARATOR imm
         |  SVC imm
         )

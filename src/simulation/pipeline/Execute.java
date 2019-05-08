@@ -1,16 +1,12 @@
 package simulation.pipeline;
 
-import org.omg.CORBA.INTERNAL;
-import simulation.Controller;
 import simulation.Interface;
+import simulation.SysCall;
 import simulation.control.ControlUnit;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
-
-import static simulation.control.ControlUnit.ASSERT;
 
 
 /**
@@ -203,27 +199,7 @@ public class Execute extends PipelineSegment {
         Register type = regFile.getRegister(8);
         int num = Integer.parseInt(type.getBinary(), 2);
         System.out.print(">>> ");
-        switch(num) {
-
-            case(64): //printing / write
-                sysHandler.setType(num);
-                break;
-
-            case(63): // read from keyboard
-                System.out.flush();
-
-                Interface.setBeforeInputLength(Interface.getAreas()[1].getLength());
-                Interface.getInput().release();
-                try {
-                    Interface.getInput().acquire(3);
-                } catch(InterruptedException ie) {
-                    //
-                }
-                Interface.getInput().release(4);
-                String input = Interface.getNewInput();
-
-                break;
-        }
+        sysHandler.setType(num);
         sysHandler.handle();
 
 
