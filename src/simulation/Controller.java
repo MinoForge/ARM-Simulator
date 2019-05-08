@@ -200,7 +200,7 @@ public class Controller implements Runnable {
 
         System.out.println(length);
         StringBuilder stackStr = new StringBuilder();
-        for(int i = (int)length-1; i >= 0; i -= 2) {
+        for(int i = (int)length-2; i >= 0; i -= 2) {
             stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*8));
             stackStr.append(memory.getBinary(i*4, (i+1)*4));
             stackStr.append(" ");

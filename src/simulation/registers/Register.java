@@ -345,6 +345,15 @@ public class Register {
         return word;
     }
 
+    public int indexOf(int startIndex, byte b) {
+        for(int i = startIndex; i < length; i++) {
+            if(bytes[i] == b) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     //GENERAL TESTING
     public static void main(String... args) {
 //        Controller control = new Controller("file", true);

@@ -166,7 +166,11 @@ public class Assembler implements ANTLRErrorListener {
                     }
                 }
                 if(type.equals(".asciz")) {
+                    totalDataBytes++;
+                    wordMod++;
+                    lineIndex++;
                     binary = binary + "00000000";
+                    System.out.println("Final binary after adding null " + binary);
                 }
             }
 

@@ -3,6 +3,8 @@ package simulation;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  *Created by Caleb on 5/7/2019.
  * Class that will handle all system calls, only handles printing to screen
@@ -35,10 +37,23 @@ public class SysCall {
         switch (type) {
 
             case 64: //64 is the value for printing to screen
-                temp = memory.getBytes(address, address + offset);
-                for (byte b : temp) {
-                    str.append(((char) b));
+                if(offset == 0) {
+                    offset = memory.indexOf(address, (byte)0) - address;
                 }
+
+                temp = memory.getBytes(address, address + offset);
+
+                for (byte b : temp) {
+                    char c;
+                    if(((Byte) b).toString().charAt(0) == '-') {
+                        //Total honesty, I don't think this should work
+                        c = (char)(b + 128);
+                    } else {
+                        c = (char) b;
+                    }
+                    str.append(c);
+                }
+
                 System.out.println(str.toString());
                 System.out.flush();
                 break;
