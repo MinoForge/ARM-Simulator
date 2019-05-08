@@ -134,7 +134,9 @@ public class ControlUnit {
         System.out.println("instBin in ControlUnit:       " + temp);
         String check = temp.substring(3,7);
         System.out.println("Check is: " + check);
-        if(check.matches("100.")){
+        //matches i types and "ldr" instruction because it is a special i
+        //type case
+        if(check.matches("100.")|| temp.matches("01011000")){
             format = 'i';
 
             unit.flags.set(0,ASSERT);   //Reg2Loc

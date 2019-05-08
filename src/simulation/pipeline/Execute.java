@@ -35,16 +35,18 @@ public class Execute extends PipelineSegment {
     private long result;
     private ArrayList<Boolean> flags;
     private RegisterFile regFile;
-
+    private SysCall sysHandler;
 
     /**
      * Constructor to make an Executor Class. Must have the IDEX pipeline
      * register implementation and the EXMEM register implementation.
      */
-    public Execute(Register idex, Register exmem, RegisterFile regFile) {
+    public Execute(Register idex, Register exmem, RegisterFile regFile,
+                   SysCall sysHandler) {
         this.exmemRegister = exmem;
         this.idexRegister = idex;
         this.regFile = regFile;
+        this.sysHandler = sysHandler;
     }
 
 
@@ -54,7 +56,8 @@ public class Execute extends PipelineSegment {
         this.command = temp.substring(0,temp.indexOf(' ')).toLowerCase();
 //        localPC = (int)(long)(idexRegister.getLong(0));
         localPC = (int)Long.parseUnsignedLong(idexRegister.getBinary(0, 8), 2);
-        value1 = Long.parseUnsignedLong(idexRegister.getBinary(8,16),2); //TODO replace calls with getLong()
+        value1 = Long.parseUnsignedLong(idexRegister.getBinary(8,16),2);
+        //TODO replace calls with getLong()
         if(!flags.get(3) && !flags.get(4)) { //ALUSrc deasserted
             System.out.println("Register instruction");
             value2 = Long.parseUnsignedLong(idexRegister.getBinary(16, 24), 2);
@@ -185,6 +188,9 @@ public class Execute extends PipelineSegment {
                 case("svc"):
                     syscall();
                     break;
+                case("ldr"):
+
+                    break;
 
             }
             write();
@@ -197,13 +203,10 @@ public class Execute extends PipelineSegment {
         Register type = regFile.getRegister(8);
         int num = Integer.parseInt(type.getBinary(), 2);
         System.out.print(">>> ");
-
-
         switch(num) {
 
             case(64): //printing / write
-                type = regFile.getRegister(1);
-                int address  = Integer.parseInt(type.getBinary());
+                sysHandler.setType(num);
                 break;
 
             case(63): // read from keyboard
@@ -221,6 +224,7 @@ public class Execute extends PipelineSegment {
 
                 break;
         }
+        sysHandler.handle();
 
 
     }

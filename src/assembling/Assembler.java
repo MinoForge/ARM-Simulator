@@ -99,6 +99,7 @@ public class Assembler implements ANTLRErrorListener {
         this.opCodes.put("lsl",  "10011010110");
         this.opCodes.put("lsr",  "10011010110");
         this.opCodes.put("svc",  "11010100000");
+        this.opCodes.put("ldr",  "01011000");
 
     }
 
@@ -343,7 +344,7 @@ public class Assembler implements ANTLRErrorListener {
         String temp = (instruction[0].toLowerCase()).trim();
 
         // This check is to determine how many arguments are in the instruction
-        // if true then the instruction could be either an i or r type
+        // if false then the instruction could be either an i or r type
         if(instruction.length < 4) {
             instBin = instBin + opCodes.get(temp);
         }else{
@@ -383,7 +384,11 @@ public class Assembler implements ANTLRErrorListener {
             if(instBin.length() < 8){
                 format = 'b';
             }else{
-                format = 'c';
+                if(instBin.equals("01011000")){
+                    format = 'l';
+                }else{
+                    format = 'c';
+                }
             }
         }
 
@@ -435,7 +440,8 @@ public class Assembler implements ANTLRErrorListener {
 
 
                 break;
-            //Currently unfinished for i types
+            //Currently unfinished for i type
+
             case('i'):
                 //grabbing  inst command
                 //temp = instruction[0].toLowerCase();
@@ -531,9 +537,17 @@ public class Assembler implements ANTLRErrorListener {
 
                 instBin = instBin + immediate + "00001"; //Must be 00001 for
                                                          //syscalls
-
-
                 break;
+
+            case('l'):
+                instruction[1] = instruction[1].replace("[A-Za-z]", "");
+                reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]));
+                reg1 = correctBits(reg1, 5, 5);
+
+                num = labelMap.get(instruction);
+                immediate = Integer.toBinaryString(num);
+                immediate = correctBits(immediate, 19, 19);
+                instBin = instBin + immediate + reg1;
         }
 
         return instBin;

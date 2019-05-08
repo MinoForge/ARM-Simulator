@@ -52,7 +52,8 @@ public class Controller implements Runnable {
     private Writeback writeback;
 
     private RegisterFile regFile;
-    public Register memory;
+    public  Register memory;
+    private SysCall sysHandler;
 
 
 
@@ -80,7 +81,7 @@ public class Controller implements Runnable {
         this.doProgram = doProgram;
 
         this.regFile = new RegisterFile();
-
+        this.sysHandler = new SysCall(regFile, memory);
 
         if(littleEnd) {
             BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
@@ -158,7 +159,7 @@ public class Controller implements Runnable {
         fetcher = new Fetch(ifid, instructions.toArray(new String[0]),
                 progBins.toArray(new String[0]), memory);
         decoder = new Decode(ifid, idex, regFile);
-        execute = new Execute(idex, exmem, regFile);
+        execute = new Execute(idex, exmem, regFile, sysHandler);
         access = new Access(exmem, memwb, memory);
         writeback = new Writeback(memwb, regFile);
     }
