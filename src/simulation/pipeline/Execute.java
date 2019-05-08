@@ -198,10 +198,11 @@ public class Execute extends PipelineSegment {
     public void syscall(){
         Register type = regFile.getRegister(8);
         int num = Integer.parseInt(type.getBinary(), 2);
-        //System.out.print(">>> ");
-        System.out.println("this is the type: " + num);
+        System.out.print(">>> ");
+//        System.out.println("this is the type: " + num);
         sysHandler.setType(num);
         sysHandler.handle();
+        ControlUnit.setStageDataValid(3, false);
 
 
     }

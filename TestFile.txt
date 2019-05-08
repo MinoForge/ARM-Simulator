@@ -1,7 +1,6 @@
 ENTRY
 .text
-add r8, r31, #64
-ldr r0, ratty
+add r8, r31, #63
 svc #0
 
 

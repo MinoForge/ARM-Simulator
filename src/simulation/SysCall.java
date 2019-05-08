@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.pipeline.PipelineSegment;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
@@ -32,7 +33,7 @@ public class SysCall {
         byte[] temp;
         StringBuilder str = new StringBuilder();
         this.address = Integer.parseInt(regFile.getRegister(0).getBinary(),2);
-        System.out.println("Address of print " + address);
+//        System.out.println("Address of print " + address);
         int offset = Integer.parseInt(regFile.getRegister(1).getBinary(),2);
         switch (type) {
 
@@ -43,7 +44,8 @@ public class SysCall {
 
                 temp = memory.getBytes(address, address + offset);
 
-                for (byte b : temp) {
+                for (int i = 0; i < temp.length; i++) {
+                    byte b = temp[i];
                     char c;
                     if(((Byte) b).toString().charAt(0) == '-') {
                         //Total honesty, I don't think this should work
@@ -70,6 +72,8 @@ public class SysCall {
                 }
                 Interface.getInput().release(4);
                 String input = Interface.getNewInput();
+                input = PipelineSegment.correctBits(Long.toBinaryString(Long.parseUnsignedLong(input)),64,64);
+                regFile.getRegister(0).writeBinaryAtIndex(0, input);
 
                 break;
         }
