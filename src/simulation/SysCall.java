@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.control.ControlUnit;
 import simulation.pipeline.PipelineSegment;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
@@ -86,11 +87,10 @@ public class SysCall {
                 break;
 
             case 93: //System exit number
-                try {
-                    run.acquire(1);
-                } catch(InterruptedException ie) {
-                    //Catching Controller
-                }
+
+                Controller.stop();
+                break;
+
 
         }
         for(int i = 0; i < 9; i++) {

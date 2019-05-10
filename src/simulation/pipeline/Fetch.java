@@ -19,8 +19,6 @@ public class Fetch extends PipelineSegment{
     /** All instructions from file. */
     private String[] instructions;
 
-    private String[] bins;
-
     /** The if/id register. */
     private Register ifidRegister;
 
@@ -40,27 +38,22 @@ public class Fetch extends PipelineSegment{
      * @param ifid  The byte[][] representing the pipeline register
      * @param instructions The String array containing the instructions.
      */
-    public Fetch(Register ifid, String[] instructions, String[] bins, Register memory) {
+    public Fetch(Register ifid, String[] instructions, Register memory) {
         this.instructions = instructions;
         this.ifidRegister = ifid;
         this.instBin = "";
-        this.bins = bins;
         this.inst = "";
         this.memory = memory;
     }
 
     public Fetch(Register ifid, Register memory) {
-        this(ifid, new String[0], new String[0], memory);
+        this(ifid, new String[0], memory);
     }
 
 
 
     public void setInstructions(String[] insts) {
         instructions = insts;
-    }
-
-    public void setBins(ArrayList<String> binary){
-        bins = binary.toArray(new String[0]);
     }
 
     /**
@@ -75,7 +68,7 @@ public class Fetch extends PipelineSegment{
 
         int address = Controller.PC / 4;
         instBin = memory.getBinary(Controller.PC, Controller.PC + 4);
-        inst = instructions[address]; //TODO move hashmap stuff from execute to Control unit to remove instructions entirely
+        inst = instructions[address].toLowerCase(); //TODO move hashmap stuff from execute to Control unit to remove instructions entirely
 //        instBin = bins[Controller.PC / 4];
     }
 
@@ -85,17 +78,11 @@ public class Fetch extends PipelineSegment{
      * Writes the PC and the instruction fetched to the IFID register in bytes.
      */
     private void write(){
-//        System.err.println(Controller.PC);
-//        System.err.println("This is the binary string: " + instBin);
-//        System.err.println(instBin);
-//        System.err.println(ifidRegister);
 
         ifidRegister.append(correctBits(Long.toBinaryString(Controller.PC),
                 64, 64));
         ifidRegister.append(instBin);
         System.err.println("Instruction written to IFID: " + ifidRegister.getBinary(8,12));
-//        System.err.println(ifidRegister);
-//        System.err.println(instBin);
 
 
 

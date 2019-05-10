@@ -409,6 +409,7 @@ public class Assembler implements ANTLRErrorListener {
         String reg1,reg2,reg3;
         switch(format){
 
+
             case('r'):
                 //grabbing inst command
                 // Adding the correct opcode to the instBin string

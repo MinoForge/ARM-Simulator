@@ -1,10 +1,13 @@
 ENTRY
 .text
-ADD r1, r31, #100
-ADD r1, r1, r1
-SUB r2, r1, #25
+LDR r0, label
+ADD r1, r31, #11
+ADD r8, r31, #64
+SVC #0
 
-MUL r3, r2, r1
-ADD r4, r31, #3
-UDIV r5, r1, r4
+ADD r8, r31, #63
+SVC #0
+ADD r4, r0, r31
 END
+.data
+label: .ascii "Hey There: "

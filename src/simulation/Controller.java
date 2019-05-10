@@ -152,8 +152,7 @@ public class Controller implements Runnable {
         Register exmem = new Register(EXMEM_SIZE);
         Register memwb = new Register(MEMWB_SIZE);
 
-        fetcher = new Fetch(ifid, instructions.toArray(new String[0]),
-                progBins.toArray(new String[0]), memory);
+        fetcher = new Fetch(ifid, instructions.toArray(new String[0]), memory);
         decoder = new Decode(ifid, idex, regFile);
         execute = new Execute(idex, exmem, regFile, sysHandler);
         access = new Access(exmem, memwb, memory);
@@ -175,7 +174,7 @@ public class Controller implements Runnable {
 //            System.err.println("Writing Instruction to " + (i*4));
 //            System.err.flush();
             System.err.println("Writing instruction :: " + progBins.get(i) + " :: to " + (i*4));
-            memory.writeBinaryAtIndex(i*4, PipelineSegment.correctBits(progBins.get(i), 32, 32));
+            memory.writeBinaryAtIndex(i*4, progBins.get(i));
         }
 
         printMemory();
@@ -200,7 +199,6 @@ public class Controller implements Runnable {
     /** A single cycle of the cpu. */
     public boolean cycle() {
         int size = NUM_INSTRUCTIONS * 4;
-        System.out.println(Controller.PC - size);
         if(Controller.PC <= size) {
 
             writeback.execute();
