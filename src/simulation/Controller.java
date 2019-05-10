@@ -202,34 +202,32 @@ public class Controller implements Runnable {
         int size = NUM_INSTRUCTIONS * 4;
         System.out.println(Controller.PC - size);
         if(Controller.PC <= size) {
-            if(Controller.PC == size) {
 
-                boolean stop = true;
-                for(int i = endOfInstructions; i < 5; i++) {
-                    if(ControlUnit.getValidData()[i]) {
-                        stop = false;
-                    }
-                }
-                if(stop) {
-                    System.out.println("Incrementing towards stopping");
-                    endOfInstructions++;
-                }
-                for(int i = 0; i < endOfInstructions; i++) {
-                    ControlUnit.setStageDataValid(i, false);
-                    System.out.println();
-                }
-                if(endOfInstructions == 4) {
-                    return false;
-                }
-
-
-            }
             writeback.execute();
             access.execute();
             execute.execute();
             decoder.execute();
             fetcher.execute();
+            if(Controller.PC == size) {
+                ControlUnit.setStageDataValid(0,false);
+                if(endOfInstructions == 0) {
+                    endOfInstructions++;
+                } else if(endOfInstructions == 1) {
+//                    ControlUnit.setStageDataValid(endOfInstructions, false);
+                    if(ControlUnit.getValidData()[2]) {
+                        ControlUnit.setStageDataValid(endOfInstructions, false);
+                        endOfInstructions++;
+                    }
+                } else if(endOfInstructions >= 2 && endOfInstructions < 4) {
+                    ControlUnit.setStageDataValid(endOfInstructions++, false);
+                } else if(endOfInstructions == 4) {
+                    return false;
+                }
 
+
+
+
+            }
 
             System.err.println("On cycle: " + cycleCounter++);
             return true;
