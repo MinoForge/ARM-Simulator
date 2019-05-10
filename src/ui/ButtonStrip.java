@@ -200,20 +200,6 @@ public class ButtonStrip {
             }
             gui.getCycleToEnd().release();
             gui.getGo().release();
-//            try {
-//                Thread.sleep(100);
-//                gui.getGo().acquire();
-//            } catch(InterruptedException ie) {
-//                //Shouldn't be an issue
-//            }
-
-//            control.cycleToEnd();
-//            System.out.println("Reached end of instructions.");
-//            button.setDisable(true);
-//            pauseRunButton.setDisable(true);
-//            stopRunButton.setDisable(true);
-//            Controller.stop();
-//            System.out.println(Controller.PC);
         });
         button.setDisable(true);
         return button;
@@ -229,19 +215,6 @@ public class ButtonStrip {
             }
             gui.getCycleInstruction().release();
             gui.getGo().release();
-//            if(!control.doInstruction()) {
-//                System.out.println("Reached end of instructions.");
-//                button.setDisable(true);
-//                runProgramButton.setDisable(true);
-//                runCycleButton.setDisable(true);
-//                control.stop();
-//            }
-//            try {
-//                Thread.sleep(100);
-//                gui.getGo().acquire();
-//            } catch(InterruptedException ie) {
-//                //Shouldn't be an issue
-//            }
         });
         button.setDisable(true);
         return button;

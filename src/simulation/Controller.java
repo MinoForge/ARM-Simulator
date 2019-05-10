@@ -70,6 +70,8 @@ public class Controller implements Runnable {
     private Semaphore doInstruction;
     private Semaphore doProgram;
 
+    private int endOfInstructions;
+
 
     public Controller(String filePath, boolean littleEnd, Assembler assembler,
                       Semaphore run, Semaphore doCycle, Semaphore doInstruction,
@@ -80,6 +82,7 @@ public class Controller implements Runnable {
         this.doCycle = doCycle;
         this.doInstruction = doInstruction;
         this.doProgram = doProgram;
+        endOfInstructions = 0;
 
         this.regFile = new RegisterFile();
 
@@ -95,31 +98,31 @@ public class Controller implements Runnable {
 
     public void run() {
         while(!halt.get()) {
-            System.err.println("Halt is set to before: " + halt);
 
             try {
-                Thread.yield();
-                Thread.sleep(1000/CPS); //Sleep for a time period.
+
                 run.acquire(2);
-                System.err.println("Hey");
                 if(doCycle.tryAcquire()) {
-                    if(!cycle()) {
-                        run.acquire();
+                    if(cycle()) {
+
+                    } else {
+                        stop(); //TODO STOPS MIGHT NEED TO BE TAKEN OFF TO ALLOW MULTIPLE RUNS????
                     }
-                    doCycle.release();
                 }
                 if(doProgram.tryAcquire()) {
-
-                    if(!cycle()) {
-                        run.acquire();
+                    if(cycle()) {
+                        doProgram.release();
+                    } else {
+                        stop();
                     }
-                    doProgram.release();
                     run.release();
+                    Thread.sleep(1000/CPS); //Sleep for a time period.
                 }
                 if(doInstruction.tryAcquire()) {
-                    System.err.println("Hello");
-                    if(!doInstruction()) {
-                        run.acquire();
+                    if(doInstruction()) {
+
+                    } else {
+                        stop();
                     }
                     doInstruction.release();
                 }
@@ -128,31 +131,21 @@ public class Controller implements Runnable {
                 System.err.println(Arrays.toString(ie.getStackTrace()));
             } finally {
                 run.release();
-//                try {
-//                    Thread.sleep(100);
-//                } catch(InterruptedException ie){}
             }
-            System.err.println("Halt is set to after: " + halt);
-            System.err.flush();
 
         }
-        System.err.println("Out of runloop.");
+        System.err.println("Out of runloop. Exiting Controller thread.");
     }
 
     public void assemble() {
-//        this.assembler = new Assembler(filePath);
         this.instructions = assembler.getInstructionList();
         Controller.NUM_INSTRUCTIONS = instructions.size();
         this.progBins = assembler.makeBinaryList();
-//        System.err.println(instructions);
-//        System.err.println("Calling setUpStack()");
 
 
         setUpStack(); //stack initialization
         initRegisters();
         this.sysHandler = new SysCall(regFile, memory, run);
-
-        readData(); //initialize data stuff
 
         Register ifid = new Register(IFID_SIZE);
         Register idex = new Register(IDEX_SIZE);
@@ -170,14 +163,9 @@ public class Controller implements Runnable {
     private void initRegisters() {
         regFile.getRegister(31).zeroOut();
         regFile.lockRegister(31); //Zero Register
-        regFile.getRegister(28).writeBinary(Integer.toBinaryString(MEMORY_BYTES));
+        regFile.getRegister(28).writeBinary(Integer.toBinaryString(MEMORY_BYTES)); //TODO change this to reflect true address instead of 'byte' address
     }
 
-
-    /** Unimplemented */
-    private void readData() {
-
-    }
 
     /** Unimplemented. */
     private void setUpStack() {
@@ -194,46 +182,58 @@ public class Controller implements Runnable {
     }
 
     public void printMemory() {
-        long length = MEMORY_BYTES * 8 / 64;
+        long length = MEMORY_BYTES / 8;
 
         System.err.println(length);
         StringBuilder stackStr = new StringBuilder();
-        for(int i = (int)length-1; i >= 0; i -= 1) {
+        for(int i = (int)length-2; i >= 0; i -= 1) {
             stackStr.append(String.format("%x ", Controller.TEXT_BASE_ADDRESS_OFFSET + i*8));
-            stackStr.append(memory.getBinary(i*8, (i+1)*8));
-//            stackStr.append(" ");
-//            stackStr.append(memory.getBinary((i+1)*4, (i+2)*4));
-            stackStr.append('\n');
+            stackStr.append(memory.getBinary(i*8, 8*i+4));
+            stackStr.append(" ");
+            stackStr.append(memory.getBinary(8*i+4, (i+1)*8));
+            stackStr.append("\n");
+
         }
         System.err.println(stackStr.toString());
     }
 
     /** A single cycle of the cpu. */
     public boolean cycle() {
-        int size = instructions.size() * 4;
-        if(Controller.PC < size + 16) {
+        int size = NUM_INSTRUCTIONS * 4;
+        System.out.println(Controller.PC - size);
+        if(Controller.PC <= size) {
+            if(Controller.PC == size) {
+
+                boolean stop = true;
+                for(int i = endOfInstructions; i < 5; i++) {
+                    if(ControlUnit.getValidData()[i]) {
+                        stop = false;
+                    }
+                }
+                if(stop) {
+                    System.out.println("Incrementing towards stopping");
+                    endOfInstructions++;
+                }
+                for(int i = 0; i < endOfInstructions; i++) {
+                    ControlUnit.setStageDataValid(i, false);
+                    System.out.println();
+                }
+                if(endOfInstructions == 4) {
+                    return false;
+                }
+
+
+            }
             writeback.execute();
             access.execute();
             execute.execute();
             decoder.execute();
-            if(Controller.PC < size) {
-                fetcher.execute();
-            } else {
-                if(ControlUnit.getGoAhead(0)) {
-                    Controller.PC += 4;
-                }
-            }
-            if(Controller.PC >= size) {
-                for (int i = 0; i < 5 && (Controller.PC - size) - i*4 >= 0 ; i++) {
-                    ControlUnit.setStageDataValid(i, false);
-//                    System.err.println("Setting stage " + (i) + "off at end of instructions.");
-//                    System.err.flush();
-                }
-            }
+            fetcher.execute();
+
+
             System.err.println("On cycle: " + cycleCounter++);
             return true;
         }
-
         return false;
 
     }

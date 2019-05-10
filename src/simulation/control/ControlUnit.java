@@ -336,6 +336,9 @@ public class ControlUnit {
         values.get(stage).set(flag, value);
     }
 
+    public static boolean[] getValidData() {
+        return unit.validData;
+    }
 
     /** Testing. */
     public static void main(String... args) {

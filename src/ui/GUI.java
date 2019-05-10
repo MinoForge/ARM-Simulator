@@ -223,7 +223,7 @@ public class GUI extends Application {
 //        OutputStream er = (int b) -> {
 //            appendText(simErr, String.valueOf((char) b));
 //        };
-        System.setErr(streams[2]);
+//        System.setErr(streams[2]);
         System.err.println("Welcome to ARM & Simulator!\nError messages will show here");
 
         ScrollPane simScroll = new ScrollPane(simErr);
