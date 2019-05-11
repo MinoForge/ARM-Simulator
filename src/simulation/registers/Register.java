@@ -14,7 +14,7 @@ import java.util.Arrays;
  *
  * @author Peter Gardner
  * @author Caleb Dinehart
- * @version November 30, 2018
+ * @version May 10, 2019
  */
 public class Register {
 

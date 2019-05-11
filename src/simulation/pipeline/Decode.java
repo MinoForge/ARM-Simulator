@@ -13,7 +13,7 @@ import static simulation.control.ControlUnit.DEASSERT;
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version November 8, 2018
+ * @version May 10, 2019
  *
  */
 public class Decode extends PipelineSegment {

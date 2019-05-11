@@ -6,6 +6,12 @@ import simulation.Controller;
 
 import java.util.ArrayList;
 
+/**
+ * Class to hold all the buttons.
+ *
+ * @author Peter Gardner
+ * @version May 10, 2019
+ */
 public class ButtonStrip {
 
     /** The Controller and the GUI, to allow modifying their states with the Buttons. */

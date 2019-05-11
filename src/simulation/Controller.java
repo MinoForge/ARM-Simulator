@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version November 8, 2018
+ * @version May 10, 2019
  *
  */
 public class Controller implements Runnable {
@@ -40,7 +40,6 @@ public class Controller implements Runnable {
 
 
 
-    private String[] data;
     private ArrayList<String> instructions;
     private ArrayList<String> progBins;
 
@@ -115,7 +114,7 @@ public class Controller implements Runnable {
                         stop();
                     }
                     run.release();
-//                    Thread.sleep(1000/CPS); //Sleep for a time period.
+                    Thread.sleep(1000/CPS); //Sleep for a time period.
                 }
 
                 if(doInstruction.tryAcquire()) {

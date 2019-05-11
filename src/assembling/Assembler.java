@@ -13,6 +13,13 @@ import java.util.*;
 
 import static simulation.pipeline.PipelineSegment.correctBits;
 
+
+/**
+ *
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @version May 10, 2019
+ */
 public class Assembler implements ANTLRErrorListener {
 
     /** The file to be read from. */

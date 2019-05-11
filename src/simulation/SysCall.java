@@ -1,17 +1,19 @@
 package simulation;
 
-import simulation.control.ControlUnit;
+
 import simulation.pipeline.PipelineSegment;
 import simulation.registers.Register;
 import simulation.registers.RegisterFile;
 
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.Semaphore;
 
 /**
- *Created by Caleb on 5/7/2019.
  * Class that will handle all system calls, only handles printing to screen
  * and accepting user input.
+ *
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @version May 10, 2019
  */
 public class SysCall {
 

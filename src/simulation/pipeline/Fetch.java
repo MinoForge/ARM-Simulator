@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version February, 2019
+ * @version May 10, 2019
  *
  */
 public class Fetch extends PipelineSegment{

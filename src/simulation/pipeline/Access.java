@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 /**
  * A class to model the Memory Accessing segment of the ARM pipeline.
- * NOT IMPLEMENTED YET.
+ *
  * @author Caleb Dinehart
  * @author Peter Gardner
- * @version November 8, 2018
+ * @version May 10, 2019
  *
  */
 public class Access extends PipelineSegment{

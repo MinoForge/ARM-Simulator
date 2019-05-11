@@ -9,6 +9,13 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.concurrent.Semaphore;
 
+
+/**
+ * Class to handle output to gui, as well as catching proper input into gui.
+ *
+ * @author Peter Gardner
+ * @version May 10, 2019
+ */
 public class Interface {
 
     private static Interface instance;
