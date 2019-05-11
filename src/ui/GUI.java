@@ -211,9 +211,6 @@ public class GUI extends Application {
 
         TextArea[] areas = Interface.getAreas();
         PrintStream[] streams = Interface.getStreams();
-        Thread t = new Thread(Interface.theInterface());
-        t.setDaemon(true);
-        t.start();
 
         this.simErr = areas[2];
         simErr.setMinWidth(WIDTH);

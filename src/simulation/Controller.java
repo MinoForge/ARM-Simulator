@@ -100,15 +100,14 @@ public class Controller implements Runnable {
         while(!halt.get()) {
 
             try {
-
                 run.acquire(2);
-                if(doCycle.tryAcquire()) {
-                    if(cycle()) {
 
-                    } else {
-                        stop(); //TODO STOPS MIGHT NEED TO BE TAKEN OFF TO ALLOW MULTIPLE RUNS????
+                if(doCycle.tryAcquire()) {
+                    if(!cycle()) {
+                        stop();
                     }
                 }
+
                 if(doProgram.tryAcquire()) {
                     if(cycle()) {
                         doProgram.release();
@@ -116,8 +115,9 @@ public class Controller implements Runnable {
                         stop();
                     }
                     run.release();
-                    Thread.sleep(1000/CPS); //Sleep for a time period.
+//                    Thread.sleep(1000/CPS); //Sleep for a time period.
                 }
+
                 if(doInstruction.tryAcquire()) {
                     if(doInstruction()) {
 
@@ -199,8 +199,11 @@ public class Controller implements Runnable {
     /** A single cycle of the cpu. */
     public boolean cycle() {
         int size = NUM_INSTRUCTIONS * 4;
-        if(Controller.PC <= size) {
+        if(Controller.PC < size) {
+            endOfInstructions = 0;
+        }
 
+        if(Controller.PC <= size) {
             writeback.execute();
             access.execute();
             execute.execute();
@@ -302,6 +305,10 @@ public class Controller implements Runnable {
         Controller.halt.set(true);
     }
 
+    public static void start() {
+        Controller.halt.set(false);
+    }
+
     /** Resets the registers to their default values. Currently sets to testValues, rather than 0.*/
     public void reset() {
         regFile.reset();
@@ -312,6 +319,8 @@ public class Controller implements Runnable {
         System.err.println(regFile.getRegister(28).getRegNum() + "!!");
         regFile.getRegister(28).writeBinaryAtIndex(0, PipelineSegment.correctBits(Integer.toBinaryString(MEMORY_BYTES), 64, 64));
     }
+
+
 
 
     /** Sets registers to testing values. */

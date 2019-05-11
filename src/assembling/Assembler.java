@@ -406,8 +406,7 @@ public class Assembler implements ANTLRErrorListener {
             }
         }
 
-        String reg1,reg2,reg3;
-        switch(format){
+        String reg1,reg2,reg3;        switch(format){
 
 
             case('r'):

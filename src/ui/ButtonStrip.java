@@ -121,14 +121,13 @@ public class ButtonStrip {
         Button button = new Button("Pause Run");
         button.setOnMouseReleased(event -> {
             try {
-                gui.getGo().acquire(2);
-                gui.getGo().release();
+                gui.getGo().acquire();
             } catch(InterruptedException ie) {
                 //
             }
             button.setDisable(true);
-//            runProgramButton.setDisable(false);
-            stepBackButton.setDisable(false);
+            runProgramButton.setDisable(false);
+//            stepBackButton.setDisable(false);
         });
         button.setDisable(true);
         return button;
@@ -149,6 +148,7 @@ public class ButtonStrip {
             gui.getCycleInstruction().drainPermits();
             gui.getCycleToEnd().drainPermits();
             gui.getGo().release();
+            Controller.start();
             Thread thread = new Thread(control);
             thread.setDaemon(true);
             thread.start();
@@ -225,8 +225,8 @@ public class ButtonStrip {
         Button button = new Button("Stop Run");
         button.setOnMouseReleased(event -> {
             try {
-                gui.getGo().acquire(2);
-                gui.getGo().release();
+                gui.getGo().acquire();
+                Controller.stop();
             } catch(InterruptedException ie) {
                 //
             }

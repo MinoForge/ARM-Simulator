@@ -72,16 +72,9 @@ public class SysCall {
             case 63: // value for reading input from the keyboard.
                 System.out.flush();
 
-                Interface.setBeforeInputLength(Interface.getAreas()[1].getLength());
-                Interface.getInput().release();
-                try {
-                    Interface.getInput().acquire(3);
-                } catch(InterruptedException ie) {
-                    //
-                }
-                Interface.getInput().release(4);
+
                 String input = Interface.getNewInput();
-                input = PipelineSegment.correctBits(Long.toBinaryString(Long.parseUnsignedLong(input)),64,64);
+                input = PipelineSegment.correctBits(Long.toBinaryString(Long.parseLong(input)),64,64);
                 regFile.getRegister(0).writeBinaryAtIndex(0, input);
 
                 break;

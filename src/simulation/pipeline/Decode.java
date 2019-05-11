@@ -89,7 +89,7 @@ public class Decode extends PipelineSegment {
             if (flags.get(5) || flags.get(6)) { //D-type
                 imm = instBin.substring(11, 20);
             } else { //I-type
-                if (ControlUnit.getInstruction(1).matches("ldr")) {
+                if (ControlUnit.getInstruction(1).contains("ldr")) {
                     System.err.println("ldr is happening");
                     imm = instBin.substring(8, 27);
                 } else {
