@@ -92,7 +92,6 @@ public class GUI extends Application {
         control = new Controller(file, true, assembler,
                 go, cycleCPU, cycleInstruction, cycleToEnd);
 
-        assembler.parseInput();
 
 
         //Make sections of GUI.

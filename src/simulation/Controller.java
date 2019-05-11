@@ -138,25 +138,28 @@ public class Controller implements Runnable {
     }
 
     public void assemble() {
-        this.instructions = assembler.getInstructionList();
-        Controller.NUM_INSTRUCTIONS = instructions.size();
-        this.progBins = assembler.makeBinaryList();
+        if(assembler.parseInput()) {
+
+            this.instructions = assembler.getInstructionList();
+            Controller.NUM_INSTRUCTIONS = instructions.size();
+            this.progBins = assembler.makeBinaryList();
 
 
-        setUpStack(); //stack initialization
-        initRegisters();
-        this.sysHandler = new SysCall(regFile, memory, run);
+            setUpStack(); //stack initialization
+            initRegisters();
+            this.sysHandler = new SysCall(regFile, memory, run);
 
-        Register ifid = new Register(IFID_SIZE);
-        Register idex = new Register(IDEX_SIZE);
-        Register exmem = new Register(EXMEM_SIZE);
-        Register memwb = new Register(MEMWB_SIZE);
+            Register ifid = new Register(IFID_SIZE);
+            Register idex = new Register(IDEX_SIZE);
+            Register exmem = new Register(EXMEM_SIZE);
+            Register memwb = new Register(MEMWB_SIZE);
 
-        fetcher = new Fetch(ifid, instructions.toArray(new String[0]), memory);
-        decoder = new Decode(ifid, idex, regFile);
-        execute = new Execute(idex, exmem, regFile, sysHandler);
-        access = new Access(exmem, memwb, memory);
-        writeback = new Writeback(memwb, regFile);
+            fetcher = new Fetch(ifid, instructions.toArray(new String[0]), memory);
+            decoder = new Decode(ifid, idex, regFile);
+            execute = new Execute(idex, exmem, regFile, sysHandler);
+            access = new Access(exmem, memwb, memory);
+            writeback = new Writeback(memwb, regFile);
+        }
     }
 
     private void initRegisters() {

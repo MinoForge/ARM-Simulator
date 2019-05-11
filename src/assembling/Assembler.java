@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 import assembling.parsing.antlr.LEGGramLexer;
 import assembling.parsing.antlr.LEGGramParser;
+import simulation.Interface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -229,7 +230,7 @@ public class Assembler implements ANTLRErrorListener {
 
         parser.filePath();
 
-        System.err.println(this.errorMsg);
+        Interface.getStreams()[2].println(this.errorMsg);
         if(!this.errorMsg.equals("")) {
             passesParse = false;
         }

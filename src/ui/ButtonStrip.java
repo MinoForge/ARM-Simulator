@@ -138,6 +138,7 @@ public class ButtonStrip {
         Button button = new Button("Assemble!");
         button.setOnMouseReleased(event -> {
             firstRun = true;
+
             control.assemble();
             runProgramButton.setDisable(false);
             runCycleButton.setDisable(false);
