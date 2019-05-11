@@ -1,0 +1,10 @@
+ENTRY
+.text
+LDUR r6, [r5, #0]
+STUR r6, [r5, #16]
+LDUR r7, [r5, #16]
+ADD r4, r0, r31
+END
+.data
+label: .ascii "Hey There: "
+thing: .byte 01 02 03 04

@@ -14,27 +14,6 @@ public abstract class PipelineSegment {
 
     private void read() {}
 
-//    /**
-//     * Method to make sure that the binary representation of the registers
-//     * have the correct number bits. It concatenates zeros to the front of
-//     * the binary string and returns the corrected string.
-//     * @param reg the string to be checked/altered
-//     * @param num the number of bits needed
-//     * @return the corrected string
-//     */
-//    public static String correctBits(String reg, int num) { //TODO needs testing and expansion
-//        StringBuilder str = new StringBuilder(reg);
-//
-//        while (str.length() < num) {
-//            str.insert(0, '0');
-////            str.insert(0, str.charAt(0));
-//        }
-//
-//        while(str.length() > num) {
-//            str.deleteCharAt(0);
-//        }
-//        return str.toString();
-//    }
 
     /**
      * Method to make sure that the binary representation of the registers

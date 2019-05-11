@@ -2,6 +2,8 @@ package simulation.control;
 
 import java.nio.channels.Pipe;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import simulation.pipeline.PipelineSegment;
 
 /**

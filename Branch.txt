@@ -1,0 +1,8 @@
+ENTRY
+.text
+B branch
+ADD r1, r31, #11
+ADD r8, r31, #64
+
+branch: LDR r5, thing
+END

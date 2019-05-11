@@ -41,7 +41,7 @@ public class SysCall {
         this.address = Integer.parseInt(regFile.getRegister(0).getBinary(),2);
 //        System.out.println("Address of print " + address);
         int offset = Integer.parseInt(regFile.getRegister(1).getBinary(),2);
-        switch (type) {
+        switch (type) { // check what syscall we are doing
 
             case 1: //1 is OUR value for printing integer to screen
                 System.out.print(address);

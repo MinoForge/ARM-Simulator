@@ -112,8 +112,14 @@ public class Assembler implements ANTLRErrorListener {
         this.opCodes.put("br",   "1101011");
         this.opCodes.put("blr",  "1101011");
 
+
     }
 
+    /**
+     * Set up the data section
+     * @param temp array of data to add
+     * @return
+     */
     public int[] dataSection(ArrayList<String> temp){
         this.dataLabels = new ArrayList<>();
 //        this.dataBins = new ArrayList<>();
@@ -203,11 +209,12 @@ public class Assembler implements ANTLRErrorListener {
         return addressIntoData;
     }
 
+    /**
+     * Set up all of the labels in the file, both labels in .text and .data
+     */
     public void makeLabels(){
         for(int i = 0; i < instructionArray.length; i++){
             if(instructionArray[i].contains(":")){
-                System.err.println("I got here in the make labels if " +
-                        "statement");
                 String[] temp = instructionArray[i].split(":");
                 System.err.println(temp[0] + " and " + temp[1]);
                 temp[0].replace(":","");
@@ -244,6 +251,9 @@ public class Assembler implements ANTLRErrorListener {
         return passesParse;
     }
 
+    /**
+     *
+     */
     public void realInstAdder(String[] tempInsts, ArrayList<String>
             realInsts, ArrayList<String> data){
         boolean isData = false;
@@ -464,23 +474,13 @@ public class Assembler implements ANTLRErrorListener {
 
 
                 break;
-            //Currently unfinished for i type
-//            case('l'):
+
             case('i'):
                 //grabbing  inst command
                 //temp = instruction[0].toLowerCase();
                 // adding opcode to instruction binary
                 // instBin = instBin + opCodes.get(temp);
 
-                //pulling the registers from the instruction
-//                if(format == 'l'){
-//                    instruction[1] = instruction[1].replace("[A-Za-z]", "");
-//                    reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]));
-//                    reg1 = correctBits(reg1, 5, 5);
-//
-//                    int num2 = labelMap.get(instruction[2]);
-//
-//                }
 
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]
                         .replaceAll("[a-zA-Z]", "")));
@@ -553,7 +553,6 @@ public class Assembler implements ANTLRErrorListener {
                 break;
 
             case('d'):
-                // TODO:
                 // much trickier to pull apart as the syntax for these
                 // instructions are much different from the others
                 instruction[2] = instruction[2].replace("[","");
@@ -591,6 +590,7 @@ public class Assembler implements ANTLRErrorListener {
                 reg1 = Integer.toBinaryString(Integer.parseInt(instruction[1]));
                 reg1 = correctBits(reg1, 5, 5);
                 num = labelMap.get(instruction[2]);
+
                 System.err.println("the number from label map: " + num);
                 immediate = Integer.toBinaryString(num);
                 System.err.println("the bin of the num: " + immediate);

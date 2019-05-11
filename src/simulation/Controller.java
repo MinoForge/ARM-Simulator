@@ -161,6 +161,11 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * Initialize the registers, making them all zero, except for the stack
+     * pointer, r28, it is set to where memory begins. Also locks r31 as this
+     * register always contains 0.
+     */
     private void initRegisters() {
         regFile.getRegister(31).zeroOut();
         regFile.lockRegister(31); //Zero Register
@@ -168,7 +173,7 @@ public class Controller implements Runnable {
     }
 
 
-    /** Unimplemented. */
+    /** Sets up memory and places the instructions and .data section into it*/
     private void setUpStack() {
         this.memory = new Register(MEMORY_BYTES);
 //        System.err.println("Starting Stack setup");
@@ -178,10 +183,14 @@ public class Controller implements Runnable {
             System.err.println("Writing instruction :: " + progBins.get(i) + " :: to " + (i*4));
             memory.writeBinaryAtIndex(i*4, progBins.get(i));
         }
-
+        //for testing purposes, we print out the what is in memory.
         printMemory();
     }
 
+    /**
+     * Printing out what is currently in memory, prints out memory address
+     * with them.
+     */
     public void printMemory() {
         long length = MEMORY_BYTES / 8;
 
@@ -297,10 +306,6 @@ public class Controller implements Runnable {
         return str.toString();
     }
 
-    /** Sets the halt boolean to a value. If true, the simulator should stop when checked. */
-//    public void setHalt(boolean val) {
-//        Controller.halt.set(val);
-//    }
 
     /** Stops the simulator in place */
     public static void stop() {
